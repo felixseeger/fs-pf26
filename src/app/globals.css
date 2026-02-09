@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --font-unbounded: var(--font-unbounded);
+  --font-poppins: var(--font-poppins);
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 66 100% 54%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 66 100% 54%;
+    --radius: 0.5rem;
+  }
+
+  html.dark, [data-theme='dark'] {
+    --background: 0 0% 0% !important;
+    --foreground: 0 0% 98% !important;
+    --card: 0 0% 5% !important;
+    --card-foreground: 0 0% 98% !important;
+    --popover: 0 0% 3% !important;
+    --popover-foreground: 0 0% 98% !important;
+    --primary: 66 100% 54% !important;
+    --primary-foreground: 0 0% 0% !important;
+    --secondary: 215 25% 27% !important;
+    --secondary-foreground: 210 40% 98% !important;
+    --muted: 217.2 32.6% 17.5% !important;
+    --muted-foreground: 215 20.2% 70% !important;
+    --accent: 200 100% 50% !important;
+    --accent-foreground: 0 0% 100% !important;
+    --border: 0 0% 15% !important;
+    --input: 0 0% 10% !important;
+    --ring: 84 100% 59% !important;
+  }
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html, body {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    font-family: var(--font-poppins), sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-unbounded), sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background-color: hsla(0, 0%, 100%, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsla(0, 0%, 100%, 0.2);
+  }
+
+  html.dark .glass {
+    background-color: hsla(0, 0%, 0%, 0.2);
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
+  }
+
+  .glass-strong {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  html.dark .glass-strong {
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .glass-card {
+    background-color: hsla(0, 0%, 100%, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid hsla(0, 0%, 100%, 0.2);
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
+  }
+
+  html.dark .glass-card {
+    background-color: hsla(0, 0%, 0%, 0.2);
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
+  }
+}
+
+/* Service Cards - Theme aware styling */
+.service-card {
+  transition: background-color 0.3s ease;
+}
+
+/* 3D tilt card effect (mouse-follow) */
+.tilt-card {
+  --rotateX: 0deg;
+  --rotateY: 0deg;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: perspective(5000px) rotateX(var(--rotateX)) rotateY(var(--rotateY));
+  transition: transform 0.15s ease-out, background-color 0.3s ease;
+}
+
+.tilt-card::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border-radius: inherit;
+  background: black;
+  z-index: -1;
+  transform: translateZ(-40px);
+  filter: blur(12px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* Service Icons - Theme aware SVG styling */
+.service-icon img {
+  transition: filter 0.3s ease;
+}
+
+/* Dark mode: Show lime color as-is (works great on dark backgrounds) */
+.dark .service-icon img {
+  filter: none;
+}
+
+/* Light mode: Convert lime to blue for better contrast on light backgrounds */
+:root:not(.dark) .service-icon img,
+html:not(.dark) .service-icon img {
+  /* Converts lime (#E9FF13) to blue color for light mode */
+  filter: brightness(0) saturate(100%) invert(30%) sepia(100%) saturate(1500%) hue-rotate(200deg) brightness(95%) contrast(105%);
+}
+
+/* Alternative: Keep lime but darken slightly for light mode */
+.service-icon-preserve img {
+  filter: none;
+}
+
+:root:not(.dark) .service-icon-preserve img {
+  filter: brightness(0.6) saturate(1.3);
+}
+
+/* Scroll Trigger Layout Pinning Helper */
+body.waiting-for-preloader {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Lenis CSS */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}

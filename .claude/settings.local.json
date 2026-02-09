@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(for pkg in \"embla-carousel-autoplay\" \"embla-carousel-react\" \"embla-carousel-wheel-gestures\" \"next-themes\" \"yet-another-react-lightbox\")",
+      "Bash(done)",
+      "Bash(for pkg in \"html-react-parser\" \"three-stdlib\")",
+      "Bash(python:*)",
+      "Bash(node -e:*)",
+      "Bash(npm run build:*)"
+    ]
+  }
+}
