@@ -3,6 +3,7 @@ import PostList from "@/components/blog/PostList";
 import { WPPost, WPPortfolioItem, WPPage, ACFImage } from "@/types/wordpress";
 import HomepageHero from "@/components/layout/HomepageHero";
 import ContactSection from "@/components/sections/ContactSection";
+import SelectedWorksSection from "@/components/sections/SelectedWorksSection";
 import TiltCard from "@/components/ui/TiltCard";
 import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
 import Image from "next/image";
@@ -17,7 +18,7 @@ export default async function Home() {
   try {
     const [postsData, portfolioData, homePageData] = await Promise.all([
       getPosts(6),
-      getPortfolioItems(5),
+      getPortfolioItems(12),
       getHomePage()
     ]);
     posts = postsData || [];
@@ -106,6 +107,9 @@ export default async function Home() {
             </div>
           </section>
         )}
+
+        {/* Selected Works - Masonry Portfolio Grid */}
+        <SelectedWorksSection items={portfolioItems} maxItems={6} />
 
         {/* Services Section - from WordPress ACF */}
         {acf?.services && acf.services.length > 0 && (

@@ -185,7 +185,7 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
                             />
                             {/* Optional overlay icon */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center border-0">
                                     <svg
                                         className="w-6 h-6 text-white"
                                         fill="currentColor"

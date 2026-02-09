@@ -40,7 +40,7 @@ export default function HomePreloaderWrapper({
 
   return (
     <>
-      {showPreloader && (
+      <div style={{ display: showPreloader ? 'block' : 'none' }} aria-hidden={!showPreloader}>
         <PreloaderAnimation
           orbitLabels={orbitLabels}
           backgroundColor={backgroundColor}
@@ -48,7 +48,7 @@ export default function HomePreloaderWrapper({
           counterDuration={counterDuration}
           onComplete={handleComplete}
         />
-      )}
+      </div>
       <div style={{ display: showPreloader ? 'none' : 'block' }}>{children}</div>
     </>
   );

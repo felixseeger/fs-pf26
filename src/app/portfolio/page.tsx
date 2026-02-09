@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { getPortfolioItems } from '@/lib/wordpress';
-import PortfolioGrid from '@/components/portfolio/PortfolioGrid';
+import PortfolioGridWithFilter from '@/components/portfolio/PortfolioGridWithFilter';
 
 export const metadata: Metadata = {
     title: 'Portfolio | Felix Seeger',
@@ -23,7 +23,7 @@ export default async function PortfolioPage() {
                     </p>
                 </header>
 
-                <PortfolioGrid items={items} />
+                <PortfolioGridWithFilter items={items} />
             </main>
         </div>
     );
