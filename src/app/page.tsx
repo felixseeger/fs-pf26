@@ -4,6 +4,7 @@ import { WPPost, WPPortfolioItem, WPPage, ACFImage } from "@/types/wordpress";
 import HomepageHero from "@/components/layout/HomepageHero";
 import ContactSection from "@/components/sections/ContactSection";
 import TiltCard from "@/components/ui/TiltCard";
+import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
 import Image from "next/image";
 import { Phone, Mail, ArrowRight } from "lucide-react";
 
@@ -34,7 +35,8 @@ export default async function Home() {
   const homeFeaturedImage = homePage?._embedded?.['wp:featuredmedia']?.[0];
 
   return (
-    <div className="min-h-screen bg-white font-sans dark:bg-black" suppressHydrationWarning>
+    <HomePreloaderWrapper>
+      <div className="min-h-screen bg-white font-sans dark:bg-black" suppressHydrationWarning>
       {/* Hero Section with Portfolio Items */}
       <HomepageHero items={portfolioItems} />
 
@@ -279,5 +281,6 @@ export default async function Home() {
         </div>
       </main>
     </div>
+    </HomePreloaderWrapper>
   );
 }

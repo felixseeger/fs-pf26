@@ -152,6 +152,38 @@ export interface HomepageMetaBox {
   social_links?: SocialLink[];
 }
 
+// About page – Trust section (SCF / Meta Box)
+export interface TrustClientItem {
+  name: string;
+  image?: { id: number; url: string; alt: string } | null;
+}
+
+export interface AboutPageMetaBox {
+  trust_section_title?: string;
+  trust_clients?: TrustClientItem[];
+}
+
+// Loading page – Preloader (SCF / Meta Box)
+export interface LoadingPageMetaBox {
+  loading_orbit_labels?: string[];
+  loading_background_color?: string;
+  loading_text_color?: string;
+  loading_counter_duration?: number;
+  loading_redirect_url?: string;
+  loading_hero_heading?: string;
+  loading_hero_image?: { id: number; url: string; alt: string } | null;
+}
+
+// 404 / Not Found page (SCF / Meta Box)
+export interface NotFoundPageMetaBox {
+  notfound_title?: string;
+  notfound_message?: string;
+  notfound_button_text?: string;
+  notfound_button_link?: string;
+  notfound_bg_color?: string;
+  notfound_primary_color?: string;
+}
+
 // Legacy ACF support (alias)
 export type HomepageACF = HomepageMetaBox;
 
@@ -177,8 +209,8 @@ export interface WPPage {
   meta: unknown[];
   parent: number;
   // Custom fields (ACF or Meta Box)
-  acf?: HomepageACF & ContactPageMetaBox & ResumeMetaBox;
-  meta_box?: HomepageMetaBox & ContactPageMetaBox & ResumeMetaBox;
+  acf?: HomepageACF & ContactPageMetaBox & ResumeMetaBox & AboutPageMetaBox & LoadingPageMetaBox & NotFoundPageMetaBox;
+  meta_box?: HomepageMetaBox & ContactPageMetaBox & ResumeMetaBox & AboutPageMetaBox & LoadingPageMetaBox & NotFoundPageMetaBox;
   _embedded?: {
     author?: Author[];
     'wp:featuredmedia'?: FeaturedMedia[];

@@ -211,7 +211,7 @@ add_action('rest_api_init', function() {
                 return null;
             }
 
-            $fields = [
+            $default_fields = [
                 // Hero
                 'hero_title', 'hero_subtitle', 'hero_cta_text', 'hero_cta_link',
                 // About
@@ -223,18 +223,48 @@ add_action('rest_api_init', function() {
                 // Contact
                 'contact_title', 'contact_content', 'contact_email', 'contact_phone',
             ];
+            $fields = apply_filters('fs_pf26_rest_meta_box_fields', $default_fields);
 
             $meta = [];
             foreach ($fields as $field) {
                 $value = rwmb_meta($field, '', $object['id']);
                 if (!empty($value)) {
                     // Handle image fields
-                    if (in_array($field, ['about_image', 'hero_background']) && is_numeric($value)) {
+                    if (in_array($field, ['about_image', 'hero_background', 'loading_hero_image']) && is_numeric($value)) {
                         $meta[$field] = [
                             'id'  => $value,
                             'url' => wp_get_attachment_url($value),
                             'alt' => get_post_meta($value, '_wp_attachment_image_alt', true),
                         ];
+                    } elseif ($field === 'loading_orbit_labels' && is_array($value)) {
+                        $meta[$field] = array_values(array_filter(array_map(function ($row) {
+                            return isset($row['label']) ? trim((string) $row['label']) : '';
+                        }, $value)));
+                    } elseif ($field === 'trust_clients' && is_array($value)) {
+                        // Resolve image (ID or array from Meta Box) to { id, url, alt } for each client
+                        $meta[$field] = array_map(function ($row) {
+                            $out = [ 'name' => isset($row['name']) ? (string) $row['name'] : '' ];
+                            $img = isset($row['image']) ? $row['image'] : null;
+                            $out['image'] = null;
+                            if (!empty($img)) {
+                                if (is_numeric($img)) {
+                                    $out['image'] = [
+                                        'id'  => (int) $img,
+                                        'url' => wp_get_attachment_url($img) ?: '',
+                                        'alt' => (string) get_post_meta($img, '_wp_attachment_image_alt', true),
+                                    ];
+                                } elseif (is_array($img)) {
+                                    $id = isset($img['ID']) ? (int) $img['ID'] : (isset($img['id']) ? (int) $img['id'] : 0);
+                                    $url = isset($img['url']) ? $img['url'] : (isset($img['full_url']) ? $img['full_url'] : ($id ? wp_get_attachment_url($id) : ''));
+                                    $out['image'] = $url ? [
+                                        'id'  => $id,
+                                        'url' => $url,
+                                        'alt' => isset($img['alt']) ? (string) $img['alt'] : ($id ? (string) get_post_meta($id, '_wp_attachment_image_alt', true) : ''),
+                                    ] : null;
+                                }
+                            }
+                            return $out;
+                        }, $value);
                     } else {
                         $meta[$field] = $value;
                     }

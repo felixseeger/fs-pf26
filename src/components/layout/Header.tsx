@@ -10,6 +10,7 @@ import { useTheme } from 'next-themes';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import LiquidGradientBackground from '@/components/ui/LiquidGradientBackground';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -275,8 +276,10 @@ export default function Header() {
 
             {/* Standard Header for non-home pages */}
             {pathname !== '/' && (
-                <header className="fixed top-0 left-0 right-0 z-[100] h-20 bg-background/80 backdrop-blur-lg border-b border-border">
-                    <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center relative">
+                <header className="fixed top-0 left-0 right-0 z-[100] h-20 border-b border-border overflow-hidden">
+                    <LiquidGradientBackground className="absolute inset-0 -z-20 w-full h-full pointer-events-none" />
+                    <div className="absolute inset-0 bg-background/80 backdrop-blur-lg pointer-events-none" aria-hidden />
+                    <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center relative z-10">
                         <nav className="hidden md:flex flex-1 justify-start">
                             {renderNavLinks(0, 2)}
                         </nav>
@@ -308,8 +311,9 @@ export default function Header() {
                 <>
                     <header
                         ref={headerRef}
-                        className="fixed top-0 left-0 right-0 w-full z-[100] transition-colors duration-500 pointer-events-none"
+                        className="fixed top-0 left-0 right-0 w-full z-[100] transition-colors duration-500 pointer-events-none overflow-hidden"
                     >
+                        <LiquidGradientBackground className="absolute inset-0 -z-20 w-full h-full pointer-events-none" />
                         {/* Separate background layer for color transition */}
                         <div
                             ref={backgroundRef}
