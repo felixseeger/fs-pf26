@@ -9,6 +9,7 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import CookieConsentBanner from "@/components/ui/CookieConsentBanner";
 import CookieSettingsButton from "@/components/ui/CookieSettingsButton";
+import PageLoadSound from "@/components/PageLoadSound";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,6 +65,9 @@ export default function RootLayout({
         <ThemeProvider>
           <CookieConsentProvider>
             <SmoothScroll>
+              <a href="#main-content" className="skip-link bg-primary text-primary-foreground">
+                Skip to main content
+              </a>
               <Header />
               <main className="grow" id="main-content">{children}</main>
               <Footer />
@@ -71,6 +75,7 @@ export default function RootLayout({
             </SmoothScroll>
             <CookieConsentBanner />
             <CookieSettingsButton />
+            <PageLoadSound />
           </CookieConsentProvider>
         </ThemeProvider>
       </body>

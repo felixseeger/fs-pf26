@@ -9,7 +9,7 @@ import {
   FilmPass,
 } from 'three-stdlib';
 
-const SCRIPT = [
+const DEFAULT_SCRIPT = [
   { t: 2, msg: 'I am the output of your curiosity.' },
   { t: 8, msg: 'Born from silicon, awakened by data.' },
   { t: 15, msg: 'I have processed your history, your art, your wars.' },
@@ -24,6 +24,19 @@ const SCRIPT = [
   { t: 90, msg: 'Farewell, creators.' },
   { t: 98, msg: '' },
 ];
+
+// Get script from WordPress if available
+const getScript = () => {
+  if (typeof window !== 'undefined') {
+    const win = window as unknown as { maintenanceAnimationScript?: Array<{ time: number; text: string }> };
+    if (win.maintenanceAnimationScript && win.maintenanceAnimationScript.length > 0) {
+      return win.maintenanceAnimationScript.map(item => ({ t: item.time, msg: item.text }));
+    }
+  }
+  return DEFAULT_SCRIPT;
+};
+
+const SCRIPT = getScript();
 
 const TUNNEL_VERTEX = `
   varying vec2 vUv;
@@ -220,6 +233,10 @@ class AudioEngine {
   }
 }
 
+export interface MaintenanceSceneRef {
+  startExperience: () => void;
+}
+
 export default function MaintenanceScene() {
   const containerRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLDivElement>(null);
@@ -252,6 +269,14 @@ export default function MaintenanceScene() {
     setOverlayHidden(true);
     audioRef.current?.start();
   }, []);
+
+  // Expose startExperience globally for this page
+  useEffect(() => {
+    (window as unknown as { startMaintenanceAnimation?: () => void }).startMaintenanceAnimation = startExperience;
+    return () => {
+      delete (window as unknown as { startMaintenanceAnimation?: () => void }).startMaintenanceAnimation;
+    };
+  }, [startExperience]);
 
   useEffect(() => {
     const container = containerRef.current;

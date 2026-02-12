@@ -246,8 +246,8 @@ export default function Header() {
                 {isOpen && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100000] md:hidden bg-black/95 backdrop-blur-3xl">
                         {/* Close button */}
-                        <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border border-white/20 rounded-full text-white">
-                            <X size={24} />
+                        <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border border-white/20 rounded-full text-white" aria-label="Close menu">
+                            <X size={24} aria-hidden />
                         </button>
 
                         {/* Logo */}
@@ -280,7 +280,7 @@ export default function Header() {
                     <LiquidGradientBackground className="absolute inset-0 -z-20 w-full h-full pointer-events-none" />
                     <div className="absolute inset-0 bg-background/80 backdrop-blur-lg pointer-events-none" aria-hidden />
                     <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center relative z-10">
-                        <nav className="hidden md:flex flex-1 justify-start">
+                        <nav className="hidden md:flex flex-1 justify-start" aria-label="Main navigation">
                             {renderNavLinks(0, 2)}
                         </nav>
                         <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-16">
@@ -288,19 +288,19 @@ export default function Header() {
                                 <Image src={resolvedTheme === 'dark' ? "/logo-light.svg" : "/logo-dark.svg"} alt="Logo" width={64} height={64} className="w-full h-auto" priority />
                             </Link>
                         </div>
-                        <nav className="hidden md:flex flex-1 justify-end items-center gap-10">
+                        <nav className="hidden md:flex flex-1 justify-end items-center gap-10" aria-label="Secondary navigation">
                             {renderNavLinks(2, 4)}
                             <div className="hidden lg:flex items-center gap-6">
-                                <button onClick={toggleTheme} className="p-2 bg-muted rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
-                                    {resolvedTheme === 'dark' ? <Sun size={16} className="text-foreground" /> : <Moon size={16} className="text-foreground" />}
+                                <button onClick={toggleTheme} className="p-2 bg-muted rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+                                    {resolvedTheme === 'dark' ? <Sun size={16} className="text-foreground" aria-hidden /> : <Moon size={16} className="text-foreground" aria-hidden />}
                                 </button>
                                 <Link href="/resume.pdf" className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
                                     Resume <Download size={14} aria-hidden />
                                 </Link>
                             </div>
                         </nav>
-                        <button onClick={() => setIsOpen(true)} className="md:hidden ml-auto p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
-                            <Menu size={20} className="text-foreground" />
+                        <button onClick={() => setIsOpen(true)} className="md:hidden ml-auto p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20" aria-label="Open menu" aria-expanded={isOpen}>
+                            <Menu size={20} className="text-foreground" aria-hidden />
                         </button>
                     </div>
                 </header>
@@ -360,8 +360,8 @@ export default function Header() {
                                 ref={secondaryActionsRef}
                                 className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 items-center gap-6"
                             >
-                                <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-muted transition-colors pointer-events-auto bg-white/10 backdrop-blur-md">
-                                    {resolvedTheme === 'dark' ? <Sun size={20} className="text-foreground" /> : <Moon size={20} className="text-foreground" />}
+                                <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-muted transition-colors pointer-events-auto bg-white/10 backdrop-blur-md" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+                                    {resolvedTheme === 'dark' ? <Sun size={20} className="text-foreground" aria-hidden /> : <Moon size={20} className="text-foreground" aria-hidden />}
                                 </button>
                                 <Link href="/resume.pdf" className="bg-primary text-primary-foreground px-6 py-3 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-xl pointer-events-auto inline-flex items-center gap-2">
                                     Resume <Download size={16} aria-hidden />
@@ -374,11 +374,11 @@ export default function Header() {
                     <header className="md:hidden fixed top-0 left-0 w-full h-20 px-6 flex justify-between items-center z-[101]">
                         <Link href="/"><Image src={resolvedTheme === 'dark' ? "/logo-light.svg" : "/logo-dark.svg"} alt="Logo" width={48} height={48} /></Link>
                         <div className="flex items-center gap-3">
-                            <button onClick={toggleTheme} className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors">
-                                {resolvedTheme === 'dark' ? <Sun size={18} className="text-foreground" /> : <Moon size={18} className="text-foreground" />}
+                            <button onClick={toggleTheme} className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+                                {resolvedTheme === 'dark' ? <Sun size={18} className="text-foreground" aria-hidden /> : <Moon size={18} className="text-foreground" aria-hidden />}
                             </button>
-                            <button onClick={() => setIsOpen(true)} className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
-                                <Menu size={20} className="text-foreground" />
+                            <button onClick={() => setIsOpen(true)} className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20" aria-label="Open menu" aria-expanded={isOpen}>
+                                <Menu size={20} className="text-foreground" aria-hidden />
                             </button>
                         </div>
                     </header>

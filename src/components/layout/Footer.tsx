@@ -36,7 +36,11 @@ export default async function Footer() {
               {menuItems && Array.isArray(menuItems) && menuItems.length > 0 ? (
                 menuItems.map((item: WPMenuItem) => {
                   const isExternal = item.url.startsWith('http') && !item.url.includes(process.env.WORDPRESS_API_URL || '');
-                  const href = isExternal ? item.url : new URL(item.url).pathname;
+                  const href = isExternal
+                    ? item.url
+                    : item.url.startsWith('/')
+                      ? item.url
+                      : new URL(item.url, 'https://example.com').pathname;
 
                   return (
                     <li key={item.ID}>

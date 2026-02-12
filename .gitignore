@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/testsprite_tests/
 
 # next.js
 /.next/
@@ -32,6 +33,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# local config / credentials (never commit)
+/conf/
 
 # vercel
 .vercel
@@ -39,3 +44,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Windows reserved names
+nul

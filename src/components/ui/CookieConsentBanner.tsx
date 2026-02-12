@@ -103,7 +103,7 @@ export default function CookieConsentBanner() {
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     We use cookies to enhance your experience. You can choose which cookies to allow.{' '}
-                    <Link href="/privacy" className="text-primary hover:underline">
+                    <Link href="/privacy-policy" className="text-primary hover:underline">
                       Learn more
                     </Link>
                   </p>
@@ -152,6 +152,9 @@ export default function CookieConsentBanner() {
 
             {/* Modal */}
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="cookie-settings-title"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -164,12 +167,12 @@ export default function CookieConsentBanner() {
                   <div className="p-2 bg-primary/10 rounded-lg">
                     <Cookie className="text-primary" size={20} />
                   </div>
-                  <h2 className="text-lg font-bold text-foreground">Cookie Settings</h2>
+                  <h2 id="cookie-settings-title" className="text-lg font-bold text-foreground">Cookie Settings</h2>
                 </div>
                 <button
                   onClick={closeSettings}
                   className="p-2 hover:bg-muted rounded-lg transition-colors"
-                  aria-label="Close"
+                  aria-label="Close cookie settings"
                 >
                   <X size={20} />
                 </button>
