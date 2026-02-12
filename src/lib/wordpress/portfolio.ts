@@ -31,6 +31,39 @@ export async function getPortfolioItems(
 }
 
 /**
+ * Get previous and next portfolio items by current slug (same order as list: date desc).
+ * Returns thumbnails from featured media for use in post navigation.
+ */
+export async function getPortfolioNeighbors(slug: string): Promise<{
+  previous: { slug: string; title: string; thumbnailUrl: string | null; thumbnailAlt?: string } | null;
+  next: { slug: string; title: string; thumbnailUrl: string | null; thumbnailAlt?: string } | null;
+}> {
+  const items = await getPortfolioItems(100, 1).catch(() => []);
+  const index = items.findIndex((p) => p.slug === slug);
+  if (index === -1)
+    return { previous: null, next: null };
+
+  const prevItem = index > 0 ? items[index - 1] : null;
+  const nextItem = index < items.length - 1 && index >= 0 ? items[index + 1] : null;
+
+  const toNavItem = (p: WPPortfolioItem) => {
+    const featured = p._embedded?.['wp:featuredmedia']?.[0];
+    const title = p.title?.rendered?.replace(/<[^>]*>/g, '').trim() || 'Untitled';
+    return {
+      slug: p.slug,
+      title,
+      thumbnailUrl: featured?.source_url ?? null,
+      thumbnailAlt: featured?.alt_text ?? title,
+    };
+  };
+
+  return {
+    previous: prevItem ? toNavItem(prevItem) : null,
+    next: nextItem ? toNavItem(nextItem) : null,
+  };
+}
+
+/**
  * Get a single portfolio item by slug
  * @param slug - Portfolio item slug
  */

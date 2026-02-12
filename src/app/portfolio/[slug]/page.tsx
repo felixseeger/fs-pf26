@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, extractImagesFromContent } from '@/lib/wordpress/portfolio';
+import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, getPortfolioNeighbors, extractImagesFromContent } from '@/lib/wordpress/portfolio';
 import Link from 'next/link';
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
+import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigation';
 
 export async function generateStaticParams() {
   const items = await getPortfolioItems(100, 1).catch(() => []);
@@ -49,7 +50,10 @@ export async function generateMetadata({ params }: PortfolioItemPageProps): Prom
 
 export default async function PortfolioItemPage({ params }: PortfolioItemPageProps) {
     const { slug } = await params;
-    const item = await getPortfolioItemBySlug(slug);
+    const [item, neighbors] = await Promise.all([
+        getPortfolioItemBySlug(slug),
+        getPortfolioNeighbors(slug),
+    ]);
 
     if (!item) {
         notFound();
@@ -144,6 +148,12 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
                         dangerouslySetInnerHTML={{ __html: item.content?.rendered || '<p>No content available.</p>' }}
                     />
                 </div>
+
+                {/* Previous / Next portfolio posts */}
+                <PortfolioPostNavigation
+                    previous={neighbors.previous}
+                    next={neighbors.next}
+                />
             </article>
         </div>
     );
