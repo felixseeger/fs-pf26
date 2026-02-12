@@ -87,16 +87,18 @@ export default function HideShell() {
       
       const hiddenHeaders = document.querySelectorAll('header[data-maintenance-hidden="true"]');
       hiddenHeaders.forEach((header) => {
-        header.style.display = '';
-        header.style.visibility = '';
-        header.removeAttribute('data-maintenance-hidden');
+        const htmlHeader = header as HTMLElement;
+        htmlHeader.style.display = '';
+        htmlHeader.style.visibility = '';
+        htmlHeader.removeAttribute('data-maintenance-hidden');
       });
 
       const hiddenFooters = document.querySelectorAll('footer[data-maintenance-hidden="true"]');
       hiddenFooters.forEach((footer) => {
-        footer.style.display = '';
-        footer.style.visibility = '';
-        footer.removeAttribute('data-maintenance-hidden');
+        const htmlFooter = footer as HTMLElement;
+        htmlFooter.style.display = '';
+        htmlFooter.style.visibility = '';
+        htmlFooter.removeAttribute('data-maintenance-hidden');
       });
     };
   }, []);
