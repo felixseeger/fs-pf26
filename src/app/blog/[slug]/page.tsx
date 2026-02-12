@@ -1,7 +1,15 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getPostBySlug } from '@/lib/wordpress';
+import { getPostBySlug, getPosts } from '@/lib/wordpress';
+
+export async function generateStaticParams() {
+  const posts = await getPosts(100, 1).catch(() => []);
+  const slugs = posts.map((p) => ({ slug: p.slug }));
+  // Next.js static export requires at least one param when API fails
+  if (slugs.length === 0) return [{ slug: '__no-posts__' }];
+  return slugs;
+}
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -11,6 +19,14 @@ interface BlogPostPageProps {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
+  
+  // Handle fallback slug
+  if (slug === '__no-posts__') {
+    return {
+      title: 'Posts Unavailable',
+    };
+  }
+  
   const post = await getPostBySlug(slug);
 
   if (!post) {
@@ -37,6 +53,22 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
+  
+  // Handle fallback slug when API fails
+  if (slug === '__no-posts__') {
+    return (
+      <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black" suppressHydrationWarning>
+        <main className="max-w-4xl mx-auto px-4 py-16">
+          <div className="text-center py-12">
+            <p className="text-zinc-600 dark:text-zinc-400 text-lg">
+              Blog posts are currently unavailable. Please try again later.
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+  
   const post = await getPostBySlug(slug);
 
   if (!post) {

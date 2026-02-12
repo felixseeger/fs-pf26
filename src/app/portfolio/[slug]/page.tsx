@@ -1,9 +1,17 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getPortfolioItemBySlug, getPortfolioAttachments, extractImagesFromContent } from '@/lib/wordpress/portfolio';
+import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, extractImagesFromContent } from '@/lib/wordpress/portfolio';
 import Link from 'next/link';
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
+
+export async function generateStaticParams() {
+  const items = await getPortfolioItems(100, 1).catch(() => []);
+  const slugs = items.map((p) => ({ slug: p.slug }));
+  // Next.js static export requires at least one param when API fails
+  if (slugs.length === 0) return [{ slug: '__no-items__' }];
+  return slugs;
+}
 
 interface PortfolioItemPageProps {
     params: Promise<{

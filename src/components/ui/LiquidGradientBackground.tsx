@@ -366,6 +366,7 @@ export default function LiquidGradientBackground({ className = '', style }: Liqu
     let rafId: number;
 
     function onMouseMove(ev: MouseEvent) {
+      if (!container) return;
       const rect = container.getBoundingClientRect();
       const x = (ev.clientX - rect.left) / rect.width;
       const y = 1 - (ev.clientY - rect.top) / rect.height;
@@ -375,6 +376,7 @@ export default function LiquidGradientBackground({ className = '', style }: Liqu
     }
 
     function onTouchMove(ev: TouchEvent) {
+      if (!container) return;
       const touch = ev.touches[0];
       if (touch) {
         const rect = container.getBoundingClientRect();

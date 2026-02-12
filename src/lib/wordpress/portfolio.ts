@@ -22,8 +22,8 @@ export async function getPortfolioItems(
             page,
             orderby: 'date',
             order: 'desc',
-        });
-        return portfolio;
+        }, { suppressErrorLogging: true }); // 404 if CPT not registered; live backend may have 0 items until migrated
+        return Array.isArray(portfolio) ? portfolio : [];
     } catch (error) {
         console.error('Error fetching portfolio items:', error);
         return [];

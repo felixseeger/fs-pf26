@@ -48,11 +48,25 @@ export async function getPageBySlug(slug: string): Promise<WPPage | null> {
 }
 
 /**
- * Get the homepage content (page with slug 'home')
- * Returns the page with ACF fields for sections like About, FAQ, Services, etc.
+ * Get the homepage content for sections (About, Services, FAQ, Contact).
+ * Tries, in order: (1) WP static front page via /wp/v2/front-page, (2) slug "homepage", (3) slug "home".
+ * Requires WordPress to expose front page ID (see wordpress-front-page-api.php) for (1).
  */
 export async function getHomePage(): Promise<WPPage | null> {
-  return getPageBySlug('homepage');
+  try {
+    const res = await fetchWordPress<{ id: number }>('/front-page', undefined, {
+      suppressErrorLogging: true,
+    });
+    if (res?.id) {
+      const page = await getPageById(res.id);
+      if (page) return page;
+    }
+  } catch {
+    // No front-page endpoint or no static front page set; fall back to slugs
+  }
+  const byHomepage = await getPageBySlug('homepage');
+  if (byHomepage) return byHomepage;
+  return getPageBySlug('home');
 }
 
 /**

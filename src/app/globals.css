@@ -46,10 +46,10 @@
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 221 75% 48%;
+    --primary: 66 100% 54%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 210 40% 96.1%;
@@ -69,17 +69,17 @@
     --card-foreground: 0 0% 98% !important;
     --popover: 0 0% 3% !important;
     --popover-foreground: 0 0% 98% !important;
-    --primary: 221 75% 48% !important;
+    --primary: 66 100% 54% !important;
     --primary-foreground: 0 0% 0% !important;
-    --secondary: 215 25% 27% !important;
-    --secondary-foreground: 210 40% 98% !important;
+    --secondary: 217 91% 50% !important;
+    --secondary-foreground: 0 0% 100% !important;
     --muted: 217.2 32.6% 17.5% !important;
     --muted-foreground: 215 20.2% 70% !important;
     --accent: 200 100% 50% !important;
     --accent-foreground: 0 0% 100% !important;
     --border: 0 0% 15% !important;
     --input: 0 0% 10% !important;
-    --ring: 84 100% 59% !important;
+    --ring: 66 100% 54% !important;
   }
 
   * {
@@ -196,27 +196,6 @@
 /* Service Icons - Theme aware SVG styling */
 .service-icon img {
   transition: filter 0.3s ease;
-}
-
-/* Dark mode: Show lime color as-is (works great on dark backgrounds) */
-.dark .service-icon img {
-  filter: none;
-}
-
-/* Light mode: Convert lime to blue for better contrast on light backgrounds */
-:root:not(.dark) .service-icon img,
-html:not(.dark) .service-icon img {
-  /* Converts lime (#E9FF13) to blue color for light mode */
-  filter: brightness(0) saturate(100%) invert(30%) sepia(100%) saturate(1500%) hue-rotate(200deg) brightness(95%) contrast(105%);
-}
-
-/* Alternative: Keep lime but darken slightly for light mode */
-.service-icon-preserve img {
-  filter: none;
-}
-
-:root:not(.dark) .service-icon-preserve img {
-  filter: brightness(0.6) saturate(1.3);
 }
 
 /* Scroll Trigger Layout Pinning Helper */

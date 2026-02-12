@@ -1,13 +1,37 @@
-import { getPosts, getPortfolioItems, getHomePage } from "@/lib/wordpress";
+import { getPosts, getPortfolioItems, getHomePage, getServiceItems } from "@/lib/wordpress";
 import PostList from "@/components/blog/PostList";
-import { WPPost, WPPortfolioItem, WPPage, ACFImage } from "@/types/wordpress";
+import { WPPost, WPPortfolioItem, WPPage, ACFImage, WPServiceItem } from "@/types/wordpress";
 import HomepageHero from "@/components/layout/HomepageHero";
 import ContactSection from "@/components/sections/ContactSection";
 import SelectedWorksSection from "@/components/sections/SelectedWorksSection";
+import ServicesSection, { Service } from "@/components/sections/ServicesSection";
 import TiltCard from "@/components/ui/TiltCard";
 import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
 import Image from "next/image";
 import { Phone, Mail, ArrowRight } from "lucide-react";
+
+function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
+  return services.map((service) => {
+    const featuredImage = service._embedded?.['wp:featuredmedia']?.[0];
+    const servicesGallery = service.acf?.services_gallery;
+    const iconUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery
+      ? (servicesGallery as ACFImage).url
+      : featuredImage?.source_url;
+    const iconAlt = servicesGallery && typeof servicesGallery === 'object' && 'alt' in servicesGallery
+      ? (servicesGallery as ACFImage).alt
+      : featuredImage?.alt_text;
+    const description = service.acf?.service_short_description
+      || (service.excerpt?.rendered?.replace(/<[^>]*>/g, '').trim() || '');
+    return {
+      id: service.slug,
+      iconUrl: iconUrl || undefined,
+      iconAlt: iconAlt || service.title.rendered,
+      title: service.title.rendered,
+      description,
+      slug: service.slug,
+    };
+  });
+}
 
 export default async function Home() {
   let posts: WPPost[] = [];
@@ -15,15 +39,19 @@ export default async function Home() {
   let homePage: WPPage | null = null;
   let error: string | null = null;
 
+  let serviceItems: WPServiceItem[] = [];
+
   try {
-    const [postsData, portfolioData, homePageData] = await Promise.all([
+    const [postsData, portfolioData, homePageData, servicesData] = await Promise.all([
       getPosts(6),
       getPortfolioItems(12),
-      getHomePage()
+      getHomePage(),
+      getServiceItems(24),
     ]);
     posts = postsData || [];
     portfolioItems = portfolioData || [];
     homePage = homePageData;
+    serviceItems = servicesData || [];
   } catch (err) {
     error = err instanceof Error ? err.message : "Failed to fetch content";
     console.error("Error fetching content:", err);
@@ -41,7 +69,7 @@ export default async function Home() {
       {/* Hero Section with Portfolio Items */}
       <HomepageHero items={portfolioItems} />
 
-      <main className="py-24 overflow-hidden" suppressHydrationWarning>
+      <div className="py-24 overflow-hidden" role="region" aria-label="Homepage content" suppressHydrationWarning>
         {/* About Section - from WordPress ACF */}
         {acf?.about_content && (
           <section id="about" className="mb-24" suppressHydrationWarning>
@@ -111,53 +139,14 @@ export default async function Home() {
         {/* Selected Works - Masonry Portfolio Grid */}
         <SelectedWorksSection items={portfolioItems} maxItems={6} />
 
-        {/* Services Section - from WordPress ACF */}
-        {acf?.services && acf.services.length > 0 && (
-          <section id="services" className="mb-24 max-w-6xl mx-auto px-4" suppressHydrationWarning>
-            <header className="mb-8">
-              <div className="flex items-center gap-4 mb-4" suppressHydrationWarning>
-                <span className="w-12 h-px bg-zinc-300 dark:bg-zinc-800" />
-                <span className="text-xs uppercase tracking-widest font-bold text-zinc-500">Services</span>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white">
-                {acf.services_title || 'What I Do'}
-              </h2>
-            </header>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" suppressHydrationWarning>
-              {acf.services.map((service, index) => {
-                // Get icon URL from string or ACFImage object
-                const iconUrl = service.icon
-                  ? typeof service.icon === 'string'
-                    ? service.icon
-                    : (service.icon as ACFImage).url
-                  : null;
-
-                return (
-                  <TiltCard
-                    key={index}
-                    className="service-card p-8 bg-zinc-100 dark:bg-zinc-900 rounded-2xl group hover:bg-zinc-200 dark:hover:bg-zinc-800"
-                  >
-                    {iconUrl && (
-                      <div className="mb-6 w-12 h-12 service-icon" suppressHydrationWarning>
-                        <img
-                          src={iconUrl}
-                          alt={`${service.title} icon`}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                    )}
-                    <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-3">
-                      {service.title}
-                    </h3>
-                    <p className="text-zinc-600 dark:text-zinc-400">
-                      {service.description}
-                    </p>
-                  </TiltCard>
-                );
-              })}
-            </div>
-          </section>
-        )}
+        {/* Services Section - from WordPress services post type (services_gallery icons) */}
+        <ServicesSection
+          services={
+            serviceItems.length > 0
+              ? mapWPServicesToSection(serviceItems)
+              : undefined
+          }
+        />
 
         {/* FAQ Section - from WordPress ACF */}
         {acf?.faq_items && acf.faq_items.length > 0 && (
@@ -177,7 +166,7 @@ export default async function Home() {
                   <details className="group p-6 bg-zinc-50 dark:bg-zinc-900 rounded-lg h-full">
                     <summary className="flex justify-between items-center cursor-pointer list-none text-lg font-bold text-black dark:text-white">
                       {faq.question}
-                      <span className="ml-4 text-2xl group-open:rotate-45 transition-transform">+</span>
+                      <span className="ml-4 text-2xl group-open:rotate-45 transition-transform" aria-hidden>+</span>
                     </summary>
                     <div
                       className="mt-4 text-zinc-600 dark:text-zinc-400 prose dark:prose-invert"
@@ -283,7 +272,7 @@ export default async function Home() {
           {/* Posts Grid */}
           {!error && <PostList posts={posts} />}
         </div>
-      </main>
+      </div>
     </div>
     </HomePreloaderWrapper>
   );

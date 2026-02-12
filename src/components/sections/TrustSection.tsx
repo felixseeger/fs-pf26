@@ -29,11 +29,11 @@ export default function TrustSection({ title = 'Trusted Us', clients, className 
     gsap.set(img, { scale: 1.25, opacity: 0 });
     gsap.to(wrapper, {
       clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-      duration: 0.5,
+      duration: 0.3,
       ease: 'hop',
     });
-    gsap.to(img, { opacity: 1, duration: 0.25, ease: 'power2.out' });
-    gsap.to(img, { scale: 1, duration: 1.25, ease: 'hop' });
+    gsap.to(img, { opacity: 1, duration: 0.15, ease: 'power2.out' });
+    gsap.to(img, { scale: 1, duration: 0.8, ease: 'hop' });
   }, []);
 
   const runHide = useCallback((onComplete: () => void) => {
@@ -44,7 +44,7 @@ export default function TrustSection({ title = 'Trusted Us', clients, className 
     }
     gsap.to(img, {
       opacity: 0,
-      duration: 0.5,
+      duration: 0.15,
       ease: 'power1.out',
       onComplete,
     });
@@ -123,24 +123,13 @@ export default function TrustSection({ title = 'Trusted Us', clients, className 
 
       <div className="relative w-full max-w-[80%] flex flex-wrap justify-start items-center gap-3 z-10">
         {clients.map((client, index) => {
-          const logoUrl = getImageUrl(client);
-          const hasPreview = logoUrl != null && logoUrl !== '';
           return (
             <div
               key={index}
-              className={`relative inline-flex items-center gap-2 cursor-pointer group/client ${hasPreview ? '' : ''}`}
+              className="relative inline-flex items-center cursor-pointer group/client"
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={(e) => handleMouseLeave(index, e.relatedTarget, e.currentTarget)}
             >
-              {hasPreview && (
-                <span className="shrink-0 w-8 h-8 rounded overflow-hidden bg-zinc-200 dark:bg-zinc-800 ring-1 ring-zinc-300 dark:ring-zinc-700">
-                  <img
-                    src={logoUrl}
-                    alt=""
-                    className="w-full h-full object-contain"
-                  />
-                </span>
-              )}
               <h2 className="text-2xl md:text-3xl font-medium text-zinc-900 dark:text-white leading-tight">
                 {client.name || ' '}
                 {index < clients.length - 1 ? ',' : '.'}

@@ -7,18 +7,24 @@
 // Configuration Constants
 // =============================================================================
 
-export const WORDPRESS_API_URL = process.env.WORDPRESS_API_URL;
+const _WORDPRESS_API_URL = process.env.WORDPRESS_API_URL?.replace(/\/+$/, '') ?? '';
 
-if (!WORDPRESS_API_URL) {
-  throw new Error('WORDPRESS_API_URL is not defined in environment variables');
+if (!_WORDPRESS_API_URL) {
+  const msg =
+    'WORDPRESS_API_URL is not set. Copy .env.example to .env.local and set your WordPress backend URL. ' +
+    'For production build run: node scripts/prepare-live-env.mjs (uses conf/start.md).';
+  throw new Error(msg);
 }
+
+/** WordPress backend base URL (no trailing slash). Set in .env.local or .env.production.local */
+export const WORDPRESS_API_URL = _WORDPRESS_API_URL;
 
 /** Standard WordPress REST API v2 base path */
 export const WP_REST_BASE = '/wp-json/wp/v2';
 
-/** Default fetch options for SSR - ensures fresh data */
+/** Default fetch options for static generation - compatible with output: 'export' */
 export const DEFAULT_FETCH_OPTIONS: RequestInit = {
-  cache: 'no-store',
+  cache: 'force-cache',
   headers: {
     'Content-Type': 'application/json',
   },

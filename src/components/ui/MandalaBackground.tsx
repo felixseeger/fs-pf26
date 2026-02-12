@@ -75,56 +75,58 @@ export default function MandalaBackground() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const canvasEl = canvas;
 
-    const gl = canvas.getContext('webgl');
+    const gl = canvasEl.getContext('webgl');
     if (!gl) return;
+    const glContext = gl;
 
     function compileShader(type: number, source: string): WebGLShader | null {
-      const shader = gl.createShader(type);
+      const shader = glContext.createShader(type);
       if (!shader) return null;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        gl.deleteShader(shader);
+      glContext.shaderSource(shader, source);
+      glContext.compileShader(shader);
+      if (!glContext.getShaderParameter(shader, glContext.COMPILE_STATUS)) {
+        glContext.deleteShader(shader);
         return null;
       }
       return shader;
     }
 
-    const vs = compileShader(gl.VERTEX_SHADER, VS_SOURCE);
-    const fs = compileShader(gl.FRAGMENT_SHADER, FS_SOURCE);
+    const vs = compileShader(glContext.VERTEX_SHADER, VS_SOURCE);
+    const fs = compileShader(glContext.FRAGMENT_SHADER, FS_SOURCE);
     if (!vs || !fs) return;
 
-    const program = gl.createProgram();
+    const program = glContext.createProgram();
     if (!program) return;
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    gl.useProgram(program);
+    glContext.attachShader(program, vs);
+    glContext.attachShader(program, fs);
+    glContext.linkProgram(program);
+    glContext.useProgram(program);
 
     const vertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-    const positionLoc = gl.getAttribLocation(program, 'aVertexPosition');
-    gl.enableVertexAttribArray(positionLoc);
-    gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
+    const buffer = glContext.createBuffer();
+    glContext.bindBuffer(glContext.ARRAY_BUFFER, buffer);
+    glContext.bufferData(glContext.ARRAY_BUFFER, vertices, glContext.STATIC_DRAW);
+    const positionLoc = glContext.getAttribLocation(program, 'aVertexPosition');
+    glContext.enableVertexAttribArray(positionLoc);
+    glContext.vertexAttribPointer(positionLoc, 2, glContext.FLOAT, false, 0, 0);
 
-    const timeLoc = gl.getUniformLocation(program, 'u_time');
-    const resLoc = gl.getUniformLocation(program, 'u_resolution');
-    const egoLoc = gl.getUniformLocation(program, 'u_ego');
-    const shadowLoc = gl.getUniformLocation(program, 'u_shadow');
-    const animaLoc = gl.getUniformLocation(program, 'u_anima');
+    const timeLoc = glContext.getUniformLocation(program, 'u_time');
+    const resLoc = glContext.getUniformLocation(program, 'u_resolution');
+    const egoLoc = glContext.getUniformLocation(program, 'u_ego');
+    const shadowLoc = glContext.getUniformLocation(program, 'u_shadow');
+    const animaLoc = glContext.getUniformLocation(program, 'u_anima');
 
     let startTime = Date.now();
     const state = { ego: 0, shadow: 0, anima: 0 };
     const current = { ego: 0, shadow: 0, anima: 0 };
 
     function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      if (resLoc) gl.uniform2f(resLoc, canvas.width, canvas.height);
+      canvasEl.width = window.innerWidth;
+      canvasEl.height = window.innerHeight;
+      glContext.viewport(0, 0, canvasEl.width, canvasEl.height);
+      if (resLoc) glContext.uniform2f(resLoc, canvasEl.width, canvasEl.height);
     }
     resize();
     window.addEventListener('resize', resize);
@@ -142,17 +144,17 @@ export default function MandalaBackground() {
       current.ego = lerp(current.ego, state.ego, 0.01);
       current.shadow = lerp(current.shadow, state.shadow, 0.01);
       current.anima = lerp(current.anima, state.anima, 0.01);
-      if (egoLoc) gl.uniform1f(egoLoc, current.ego);
-      if (shadowLoc) gl.uniform1f(shadowLoc, current.shadow);
-      if (animaLoc) gl.uniform1f(animaLoc, current.anima);
+      if (egoLoc) glContext.uniform1f(egoLoc, current.ego);
+      if (shadowLoc) glContext.uniform1f(shadowLoc, current.shadow);
+      if (animaLoc) glContext.uniform1f(animaLoc, current.anima);
     }
 
     let rafId: number;
     function render() {
       const elapsed = (Date.now() - startTime) / 1000;
-      if (timeLoc) gl.uniform1f(timeLoc, elapsed);
+      if (timeLoc) glContext.uniform1f(timeLoc, elapsed);
       updatePsychology(elapsed);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      glContext.drawArrays(glContext.TRIANGLE_STRIP, 0, 4);
       rafId = requestAnimationFrame(render);
     }
     render();
@@ -160,9 +162,9 @@ export default function MandalaBackground() {
     return () => {
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(rafId);
-      gl.deleteProgram(program);
-      gl.deleteShader(vs);
-      gl.deleteShader(fs);
+      glContext.deleteProgram(program);
+      glContext.deleteShader(vs);
+      glContext.deleteShader(fs);
     };
   }, []);
 

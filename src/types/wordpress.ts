@@ -79,6 +79,20 @@ export interface WPPortfolioItem extends Omit<WPPost, 'categories' | 'tags'> {
   };
 }
 
+export interface WPServiceItem extends Omit<WPPost, 'categories' | 'tags'> {
+  // Services CPT fields
+  service_categories?: number[];
+  service_tags?: number[];
+  acf?: {
+    services_gallery?: ACFImage | false;
+    service_icon?: ACFImage | string | false;
+    service_short_description?: string;
+    service_features?: string[];
+    service_pricing?: string;
+    service_duration?: string;
+  };
+}
+
 // Meta Box Field Types for Homepage
 export interface FAQItem {
   question: string;
@@ -293,6 +307,8 @@ export interface ContactPageMetaBox {
   form_heading?: string;
   form_subheading?: string;
   form_image?: ACFImage | number | false;
+  // Contact Image (for contact page)
+  contact_image?: ACFImage | number | false;
   // Service Options for dropdown
   service_options?: ServiceOption[];
   // How did you hear options

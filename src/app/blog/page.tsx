@@ -7,23 +7,11 @@ export const metadata: Metadata = {
     description: 'Sharing insights, tutorials, and thoughts on design and development.',
 };
 
-interface BlogPageProps {
-    searchParams: Promise<{
-        page?: string;
-    }>;
-}
-
-export default async function BlogPage({ searchParams }: BlogPageProps) {
-    const params = await searchParams;
-    const currentPage = Number(params.page) || 1;
-    const perPage = 9;
+export default async function BlogPage() {
+    const perPage = 100; // Show all posts for static export
 
     // Fetch posts from WordPress
-    const posts = await getPosts(perPage, currentPage);
-
-    // For total pages, WordPress API usually returns headers like 'X-WP-TotalPages'
-    // But here we'll simplify or assume we can fetch it if needed.
-    // For now, let's keep it simple as per user request to "list all"
+    const posts = await getPosts(perPage, 1);
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans" suppressHydrationWarning>
@@ -42,7 +30,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                     posts={posts}
                     layout="grid"
                     columns={3}
-                    currentPage={currentPage}
+                    currentPage={1}
                     paginationBaseUrl="/blog"
                 />
             </main>

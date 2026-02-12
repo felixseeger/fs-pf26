@@ -276,7 +276,7 @@ export default function ContactSection({
 
               {/* Error Message */}
               {submitStatus === 'error' && (
-                <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <div id="contact-form-error" className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg" role="alert">
                   <p className="text-red-800 dark:text-red-200 text-sm">
                     Something went wrong. Please try again.
                   </p>
@@ -287,6 +287,8 @@ export default function ContactSection({
               <button
                 type="submit"
                 disabled={isSubmitting}
+                aria-busy={isSubmitting}
+                aria-describedby={submitStatus === 'error' ? 'contact-form-error' : undefined}
                 className="w-full py-4 bg-primary text-primary-foreground font-unbounded font-bold text-sm tracking-wide uppercase rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (

@@ -63,11 +63,14 @@ export default async function ContactPage() {
     const acf = page.acf || page.meta_box || {};
 
     // Helper to get ACF image URL
-    const getImageUrl = (image: unknown): string => {
-        if (!image) return defaultContactData.form.image;
-        if (typeof image === 'string') return image;
-        if (typeof image === 'object' && image !== null && 'url' in image) {
+    const getImageUrl = (image: unknown, featuredImage?: { source_url?: string }): string => {
+        // First check for contact_image ACF field
+        if (image && typeof image === 'object' && image !== null && 'url' in image) {
             return (image as { url: string }).url;
+        }
+        // Fallback to featured image
+        if (featuredImage?.source_url) {
+            return featuredImage.source_url;
         }
         return defaultContactData.form.image;
     };
@@ -117,6 +120,8 @@ export default async function ContactPage() {
         return defaultContactData.headquarters.address;
     };
 
+    const featuredImage = page._embedded?.['wp:featuredmedia']?.[0];
+
     // Build contact data from custom fields with fallbacks
     const contactData = {
         headquarters: {
@@ -135,7 +140,7 @@ export default async function ContactPage() {
         form: {
             heading: acf.form_heading?.replace(/\\n/g, '\n') || defaultContactData.form.heading,
             subheading: acf.form_subheading || defaultContactData.form.subheading,
-            image: getImageUrl(acf.form_image),
+            image: getImageUrl(acf.contact_image, featuredImage),
         },
         serviceOptions: acf.service_options?.length ? acf.service_options : defaultContactData.serviceOptions,
         heardFromOptions: getHeardFromOptions(),
