@@ -42,13 +42,14 @@ export function getPortfolioSliderMedia(item: WPPortfolioItem): SliderMediaItem[
         // Image ID - would need to fetch, but ACF usually returns object
         return null;
       } else if (typeof image === 'object' && image !== null) {
-        if ('url' in image) {
-          url = image.url;
-          if ('alt' in image) altText = image.alt;
-        } else if ('source_url' in image) {
+        const imgObj = image as Record<string, unknown>;
+        if ('url' in imgObj && typeof imgObj.url === 'string') {
+          url = imgObj.url;
+          if ('alt' in imgObj && typeof imgObj.alt === 'string') altText = imgObj.alt;
+        } else if ('source_url' in imgObj && typeof imgObj.source_url === 'string') {
           // WordPress media object format
-          url = image.source_url;
-          if ('alt_text' in image) altText = image.alt_text;
+          url = imgObj.source_url;
+          if ('alt_text' in imgObj && typeof imgObj.alt_text === 'string') altText = imgObj.alt_text;
         }
       }
 
