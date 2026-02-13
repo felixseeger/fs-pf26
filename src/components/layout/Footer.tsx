@@ -1,6 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getMenuItems, getHomePage, getLegalPages } from '@/lib/wordpress';
-import { WPMenuItem, SocialLink } from '@/types/wordpress';
+import { WPMenuItem, SocialLink, ACFImage } from '@/types/wordpress';
 
 function SocialIcon({ platform, className }: { platform: SocialLink['platform']; className?: string }) {
   const c = className ?? 'w-6 h-6';
@@ -54,6 +55,7 @@ export default async function Footer() {
   let footerConnectTitle = 'Connect';
   let footerCopyright = `© ${currentYear} Felix Seeger. All rights reserved.`;
   let socialLinks: SocialLink[] = [];
+  let footerImage: ACFImage | null = null;
 
   try {
     const [quickLinksMenu, secondaryMenu, legalMenu, legalPages, homePage] = await Promise.all([
@@ -77,6 +79,9 @@ export default async function Footer() {
     }
     const acf = homePage?.meta_box ?? homePage?.acf;
     if (acf) {
+      if (acf.footer_image && typeof acf.footer_image === 'object' && 'url' in acf.footer_image && acf.footer_image.url) {
+        footerImage = acf.footer_image as ACFImage;
+      }
       if (acf.footer_about_title?.trim()) footerAboutTitle = acf.footer_about_title.trim();
       if (acf.footer_about_text?.trim()) footerAboutText = acf.footer_about_text.trim();
       if (acf.footer_connect_title?.trim()) footerConnectTitle = acf.footer_connect_title.trim();
@@ -90,6 +95,18 @@ export default async function Footer() {
   return (
     <footer className="bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-12" suppressHydrationWarning>
+        {footerImage && (
+          <div className="mb-8 flex justify-start" suppressHydrationWarning>
+            <Image
+              src={footerImage.url}
+              alt={footerImage.alt || 'Footer logo'}
+              width={footerImage.width || 160}
+              height={footerImage.height || 48}
+              className="h-12 w-auto object-contain object-left"
+              unoptimized={process.env.NEXT_IMAGE_UNOPTIMIZED === 'true'}
+            />
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8" suppressHydrationWarning>
           {/* About Section – from WordPress */}
           <div suppressHydrationWarning>

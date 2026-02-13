@@ -32,6 +32,15 @@ export default function PortfolioPostNavigation({
               href={`/portfolio/${previous.slug}`}
               className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-colors"
             >
+              <svg
+                className="w-5 h-5 text-zinc-400 group-hover:-translate-x-1 transition-transform shrink-0 order-first"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
               <div className="flex items-center gap-3 shrink-0">
                 <span className="text-xs font-unbounded font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
                   Previous
@@ -53,14 +62,6 @@ export default function PortfolioPostNavigation({
                   {previous.title}
                 </span>
               </div>
-              <svg
-                className="w-5 h-5 text-zinc-400 group-hover:-translate-x-1 transition-transform shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
             </Link>
           ) : (
             <div className="p-4 rounded-xl bg-zinc-50/50 dark:bg-zinc-900/30" aria-hidden />

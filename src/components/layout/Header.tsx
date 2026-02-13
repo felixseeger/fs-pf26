@@ -232,7 +232,7 @@ export default function Header() {
             <ul className="flex space-x-10 items-center">
                 {navLinks.slice(sliceStart, sliceEnd).map((link) => (
                     <li key={link.name}>
-                        <AnimatedLink href={link.href} className="font-unbounded text-xs font-bold tracking-widest uppercase text-secondary-foreground dark:text-primary hover:text-primary transition-colors">
+                        <AnimatedLink href={link.href} className="font-unbounded text-xs font-bold tracking-widest uppercase text-black dark:text-primary hover:text-primary transition-colors">
                             {link.name}
                         </AnimatedLink>
                     </li>

@@ -164,6 +164,7 @@ export interface HomepageMetaBox {
   contact_privacy_policy_url?: string;
   contact_submit_button_text?: string;
   // Footer (editable in WordPress via Homepage / Front Page ACF or Meta Box)
+  footer_image?: ACFImage | number | false;
   footer_about_title?: string;
   footer_about_text?: string;
   footer_connect_title?: string;

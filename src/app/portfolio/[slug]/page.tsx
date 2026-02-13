@@ -2,9 +2,12 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, getPortfolioNeighbors, extractImagesFromContent } from '@/lib/wordpress/portfolio';
+import { getServiceItems } from '@/lib/wordpress/services';
+import { getServicesMatchingPortfolioCategories } from '@/lib/portfolio-utils';
 import Link from 'next/link';
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
 import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigation';
+import ServicesUsed from '@/components/portfolio/ServicesUsed';
 
 export async function generateStaticParams() {
   const items = await getPortfolioItems(100, 1).catch(() => []);
@@ -50,9 +53,10 @@ export async function generateMetadata({ params }: PortfolioItemPageProps): Prom
 
 export default async function PortfolioItemPage({ params }: PortfolioItemPageProps) {
     const { slug } = await params;
-    const [item, neighbors] = await Promise.all([
+    const [item, neighbors, allServices] = await Promise.all([
         getPortfolioItemBySlug(slug),
         getPortfolioNeighbors(slug),
+        getServiceItems(100, 1),
     ]);
 
     if (!item) {
@@ -87,6 +91,8 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
         .filter((v, i, a) =>
             a.findIndex(t => getBaseUrl(t.url) === getBaseUrl(v.url)) === i
         );
+
+    const matchingServices = getServicesMatchingPortfolioCategories(allServices, terms);
 
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
@@ -154,6 +160,9 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
                     previous={neighbors.previous}
                     next={neighbors.next}
                 />
+
+                {/* Services matching this project's categories */}
+                <ServicesUsed services={matchingServices} />
             </article>
         </div>
     );

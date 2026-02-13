@@ -60,16 +60,6 @@ export default function PortfolioCard({ item }: PortfolioCardProps) {
                     dangerouslySetInnerHTML={{ __html: item.excerpt?.rendered || '' }}
                 />
 
-                <div className="flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-500 mb-4">
-                    <time dateTime={item.date}>
-                        {new Date(item.date).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                        })}
-                    </time>
-                </div>
-
                 <Link
                     href={`/portfolio/${item.slug}`}
                     className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"

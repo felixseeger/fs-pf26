@@ -6,6 +6,7 @@ The site footer is driven by the **same WordPress page** used for the homepage (
 
 | Field key / name       | Type     | Description |
 |------------------------|----------|-------------|
+| `footer_image`         | Image    | Logo or image shown at the top of the footer. |
 | `footer_about_title`   | Text     | Heading for the first column (e.g. "About"). |
 | `footer_about_text`    | Textarea | Short about text in the first footer column. |
 | `footer_connect_title`| Text     | Heading for the Connect/social column (e.g. "Connect"). |

@@ -1,4 +1,4 @@
-import { WPPortfolioItem } from '@/types/wordpress';
+import { WPPortfolioItem, WPServiceItem } from '@/types/wordpress';
 import type { WPCategory } from '@/types/wordpress';
 
 /**
@@ -33,5 +33,29 @@ export function filterPortfolioItemsByCategory(
   return items.filter((item) => {
     const terms = (item._embedded?.['wp:term']?.[0] ?? []) as WPCategory[];
     return terms.some((t) => t.id === categoryId);
+  });
+}
+
+/**
+ * Return services that have at least one category matching the portfolio item's categories
+ * (by slug or name, case-insensitive). Use for "Services used" on portfolio project pages.
+ */
+export function getServicesMatchingPortfolioCategories(
+  services: WPServiceItem[],
+  portfolioTerms: WPCategory[]
+): WPServiceItem[] {
+  if (portfolioTerms.length === 0) return [];
+  const matchSet = new Set<string>();
+  for (const t of portfolioTerms) {
+    if (t.slug) matchSet.add(t.slug.toLowerCase());
+    if (t.name) matchSet.add(t.name.toLowerCase().trim());
+  }
+  return services.filter((service) => {
+    const terms = (service._embedded?.['wp:term']?.[0] ?? []) as WPCategory[];
+    return terms.some(
+      (t) =>
+        (t.slug && matchSet.has(t.slug.toLowerCase())) ||
+        (t.name && matchSet.has(t.name.toLowerCase().trim()))
+    );
   });
 }
