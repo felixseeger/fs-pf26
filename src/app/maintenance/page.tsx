@@ -120,7 +120,7 @@ export default function MaintenancePage() {
   }, []);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
+    <div className="relative min-h-screen overflow-hidden bg-background">
       {/* 3D Animation Background - Clickable */}
       <div className="fixed inset-0 z-0 pointer-events-auto">
         <MaintenanceScene />
@@ -147,7 +147,7 @@ export default function MaintenancePage() {
 
           {/* Title from WordPress ACF */}
           <h2 
-            className="text-2xl md:text-3xl font-bold text-white mb-4 text-center"
+            className="pt-6 text-2xl md:text-3xl font-bold text-white mb-4 text-center"
             style={{ fontFamily: 'var(--font-unbounded), sans-serif' }}
             dangerouslySetInnerHTML={{ __html: pageData.title }}
           />

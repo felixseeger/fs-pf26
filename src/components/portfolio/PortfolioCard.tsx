@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { WPPortfolioItem } from "@/types/wordpress";
+import { extractImagesFromContent } from "@/lib/wordpress/content-utils";
 
 interface PortfolioCardProps {
     item: WPPortfolioItem;
@@ -8,17 +9,21 @@ interface PortfolioCardProps {
 
 export default function PortfolioCard({ item }: PortfolioCardProps) {
     const featuredImage = item._embedded?.['wp:featuredmedia']?.[0];
+    const contentImages = extractImagesFromContent(item.content?.rendered || '');
+    const fallbackImage = contentImages[0];
+    const displayImageUrl = featuredImage?.source_url ?? fallbackImage?.url;
+    const displayImageAlt = featuredImage?.alt_text || fallbackImage?.altText || item.title?.rendered || 'Project Image';
     const categories = item._embedded?.['wp:term']?.[0] || [];
 
     return (
         <article className="bg-white dark:bg-zinc-900 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
-            {/* Featured Image */}
-            {featuredImage?.source_url && (
+            {/* Featured Image (or first image from content as fallback) */}
+            {displayImageUrl && (
                 <Link href={`/portfolio/${item.slug}`}>
                     <div className="featured-image-write-in relative w-full aspect-video overflow-hidden">
                         <Image
-                            src={featuredImage.source_url}
-                            alt={featuredImage.alt_text || item.title?.rendered || 'Project Image'}
+                            src={displayImageUrl}
+                            alt={displayImageAlt}
                             fill
                             className="object-cover hover:scale-105 transition-transform duration-300"
                         />

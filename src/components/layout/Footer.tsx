@@ -47,7 +47,7 @@ function SocialIcon({ platform, className }: { platform: SocialLink['platform'];
 export default async function Footer() {
   const currentYear = new Date().getFullYear();
 
-  let menuItems: WPMenuItem[] = [];
+  let quickLinksItems: WPMenuItem[] = [];
   let legalLinks: { title: string; href: string; external?: boolean }[] = [];
   let footerAboutTitle = 'About';
   let footerAboutText = 'A modern blog powered by WordPress and Next.js, delivering fast and seamless reading experience.';
@@ -56,13 +56,16 @@ export default async function Footer() {
   let socialLinks: SocialLink[] = [];
 
   try {
-    const [menu, legalMenu, legalPages, homePage] = await Promise.all([
+    const [quickLinksMenu, secondaryMenu, legalMenu, legalPages, homePage] = await Promise.all([
+      getMenuItems('quick-links'),
       getMenuItems('secondary-navigation'),
       getMenuItems('footer-legal'),
       getLegalPages(),
       getHomePage(),
     ]);
-    menuItems = Array.isArray(menu) ? menu : [];
+    quickLinksItems = Array.isArray(quickLinksMenu) && quickLinksMenu.length > 0
+      ? quickLinksMenu
+      : Array.isArray(secondaryMenu) ? secondaryMenu : [];
     if (Array.isArray(legalMenu) && legalMenu.length > 0) {
       legalLinks = legalMenu.map((item: WPMenuItem) => {
         const isExternal = item.url.startsWith('http') && !item.url.includes(process.env.WORDPRESS_API_URL || '');
@@ -98,14 +101,14 @@ export default async function Footer() {
             </p>
           </div>
 
-          {/* Quick Links – from WordPress menu */}
+          {/* Quick Links – from WordPress menu (quick-links, fallback: secondary-navigation) */}
           <div suppressHydrationWarning>
             <h3 className="text-lg font-bold text-black dark:text-white mb-4">
               Quick Links
             </h3>
             <ul className="space-y-2">
-              {menuItems.length > 0 ? (
-                menuItems.map((item: WPMenuItem) => {
+              {quickLinksItems.length > 0 ? (
+                quickLinksItems.map((item: WPMenuItem) => {
                   const isExternal = item.url.startsWith('http') && !item.url.includes(process.env.WORDPRESS_API_URL || '');
                   const href = isExternal
                     ? item.url

@@ -46,7 +46,7 @@ export default async function CategoryPage({ params }: Props) {
   // Handle fallback slug when API fails
   if (slug === '__no-categories__') {
     return (
-      <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black" suppressHydrationWarning>
+      <div className="min-h-screen bg-zinc-50 font-sans dark:bg-background" suppressHydrationWarning>
         <main className="max-w-6xl mx-auto px-4 py-16">
           <div className="text-center py-12">
             <p className="text-zinc-600 dark:text-zinc-400 text-lg">
@@ -70,7 +70,7 @@ export default async function CategoryPage({ params }: Props) {
   const posts = await getPostsByCategory(slug);
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black" suppressHydrationWarning>
+    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-background" suppressHydrationWarning>
       <main className="max-w-6xl mx-auto px-4 py-16">
         {/* Category Header */}
         <header className="mb-16 text-center">

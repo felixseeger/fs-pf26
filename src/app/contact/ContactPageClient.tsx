@@ -128,7 +128,7 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
     const headingLines = contactData.form.heading.split('\n');
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black" suppressHydrationWarning>
+        <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
             {/* Contact Info Cards Section */}
             <section className="pt-28 pb-12 px-6 lg:px-10">
                 <div className="max-w-6xl mx-auto">

@@ -57,7 +57,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Handle fallback slug when API fails
   if (slug === '__no-posts__') {
     return (
-      <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black" suppressHydrationWarning>
+      <div className="min-h-screen bg-zinc-50 font-sans dark:bg-background" suppressHydrationWarning>
         <main className="max-w-4xl mx-auto px-4 py-16">
           <div className="text-center py-12">
             <p className="text-zinc-600 dark:text-zinc-400 text-lg">
@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const categories = post._embedded?.['wp:term']?.[0] || [];
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black" suppressHydrationWarning>
+    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-background" suppressHydrationWarning>
       <article className="max-w-4xl mx-auto px-4 py-16">
         {/* Header */}
         <header className="mb-8">

@@ -10,6 +10,8 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 import CookieConsentBanner from "@/components/ui/CookieConsentBanner";
 import CookieSettingsButton from "@/components/ui/CookieSettingsButton";
 import PageLoadSound from "@/components/PageLoadSound";
+import StrudelLoadSound from "@/components/StrudelLoadSound";
+import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,6 +66,7 @@ export default function RootLayout({
         />
         <ThemeProvider>
           <CookieConsentProvider>
+            <PageTransitionProvider defaultTransition="slideRight">
             <SmoothScroll>
               <a href="#main-content" className="skip-link bg-primary text-primary-foreground">
                 Skip to main content
@@ -73,9 +76,11 @@ export default function RootLayout({
               <Footer />
               <ScrollToTop threshold={400} />
             </SmoothScroll>
+            </PageTransitionProvider>
             <CookieConsentBanner />
             <CookieSettingsButton />
             <PageLoadSound />
+            <StrudelLoadSound />
           </CookieConsentProvider>
         </ThemeProvider>
       </body>

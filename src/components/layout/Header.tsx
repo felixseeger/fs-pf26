@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
+import AnimatedLink from '@/components/ui/AnimatedLink';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -231,9 +232,9 @@ export default function Header() {
             <ul className="flex space-x-10 items-center">
                 {navLinks.slice(sliceStart, sliceEnd).map((link) => (
                     <li key={link.name}>
-                        <Link href={link.href} className="font-unbounded text-xs font-bold tracking-widest uppercase text-secondary-foreground dark:text-primary hover:text-primary transition-colors">
+                        <AnimatedLink href={link.href} className="font-unbounded text-xs font-bold tracking-widest uppercase text-secondary-foreground dark:text-primary hover:text-primary transition-colors">
                             {link.name}
-                        </Link>
+                        </AnimatedLink>
                     </li>
                 ))}
             </ul>
@@ -244,7 +245,7 @@ export default function Header() {
         <div ref={containerRef} className="relative w-full z-[100]">
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100000] md:hidden bg-black/95 backdrop-blur-3xl">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100000] md:hidden bg-background/95 backdrop-blur-3xl">
                         {/* Close button */}
                         <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border border-white/20 rounded-full text-white" aria-label="Close menu">
                             <X size={24} aria-hidden />
@@ -260,14 +261,14 @@ export default function Header() {
                         {/* Navigation Links */}
                         <div className="flex flex-col h-full p-12 pt-32 gap-8 text-white">
                             {navLinks.map(l => (
-                                <Link
+                                <AnimatedLink
                                     key={l.name}
                                     href={l.href}
                                     className="text-4xl font-unbounded font-black uppercase hover:text-primary transition-colors"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {l.name}
-                                </Link>
+                                </AnimatedLink>
                             ))}
                         </div>
                     </motion.div>

@@ -40,7 +40,7 @@ export default function ServicesSection({
   className = ''
 }: ServicesSectionProps) {
   return (
-    <section className={`py-24 md:py-40 bg-white dark:bg-black ${className}`} id="services">
+    <section className={`py-24 md:py-40 bg-white dark:bg-background ${className}`} id="services">
       <div className="container mx-auto px-6 md:px-12">
         <div className="mb-16 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">

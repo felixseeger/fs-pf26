@@ -102,10 +102,11 @@ export async function getMenuItems(locationSlug: string): Promise<WPMenuItem[]> 
     }
 
     // Try to find navigation by matching slug or title
-    // Common patterns: 'primary-navigation', 'primary', 'secondary-navigation', 'secondary', 'footer_legal'
+    // Common patterns: 'primary-navigation', 'quick-links', 'footer_legal'
     const searchTerms = [
       locationSlug,
       locationSlug.replace(/-/g, '_'),
+      locationSlug.replace(/-/g, ' '),
       locationSlug.replace(/_/g, '-'),
       locationSlug.replace('-navigation', ''),
       locationSlug.replace('navigation-', ''),

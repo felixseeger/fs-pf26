@@ -5,6 +5,9 @@
 
 import { WPPortfolioItem, FeaturedMedia } from '@/types/wordpress';
 import { fetchWordPress } from './api';
+import { extractImagesFromContent } from './content-utils';
+
+export { extractImagesFromContent } from './content-utils';
 
 /**
  * Get all portfolio items with pagination
@@ -102,36 +105,3 @@ export async function getPortfolioAttachments(postId: number): Promise<FeaturedM
     }
 }
 
-/**
- * Extract image URLs from Gutenberg content
- * @param content - The HTML content string
- */
-export function extractImagesFromContent(content: string): { url: string; altText: string }[] {
-    if (!content) return [];
-    
-    // Match src and alt from img tags
-    // Updated regex to handle potentially messy attributes and ensure we get clean URLs
-    const imgRegex = /<img[^>]+src=["']([^"']+)["']/g;
-    const altRegex = /alt=["']([^"']*)["']/;
-    
-    const images: { url: string; altText: string }[] = [];
-    let match;
-    
-    while ((match = imgRegex.exec(content)) !== null) {
-        let url = match[1];
-        
-        // Remove WordPress image size suffixes (e.g., -1024x768.jpg) 
-        // to help with deduplication against original attachments
-        const cleanUrl = url.replace(/-(\d+)x(\d+)\.(jpg|jpeg|png|webp|gif)/i, '.$3');
-        
-        const altMatch = match[0].match(altRegex);
-        const altText = altMatch ? altMatch[1] : '';
-        
-        // Avoid duplicates in the extraction itself
-        if (!images.find(img => img.url === cleanUrl || img.url === url)) {
-            images.push({ url: cleanUrl, altText });
-        }
-    }
-    
-    return images;
-}

@@ -14,7 +14,7 @@ export default async function BlogPage() {
     const posts = await getPosts(perPage, 1);
 
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-black font-sans" suppressHydrationWarning>
+        <div className="min-h-screen bg-zinc-50 dark:bg-background font-sans" suppressHydrationWarning>
             <main className="max-w-6xl mx-auto px-6 py-20">
                 <header className="max-w-2xl mb-16">
                     <h1 className="text-5xl md:text-7xl font-black text-zinc-900 dark:text-white mb-6 leading-tight">

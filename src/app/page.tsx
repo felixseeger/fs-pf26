@@ -65,7 +65,7 @@ export default async function Home() {
 
   return (
     <HomePreloaderWrapper>
-      <div className="min-h-screen bg-white font-sans dark:bg-black" suppressHydrationWarning>
+      <div className="min-h-screen bg-white font-sans dark:bg-background" suppressHydrationWarning>
       {/* Hero Section with Portfolio Items */}
       <HomepageHero items={portfolioItems} />
 

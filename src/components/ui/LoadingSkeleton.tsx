@@ -18,7 +18,7 @@ export function PostCardSkeleton() {
         </div>
 
         {/* Excerpt Skeleton */}
-        <div className="space-y-2 flex-grow">
+        <div className="space-y-2 grow">
           <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
           <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
           <div className="h-4 w-2/3 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
@@ -49,7 +49,7 @@ export function PostListSkeleton({ count = 6 }: { count?: number }) {
 
 export function PostContentSkeleton() {
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black" suppressHydrationWarning>
+    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-background" suppressHydrationWarning>
       <article className="max-w-4xl mx-auto px-4 py-16">
         {/* Header Skeleton */}
         <header className="mb-8">
@@ -97,5 +97,81 @@ export function CategoryHeaderSkeleton() {
       <div className="h-12 w-48 mx-auto bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-4" />
       <div className="h-5 w-32 mx-auto bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
     </header>
+  );
+}
+
+/** Shared page header (title + subtitle) for list pages */
+export function PageHeaderSkeleton() {
+  return (
+    <header className="max-w-3xl mb-16">
+      <div className="h-14 md:h-20 w-full max-w-2xl bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-6" />
+      <div className="h-6 w-full bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+      <div className="h-6 w-4/5 mt-2 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+    </header>
+  );
+}
+
+function PortfolioCardSkeleton() {
+  return (
+    <article className="bg-white dark:bg-zinc-900 rounded-lg overflow-hidden shadow-sm flex flex-col">
+      <div className="relative w-full aspect-video bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+      <div className="p-6 flex flex-col gap-3">
+        <div className="flex gap-2">
+          <div className="h-5 w-14 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-5 w-20 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+        </div>
+        <div className="h-7 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+        <div className="space-y-2">
+          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 w-5/6 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export function PortfolioGridSkeleton({ count = 6 }: { count?: number }) {
+  return (
+    <section className="w-full">
+      <div className="flex flex-wrap gap-2 mb-8">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-9 w-24 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({ length: count }).map((_, i) => (
+          <PortfolioCardSkeleton key={i} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ServiceCardSkeleton() {
+  return (
+    <article className="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full">
+      <div className="w-full h-24 bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+      <div className="p-6 flex flex-col grow">
+        <div className="h-8 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-3" />
+        <div className="space-y-2 grow">
+          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 w-2/3 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+        </div>
+        <div className="h-5 w-24 mt-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+      </div>
+    </article>
+  );
+}
+
+export function ServiceGridSkeleton({ count = 6 }: { count?: number }) {
+  return (
+    <section className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({ length: count }).map((_, i) => (
+          <ServiceCardSkeleton key={i} />
+        ))}
+      </div>
+    </section>
   );
 }

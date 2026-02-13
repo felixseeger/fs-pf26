@@ -14,7 +14,7 @@ The site footer is driven by the **same WordPress page** used for the homepage (
 
 ## Quick Links and Legal
 
-- **Quick Links** uses the **Secondary Navigation** menu (Appearance → Menus). Create a menu whose slug or title matches "secondary-navigation" (or "secondary") and add your links.
+- **Quick Links** uses a dedicated WordPress navigation: create a menu whose slug or title matches **"Quick Links"** (or `quick-links` / `quick_links`). It is fetched first; if empty, the app falls back to the **Secondary Navigation** menu.
 - **Legal** column: Create a navigation menu whose slug or title matches **"footer-legal"** (or "legal") and add your legal pages (Impressum, Privacy, Terms, etc.). If no such menu exists, the app fetches WordPress pages by slug and shows any that exist, in this order: `impressum`, `imprint`, `privacy-policy`, `datenschutz`, `terms`, `impress`.
 
 ## Fallbacks

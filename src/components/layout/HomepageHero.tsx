@@ -81,7 +81,7 @@ export default function HomepageHero({ items = [] }: HomepageHeroProps) {
     if (emblaApi) emblaApi.scrollTo(index);
   }, [emblaApi]);
 
-  if (!mounted) return <div className="h-screen bg-black" suppressHydrationWarning />;
+  if (!mounted) return <div className="h-screen bg-background" suppressHydrationWarning />;
 
   const hasPortfolioSlides = Array.isArray(items) && items.length > 0;
   const displayItems = hasPortfolioSlides ? items : ([{ id: 0, title: { rendered: 'Felix Seeger' }, excerpt: { rendered: '' }, slug: '' }] as unknown as typeof items);
@@ -89,7 +89,7 @@ export default function HomepageHero({ items = [] }: HomepageHeroProps) {
   return (
     <section
       id="hero"
-      className="relative w-full h-[150vh] overflow-visible bg-black"
+      className="relative w-full h-[150vh] overflow-visible bg-background"
     >
       {/* Stick the slideshow to the viewport */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
@@ -115,7 +115,7 @@ export default function HomepageHero({ items = [] }: HomepageHeroProps) {
               onError={() => setApngFailed(true)}
             />
           )}
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-background/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
         </div>
 
@@ -139,7 +139,7 @@ export default function HomepageHero({ items = [] }: HomepageHeroProps) {
                       />
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-black/40" />
+                    <div className="absolute inset-0 bg-background/40" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(233,255,19,0.08),transparent_70%)] opacity-60" />
                   </div>

@@ -11,7 +11,7 @@ export default async function ServicesPage() {
     const services = await getServiceItems(100);
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black" suppressHydrationWarning>
+        <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
             <main className="max-w-6xl mx-auto px-6 py-20">
                 <header className="max-w-3xl mb-16">
                     <h1 className="text-5xl md:text-7xl font-black text-zinc-900 dark:text-white mb-6 leading-tight">

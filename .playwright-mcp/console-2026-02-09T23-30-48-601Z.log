@@ -1,0 +1,18 @@
+[     232ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://fs26-front.felixseeger.de/resume.pdf.txt?_rsc=ge10y:0
+[     250ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://fs26-front.felixseeger.de/privacy.txt?_rsc=ge10y:0
+[ 2751816ms] [WARNING] Element not found: body @ http://fs26-front.felixseeger.de/_next/static/chunks/474-ca12dda00591ab8b.js:0
+[ 2751852ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://fs26-front.felixseeger.de/fs-pf-26.apng:0
+[ 2751947ms] [ERROR] Failed to fetch RSC payload for http://fs26-front.felixseeger.de/privacy-policy. Falling back to browser navigation. TypeError: e[o] is not a function
+    at r (http://fs26-front.felixseeger.de/_next/static/chunks/webpack-3f0c63dc340b6529.js:1:127)
+    at c (http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:34478)
+    at D (http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:37114)
+    at F (http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:39656)
+    at http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:41906
+    at V._fromJSON (http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:41940)
+    at JSON.parse (<anonymous>)
+    at k (http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:36838)
+    at x (http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:36155)
+    at http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:48069
+    at t (http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:2:48120) @ http://fs26-front.felixseeger.de/_next/static/chunks/69-4800ac4bdbe0ebd7.js:0
+[ 2751969ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://fs26-front.felixseeger.de/resume.pdf.txt?_rsc=1ld0r:0
+[ 2755173ms] [WARNING] The resource http://fs26-front.felixseeger.de/_next/static/css/5fcf24caaf57daff.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally. @ http://fs26-front.felixseeger.de/:0

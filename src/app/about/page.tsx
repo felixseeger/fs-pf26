@@ -54,7 +54,7 @@ export default async function AboutPage() {
     const hasContent = page.content.rendered && page.content.rendered.trim().length > 0;
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black" suppressHydrationWarning>
+        <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
             <article className="max-w-4xl mx-auto py-24 px-6 lg:px-10" suppressHydrationWarning>
                 <header className="mb-16">
                     <h1

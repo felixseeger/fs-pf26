@@ -147,7 +147,7 @@ export default async function ResumePage() {
     };
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black py-24 px-6 lg:px-10" suppressHydrationWarning>
+        <div className="min-h-screen bg-white dark:bg-background py-24 px-6 lg:px-10" suppressHydrationWarning>
             <article className="max-w-6xl mx-auto">
                 {/* Header */}
                 <header className="mb-12">

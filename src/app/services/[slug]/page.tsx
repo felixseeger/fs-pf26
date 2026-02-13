@@ -56,7 +56,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
     // Handle fallback slug when no services exist
     if (slug === '__no-services__') {
         return (
-            <div className="min-h-screen bg-white dark:bg-black">
+            <div className="min-h-screen bg-white dark:bg-background">
                 <div className="max-w-4xl mx-auto px-6 py-20 text-center">
                     <h1 className="text-4xl font-bold text-zinc-900 dark:text-white mb-6">Services</h1>
                     <p className="text-xl text-zinc-600 dark:text-zinc-400">
@@ -88,7 +88,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
     const acf = service.acf;
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black" suppressHydrationWarning>
+        <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
             <article className="max-w-4xl mx-auto px-6 py-20">
                 {/* Featured / service icon image – above headline, full image visible, no background */}
                 {iconImageUrl ? (

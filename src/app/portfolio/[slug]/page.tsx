@@ -89,7 +89,7 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
         );
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black" suppressHydrationWarning>
+        <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
             <article className="max-w-6xl mx-auto px-4 py-24">
                 {/* Back Link */}
                 <div className="mb-8">
