@@ -87,7 +87,8 @@ export function PageTransitionProvider({
     const tween = preset.exit(overlayRef.current, DURATION);
     tween.eventCallback('onComplete', () => {
       setStatus('idle');
-      preset.setInitial?.(overlayRef.current);
+      const el = overlayRef.current;
+      if (el) preset.setInitial?.(el);
     });
   }, [pathname, status, transitionType]);
 
