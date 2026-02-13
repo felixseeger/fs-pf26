@@ -37,7 +37,7 @@ export default function PortfolioPostNavigation({
                   Previous
                 </span>
                 {previous.thumbnailUrl && (
-                  <div className="relative w-20 h-14 rounded-lg overflow-hidden bg-zinc-200 dark:bg-zinc-800 shrink-0">
+                  <div className="featured-image-write-in relative w-20 h-14 rounded-lg bg-zinc-200 dark:bg-zinc-800 shrink-0">
                     <Image
                       src={previous.thumbnailUrl}
                       alt={previous.thumbnailAlt || previous.title}
@@ -79,7 +79,7 @@ export default function PortfolioPostNavigation({
                   Next
                 </span>
                 {next.thumbnailUrl && (
-                  <div className="relative w-20 h-14 rounded-lg overflow-hidden bg-zinc-200 dark:bg-zinc-800 shrink-0">
+                  <div className="featured-image-write-in relative w-20 h-14 rounded-lg bg-zinc-200 dark:bg-zinc-800 shrink-0">
                     <Image
                       src={next.thumbnailUrl}
                       alt={next.thumbnailAlt || next.title}

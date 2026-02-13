@@ -3,7 +3,7 @@
  * Handles all service-related API functions
  */
 
-import { WPServiceItem, FeaturedMedia } from '@/types/wordpress';
+import { WPServiceItem, FeaturedMedia, ACFImage } from '@/types/wordpress';
 import { fetchWordPress } from './api';
 
 /**
@@ -48,6 +48,46 @@ export async function getServiceItemBySlug(slug: string): Promise<WPServiceItem 
         console.error(`Error fetching service item by slug '${slug}':`, error);
         return null;
     }
+}
+
+/**
+ * Get previous and next service items by current slug (same order as list: menu_order asc).
+ * Returns thumbnails from services_gallery or featured media for use in post navigation.
+ */
+export async function getServiceNeighbors(slug: string): Promise<{
+    previous: { slug: string; title: string; thumbnailUrl: string | null; thumbnailAlt?: string } | null;
+    next: { slug: string; title: string; thumbnailUrl: string | null; thumbnailAlt?: string } | null;
+}> {
+    const items = await getServiceItems(100, 1).catch(() => []);
+    const index = items.findIndex((s) => s.slug === slug);
+    if (index === -1) return { previous: null, next: null };
+
+    const prevItem = index > 0 ? items[index - 1] : null;
+    const nextItem = index < items.length - 1 && index >= 0 ? items[index + 1] : null;
+
+    const toNavItem = (s: WPServiceItem) => {
+        const gallery = s.acf?.services_gallery;
+        const iconUrl =
+            gallery && typeof gallery === 'object' && 'url' in gallery
+                ? (gallery as ACFImage).url
+                : s._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? null;
+        const iconAlt =
+            gallery && typeof gallery === 'object' && 'alt' in gallery
+                ? (gallery as ACFImage).alt
+                : s._embedded?.['wp:featuredmedia']?.[0]?.alt_text;
+        const title = s.title?.rendered?.replace(/<[^>]*>/g, '').trim() || 'Untitled';
+        return {
+            slug: s.slug,
+            title,
+            thumbnailUrl: iconUrl ?? null,
+            thumbnailAlt: iconAlt ?? title,
+        };
+    };
+
+    return {
+        previous: prevItem ? toNavItem(prevItem) : null,
+        next: nextItem ? toNavItem(nextItem) : null,
+    };
 }
 
 /**

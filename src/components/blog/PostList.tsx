@@ -144,7 +144,7 @@ function PostListItem({ post }: { post: WPPost }) {
     <article className="flex flex-col sm:flex-row gap-6 p-4 bg-white dark:bg-gray-900 rounded-lg hover:shadow-md transition-shadow">
       {featuredImage?.source_url && (
         <Link href={`/blog/${post.slug}`} className="flex-shrink-0">
-          <div className="relative w-full sm:w-48 h-32 rounded-lg overflow-hidden" suppressHydrationWarning>
+          <div className="featured-image-write-in relative w-full sm:w-48 h-32 rounded-lg" suppressHydrationWarning>
             <img
               src={featuredImage.source_url}
               alt={featuredImage.alt_text || post.title.rendered}
@@ -227,7 +227,7 @@ export default function PostList({
         <article className="mb-12">
           <Link href={`/blog/${featuredPost.slug}`} className="group">
             {featuredImage?.source_url && (
-              <div className="relative w-full aspect-[21/9] rounded-xl overflow-hidden mb-6" suppressHydrationWarning>
+              <div className="featured-image-write-in relative w-full aspect-[21/9] rounded-xl mb-6" suppressHydrationWarning>
                 <img
                   src={featuredImage.source_url}
                   alt={featuredImage.alt_text || featuredPost.title.rendered}

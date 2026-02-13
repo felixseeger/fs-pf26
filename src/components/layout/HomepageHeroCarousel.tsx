@@ -81,7 +81,7 @@ export default function HomepageHeroCarousel({ items }: HomepageHeroCarouselProp
                             className="flex-none w-full h-full snap-center relative overflow-hidden"
                         >
                             {/* Image with Parallax-like effect */}
-                            <div className="absolute inset-0 transition-transform duration-700 scale-105 group-hover:scale-100">
+                            <div className="featured-image-write-in absolute inset-0 transition-transform duration-700 scale-105 group-hover:scale-100">
                                 {featuredImage?.source_url ? (
                                     <Image
                                         src={featuredImage.source_url}

@@ -128,6 +128,7 @@ export default function HomepageHero({ items = [] }: HomepageHeroProps) {
                 return (
                   <div key={`hero-slide-${item.id}`} className="flex-none w-full h-full relative">
                     {featuredImage?.source_url && (
+                      <div className="featured-image-write-in absolute inset-0">
                       <Image
                         src={featuredImage.source_url}
                         alt={featuredImage.alt_text || item.title.rendered}
@@ -136,6 +137,7 @@ export default function HomepageHero({ items = [] }: HomepageHeroProps) {
                         priority
                         sizes="100vw"
                       />
+                      </div>
                     )}
                     <div className="absolute inset-0 bg-black/40" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />

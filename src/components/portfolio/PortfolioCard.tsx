@@ -15,7 +15,7 @@ export default function PortfolioCard({ item }: PortfolioCardProps) {
             {/* Featured Image */}
             {featuredImage?.source_url && (
                 <Link href={`/portfolio/${item.slug}`}>
-                    <div className="relative w-full aspect-video">
+                    <div className="featured-image-write-in relative w-full aspect-video overflow-hidden">
                         <Image
                             src={featuredImage.source_url}
                             alt={featuredImage.alt_text || item.title?.rendered || 'Project Image'}

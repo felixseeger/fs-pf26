@@ -33,7 +33,7 @@ function MasonryCard({
       className="group block rounded-xl overflow-hidden bg-zinc-800 dark:bg-zinc-800/90 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 break-inside-avoid mb-6"
     >
       <div
-        className={`relative w-full overflow-hidden ${
+        className={`featured-image-write-in relative w-full ${
           variant === 'tall' ? 'aspect-[3/4] min-h-[320px]' : 'aspect-video'
         }`}
       >

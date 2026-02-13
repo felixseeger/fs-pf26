@@ -90,12 +90,14 @@ export default function PortfolioCarousel({ images }: PortfolioCarouselProps) {
                             className="flex-none w-full h-full relative cursor-zoom-in active:cursor-grabbing"
                             onClick={() => setIsOpen(true)}
                         >
+                            <div className={`absolute inset-0 ${index === 0 ? 'featured-image-write-in' : ''}`}>
                             <img
                                 src={image.url}
                                 alt={image.altText || `Project image ${index + 1}`}
                                 className="w-full h-full object-cover pointer-events-none"
                                 loading={index === 0 ? "eager" : "lazy"}
                             />
+                            </div>
                         </div>
                     ))}
                 </div>

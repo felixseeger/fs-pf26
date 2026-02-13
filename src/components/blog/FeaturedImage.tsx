@@ -98,7 +98,7 @@ export default function FeaturedImage({
     return (
       <figure className={className}>
         <div
-          className={`relative w-full overflow-hidden ${aspectRatioClasses[aspectRatio]} ${roundedClasses[rounded]}`}
+          className={`featured-image-write-in relative w-full ${aspectRatioClasses[aspectRatio]} ${roundedClasses[rounded]}`}
           style={
             aspectRatio === 'auto' && naturalWidth && naturalHeight
               ? { aspectRatio: `${naturalWidth}/${naturalHeight}` }
@@ -148,7 +148,7 @@ export default function FeaturedImage({
 
   return (
     <figure className={className}>
-      <div className={`overflow-hidden ${roundedClasses[rounded]}`}>
+      <div className={`featured-image-write-in ${roundedClasses[rounded]}`}>
         {hasImage ? (
           <Image
             src={src}

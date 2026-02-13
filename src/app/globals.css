@@ -227,3 +227,48 @@ body.maintenance-page footer:not(main footer) {
   display: none !important;
   visibility: hidden !important;
 }
+
+/* Navbar Logo Intro – stroke draw animation */
+@keyframes logo-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.logo-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 8;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: logo-draw 2s ease forwards;
+}
+
+/* Only outer lines (path 1 & 2) animate; inner line (path 3) stays static */
+.logo-stroke:nth-of-type(1) {
+  animation-delay: 0s;
+}
+.logo-stroke:nth-of-type(2) {
+  animation-delay: 0.25s;
+}
+.logo-stroke:nth-of-type(3) {
+  animation: none;
+  stroke-dashoffset: 0;
+}
+
+/* Featured image write-in reveal (clip-path left-to-right) */
+@keyframes featured-image-write-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.featured-image-write-in {
+  overflow: hidden;
+  animation: featured-image-write-in 0.9s ease-out forwards;
+}

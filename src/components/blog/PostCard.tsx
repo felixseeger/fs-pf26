@@ -12,7 +12,7 @@ export default function PostCard({ post }: PostCardProps) {
       {/* Featured Image */}
       {featuredImage?.source_url && (
         <Link href={`/blog/${post.slug}`}>
-          <div className="relative w-full aspect-video" suppressHydrationWarning>
+          <div className="featured-image-write-in relative w-full aspect-video overflow-hidden" suppressHydrationWarning>
             <Image
               src={featuredImage.source_url}
               alt={featuredImage.alt_text || post.title.rendered}

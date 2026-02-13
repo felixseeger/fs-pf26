@@ -330,20 +330,24 @@ export default function Header() {
                                 {renderNavLinks(0, 2)}
                             </div>
 
-                            {/* Logo Wrapper - Hidden on mobile/tablet */}
+                            {/* Logo Wrapper - Hidden on mobile/tablet, inline SVG for stroke intro animation */}
                             <div
                                 ref={logoWrapperRef}
                                 className="hidden md:block pointer-events-auto w-[250px]"
                             >
-                                <Link href="/" className="block">
-                                    <Image
-                                        src={resolvedTheme === 'dark' ? "/logo-light.svg" : "/logo-dark.svg"}
-                                        alt="FS Logo"
-                                        width={250}
-                                        height={250}
+                                <Link href="/" className="block w-full text-[#1D4ED8] dark:text-white" aria-label="Home">
+                                    <svg
+                                        width="250"
+                                        height="250"
+                                        viewBox="0 0 113 112"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
                                         className="w-full h-auto"
-                                        priority
-                                    />
+                                    >
+                                        <path className="logo-stroke" d="M30.3918 105.99V49.9899C30.3918 47.9111 32.3859 46.1434 35.0632 45.8182L47.4157 44.3758C49.9453 44.0788 52.2163 45.5778 52.2163 47.5434V51.4606L68.317 50.5556" strokeMiterlimit="10" />
+                                        <path className="logo-stroke" d="M95.4222 11.9071L84.4546 13.1091V11.2141C84.4546 8.7394 81.6296 6.8303 78.4353 7.12727L69.868 7.93333C67.1168 8.18788 65.0489 9.98384 65.0489 12.1051V21.4667C65.0489 22.895 65.5659 24.3091 66.526 25.5253L82.8482 46.3273C83.9007 47.6707 84.4546 49.198 84.4546 50.7535V61.5859C84.4546 63.5798 82.4974 65.2768 79.9124 65.5172L65.0489 66.903V56.9616" strokeMiterlimit="10" />
+                                        <path className="logo-stroke" d="M33.2353 78.3576L41.7657 77.6081" strokeMiterlimit="10" />
+                                    </svg>
                                 </Link>
                             </div>
 

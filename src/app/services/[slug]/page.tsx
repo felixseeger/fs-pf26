@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getServiceItems, getServiceItemBySlug } from '@/lib/wordpress';
+import { getServiceItems, getServiceItemBySlug, getServiceNeighbors } from '@/lib/wordpress';
 import { ACFImage } from '@/types/wordpress';
+import ServicePostNavigation from '@/components/services/ServicePostNavigation';
 
 export async function generateStaticParams() {
     const services = await getServiceItems(100).catch(() => []);
@@ -35,12 +36,15 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
         ? (servicesGallery as ACFImage).url
         : featuredImage?.source_url;
 
+    const title = service.acf?.service_title || service.title.rendered?.replace(/<[^>]*>/g, '').trim();
+    const description = service.acf?.service_text?.replace(/<[^>]*>/g, '').trim().substring(0, 160)
+        || service.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160);
     return {
-        title: `${service.title.rendered} | Services | Felix Seeger`,
-        description: service.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160),
+        title: `${title} | Services | Felix Seeger`,
+        description: description || undefined,
         openGraph: {
-            title: service.title.rendered,
-            description: service.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160),
+            title,
+            description: description || undefined,
             images: iconImageUrl ? [iconImageUrl] : [],
         },
     };
@@ -63,7 +67,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
         );
     }
     
-    const service = await getServiceItemBySlug(slug);
+    const [service, neighbors] = await Promise.all([
+        getServiceItemBySlug(slug),
+        getServiceNeighbors(slug),
+    ]);
 
     if (!service) {
         notFound();
@@ -83,34 +90,38 @@ export default async function ServicePage({ params }: ServicePageProps) {
     return (
         <div className="min-h-screen bg-white dark:bg-black" suppressHydrationWarning>
             <article className="max-w-4xl mx-auto px-6 py-20">
-                {/* Header */}
-                <header className="mb-12">
-                    <h1 
-                        className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-white mb-6 leading-tight"
-                        dangerouslySetInnerHTML={{ __html: service.title.rendered }}
-                    />
-                    {acf?.service_short_description && (
-                        <p className="text-xl text-zinc-600 dark:text-zinc-400">
-                            {acf.service_short_description}
-                        </p>
-                    )}
-                </header>
-
-                {/* Icon/Featured Image */}
+                {/* Featured / service icon image – above headline, full image visible, no background */}
                 {iconImageUrl ? (
-                    <div className="relative w-full aspect-video mb-12 rounded-2xl overflow-hidden">
+                    <div className="featured-image-write-in relative w-full max-w-2xl mx-auto min-h-[200px] aspect-2/1 mb-12 rounded-2xl flex items-center justify-center">
                         <Image
                             src={iconImageUrl}
                             alt={iconImageAlt || service.title.rendered}
                             fill
-                            className="object-cover"
+                            className="object-contain"
                             priority
                         />
                     </div>
                 ) : null}
 
+                {/* Service Title & Text (ACF) */}
+                {(acf?.service_title || acf?.service_text) && (
+                    <header className="mb-12">
+                        {acf?.service_title && (
+                            <h1 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-white mb-4 leading-tight">
+                                {acf.service_title}
+                            </h1>
+                        )}
+                        {acf?.service_text && (
+                            <div
+                                className="prose prose-lg dark:prose-invert max-w-none prose-p:text-zinc-600 dark:prose-p:text-zinc-400"
+                                dangerouslySetInnerHTML={{ __html: acf.service_text }}
+                            />
+                        )}
+                    </header>
+                )}
+
                 {/* Service Meta */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                     {acf?.service_duration && (
                         <div className="bg-zinc-100 dark:bg-zinc-900 p-6 rounded-xl">
                             <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
@@ -128,6 +139,16 @@ export default async function ServicePage({ params }: ServicePageProps) {
                             </h3>
                             <p className="text-lg font-semibold text-zinc-900 dark:text-white">
                                 {acf.service_pricing}
+                            </p>
+                        </div>
+                    )}
+                    {acf?.service_features && acf.service_features.length > 0 && (
+                        <div className="bg-zinc-100 dark:bg-zinc-900 p-6 rounded-xl">
+                            <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
+                                Included
+                            </h3>
+                            <p className="text-lg font-semibold text-zinc-900 dark:text-white">
+                                {acf.service_features.length} {acf.service_features.length === 1 ? 'item' : 'items'}
                             </p>
                         </div>
                     )}
@@ -159,7 +180,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                         <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {acf.service_features.map((feature, index) => (
                                 <li key={index} className="flex items-start gap-3">
-                                    <svg className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-6 h-6 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     </svg>
                                     <span className="text-zinc-700 dark:text-zinc-300">{feature}</span>
@@ -168,6 +189,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
                         </ul>
                     </div>
                 )}
+
+                <ServicePostNavigation previous={neighbors.previous} next={neighbors.next} />
             </article>
         </div>
     );

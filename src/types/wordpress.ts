@@ -86,6 +86,8 @@ export interface WPServiceItem extends Omit<WPPost, 'categories' | 'tags'> {
   acf?: {
     services_gallery?: ACFImage | false;
     service_icon?: ACFImage | string | false;
+    service_title?: string;
+    service_text?: string;
     service_short_description?: string;
     service_features?: string[];
     service_pricing?: string;
@@ -161,7 +163,10 @@ export interface HomepageMetaBox {
   contact_form_shortcode?: string;
   contact_privacy_policy_url?: string;
   contact_submit_button_text?: string;
-  // Footer
+  // Footer (editable in WordPress via Homepage / Front Page ACF or Meta Box)
+  footer_about_title?: string;
+  footer_about_text?: string;
+  footer_connect_title?: string;
   footer_text?: string;
   social_links?: SocialLink[];
 }

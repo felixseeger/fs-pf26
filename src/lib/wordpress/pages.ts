@@ -84,3 +84,64 @@ export async function getPageById(id: number): Promise<WPPage | null> {
     return null;
   }
 }
+
+/** Legal page item for footer links */
+export interface LegalPageItem {
+  title: string;
+  slug: string;
+  link: string;
+}
+
+/**
+ * Default legal page slugs to try when no footer-legal menu is configured.
+ * Order is preserved; only existing WordPress pages are returned.
+ */
+const DEFAULT_LEGAL_SLUGS = [
+  'impressum',
+  'imprint',
+  'impress',
+  'privacy-policy',
+  'privacy-policy-2',
+  'privacy',
+  'policy',
+  'policies',
+  'datenschutz',
+  'cookies',
+  'cookie-policy',
+  'cookie-policy-2',
+  'cookie',
+  'terms',
+  'terms-of-service',
+];
+
+/**
+ * Fetch legal pages from WordPress by slug (Impressum, Privacy, Cookies, Terms, etc.).
+ * Used when no footer-legal menu is configured. Order follows the slugs array.
+ * Each slug is fetched at most once; duplicates (e.g. privacy and privacy-policy) are skipped if already added.
+ * @param slugs - Page slugs to try (default: common legal slugs including policies and cookies)
+ */
+export async function getLegalPages(
+  slugs: string[] = DEFAULT_LEGAL_SLUGS
+): Promise<LegalPageItem[]> {
+  const seen = new Set<string>();
+  const results: LegalPageItem[] = [];
+  for (const slug of slugs) {
+    if (seen.has(slug)) continue;
+    try {
+      const page = await getPageBySlug(slug);
+      if (page?.slug && page?.title?.rendered) {
+        if (seen.has(page.slug)) continue;
+        seen.add(page.slug);
+        const title = page.title.rendered.replace(/<[^>]*>/g, '').trim();
+        results.push({
+          title: title || page.slug,
+          slug: page.slug,
+          link: `/${page.slug}`,
+        });
+      }
+    } catch {
+      // Skip missing slugs
+    }
+  }
+  return results;
+}

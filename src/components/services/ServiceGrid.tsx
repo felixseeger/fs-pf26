@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { WPServiceItem, ACFImage } from '@/types/wordpress';
+import TiltCard from '@/components/ui/TiltCard';
 
 interface ServiceGridProps {
     services: WPServiceItem[];
@@ -35,18 +36,18 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
                     const acf = service.acf;
                     
                     return (
+                        <TiltCard key={service.id} className="h-full">
                         <article 
-                            key={service.id}
-                            className="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group"
+                            className="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group h-full"
                         >
                             {/* Image - Use services_gallery icon or fallback to featured image */}
                             {iconImageUrl ? (
-                                <Link href={`/services/${service.slug}`} className="relative w-full h-24 overflow-hidden flex items-center justify-center p-4 bg-zinc-50 dark:bg-zinc-800">
+                                <Link href={`/services/${service.slug}`} className="featured-image-write-in relative w-full h-24 flex items-center justify-center p-4 bg-zinc-50 dark:bg-zinc-800">
                                     <Image
                                         src={iconImageUrl}
                                         alt={iconImageAlt || service.title.rendered}
                                         fill
-                                        className="object-contain p-2 group-hover:scale-110 transition-transform duration-300"
+                                        className="object-contain p-2 transition-[filter] duration-300 group-hover:brightness-0"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     />
                                 </Link>
@@ -102,6 +103,7 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
                                 </Link>
                             </div>
                         </article>
+                        </TiltCard>
                     );
                 })}
             </div>

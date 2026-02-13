@@ -120,7 +120,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Featured Image */}
         {featuredImage?.source_url && (
-          <div className="relative w-full aspect-video mb-8 rounded-lg overflow-hidden">
+          <div className="featured-image-write-in relative w-full aspect-video mb-8 rounded-lg">
             <Image
               src={featuredImage.source_url}
               alt={featuredImage.alt_text || post.title.rendered}

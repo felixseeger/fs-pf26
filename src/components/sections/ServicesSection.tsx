@@ -65,7 +65,7 @@ export default function ServicesSection({
                           cursor-pointer"
               >
                 {service.iconUrl ? (
-                  <div className="mb-6 w-12 h-12 service-icon relative shrink-0">
+                  <div className="featured-image-write-in mb-6 w-12 h-12 service-icon relative shrink-0 overflow-hidden">
                     <Image
                       src={service.iconUrl}
                       alt={service.iconAlt || `${service.title} icon`}

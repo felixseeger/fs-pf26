@@ -78,6 +78,24 @@ pnpm dev
 #### Categories
 - `getCategories()` - Get all categories with post counts
 
+### Homepage sections (About, Services, FAQ, Contact)
+
+The Next.js homepage expects content from a **single WordPress page** that holds ACF/Meta Box fields for these sections.
+
+**Option A – Static front page (recommended)**  
+1. Add the code from `wordpress-front-page-api.php` to your theme’s `functions.php` (or a code snippets plugin). This exposes `GET /wp-json/wp/v2/front-page` returning `{ "id": <page_id> }`.  
+2. In WordPress: **Settings → Reading** set “Your homepage displays” to **A static page** and choose the page that has your homepage sections.  
+3. Add the homepage fields (e.g. from `wordpress-homepage-fields.php`) and fill them on that page.
+
+**Option B – Slug-based fallback**  
+If you don’t use the front-page endpoint, the app looks for a page with slug **`homepage`** or **`home`**. Create such a page, add the ACF/Meta Box fields from `wordpress-homepage-fields.php`, and fill the sections there.
+
+### Portfolio
+
+- Portfolio items come from the **Portfolio** custom post type (`/wp-json/wp/v2/portfolio`).  
+- Register the CPT with **Post Types Unlimited** or **Custom Post Type UI** and ensure the REST API is enabled for it.  
+- If the live backend shows **0 portfolio items**, the frontend will show empty hero/selected works until you create or migrate portfolio posts (see `conf/LIVE-vs-LOCAL-comparison.md`).
+
 ### Troubleshooting
 
 #### Featured Images Not Showing

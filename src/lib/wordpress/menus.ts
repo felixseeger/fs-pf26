@@ -102,19 +102,23 @@ export async function getMenuItems(locationSlug: string): Promise<WPMenuItem[]> 
     }
 
     // Try to find navigation by matching slug or title
-    // Common patterns: 'primary-navigation', 'primary', 'secondary-navigation', 'secondary'
+    // Common patterns: 'primary-navigation', 'primary', 'secondary-navigation', 'secondary', 'footer_legal'
     const searchTerms = [
       locationSlug,
+      locationSlug.replace(/-/g, '_'),
+      locationSlug.replace(/_/g, '-'),
       locationSlug.replace('-navigation', ''),
       locationSlug.replace('navigation-', ''),
     ];
 
-    const navigation = navigations.find(nav =>
-      searchTerms.some(term =>
-        nav.slug.toLowerCase().includes(term.toLowerCase()) ||
-        nav.title.rendered.toLowerCase().includes(term.toLowerCase())
-      )
-    );
+    const navigation = navigations.find(nav => {
+      const slug = nav.slug.toLowerCase();
+      const title = (nav.title?.rendered ?? '').toLowerCase();
+      return searchTerms.some(term => {
+        const t = term.toLowerCase();
+        return slug.includes(t) || title.includes(t);
+      });
+    });
 
     if (!navigation) {
       // If no match found, use first navigation for primary, last for secondary
