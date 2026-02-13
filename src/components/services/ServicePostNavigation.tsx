@@ -21,16 +21,16 @@ export default function ServicePostNavigation({
 
     return (
         <nav
-            className="mt-16 pt-12 border-t border-zinc-200 dark:border-zinc-800"
+            className="mt-16 pt-12 border-t border-zinc-200 dark:border-zinc-800 w-full"
             aria-label="Service post navigation"
         >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                 {/* Previous – arrow outer left */}
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full">
                     {previous ? (
                         <Link
                             href={`/services/${previous.slug}`}
-                            className="group flex flex-row items-center gap-4 transition-colors"
+                            className="group flex flex-row items-center gap-4 transition-colors w-full"
                             aria-label={`Previous: ${previous.title}`}
                         >
                             <svg
@@ -62,7 +62,7 @@ export default function ServicePostNavigation({
                 </div>
 
                 {/* Next – arrow outer right */}
-                <div className="flex flex-col md:items-end">
+                <div className="flex flex-col md:items-end w-full">
                     {next ? (
                         <Link
                             href={`/services/${next.slug}`}

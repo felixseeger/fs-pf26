@@ -64,6 +64,11 @@ export interface WPPost {
   };
 }
 
+export interface PortfolioSliderMediaItem {
+  media_type?: boolean | string; // Checkbox (true/false) or select ('image'/'video')
+  media_image?: ACFImage | number | string | false;
+}
+
 export interface WPPortfolioItem extends Omit<WPPost, 'categories' | 'tags'> {
   // Common CPT fields
   project_categories?: number[];
@@ -76,6 +81,7 @@ export interface WPPortfolioItem extends Omit<WPPost, 'categories' | 'tags'> {
       width?: number;
       height?: number;
     }[];
+    portfolio_slider_media?: PortfolioSliderMediaItem[];
   };
 }
 

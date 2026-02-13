@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, getPortfolioNeighbors, extractImagesFromContent } from '@/lib/wordpress/portfolio';
 import { getServiceItems } from '@/lib/wordpress/services';
 import { getServicesMatchingPortfolioCategories } from '@/lib/portfolio-utils';
+import { getPortfolioSliderMedia, getPortfolioFallbackImages } from '@/lib/wordpress/portfolio-media';
 import Link from 'next/link';
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
 import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigation';
@@ -66,31 +67,33 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
     const featuredImage = item._embedded?.['wp:featuredmedia']?.[0];
     const terms = item._embedded?.['wp:term']?.[0] || [];
     
-    // 1. Get images from Gutenberg content
-    const contentImages = extractImagesFromContent(item.content?.rendered || '');
+    // Priority 1: Get slider media from ACF portfolio_slider_media field
+    const sliderMedia = getPortfolioSliderMedia(item);
     
-    // 2. Get standard attachments (fallback)
-    const attachments = await getPortfolioAttachments(item.id);
-    const attachmentImages = attachments.map(a => ({ 
-        url: a.source_url, 
-        altText: a.alt_text || item.title.rendered 
-    }));
+    // Priority 2: Fallback to existing sources if slider media is empty
+    let carouselMedia = sliderMedia;
+    if (carouselMedia.length === 0) {
+      // 1. Get images from Gutenberg content
+      const contentImages = extractImagesFromContent(item.content?.rendered || '');
+      
+      // 2. Get standard attachments (fallback)
+      const attachments = await getPortfolioAttachments(item.id);
+      const attachmentImages = attachments.map(a => ({ 
+          url: a.source_url, 
+          altText: a.alt_text || item.title.rendered 
+      }));
 
-    // 3. Combine: Featured -> Content Images -> Attachments
-    const allImages = [
-        ...(featuredImage ? [{ url: featuredImage.source_url, altText: featuredImage.alt_text || item.title.rendered }] : []),
-        ...contentImages,
-        ...attachmentImages
-    ];
+      // 3. Combine: Featured -> Content Images -> Attachments
+      carouselMedia = getPortfolioFallbackImages(item, featuredImage, contentImages, attachmentImages);
+    }
 
-    // Improved deduplication: Normalize URLs by removing size suffixes and protocol
-    const getBaseUrl = (url: string) => url.replace(/-(\d+)x(\d+)\.(jpg|jpeg|png|webp|gif)/i, '.$3').replace(/^https?:\/\//, '');
-    
-    const carouselImages = allImages
-        .filter(img => img.url)
-        .filter((v, i, a) =>
-            a.findIndex(t => getBaseUrl(t.url) === getBaseUrl(v.url)) === i
-        );
+    // Convert to carousel format (images array for now, videos will be handled later)
+    const carouselImages = carouselMedia
+      .filter(media => media.type === 'image')
+      .map(media => ({
+        url: media.url,
+        altText: media.altText,
+      }));
 
     const matchingServices = getServicesMatchingPortfolioCategories(allServices, terms);
 

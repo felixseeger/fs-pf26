@@ -21,16 +21,16 @@ export default function PortfolioPostNavigation({
 
   return (
     <nav
-      className="mt-16 pt-12 border-t border-zinc-200 dark:border-zinc-800"
+      className="mt-16 pt-12 border-t border-zinc-200 dark:border-zinc-800 w-full"
       aria-label="Portfolio post navigation"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         {/* Previous */}
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           {previous ? (
             <Link
               href={`/portfolio/${previous.slug}`}
-              className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-colors"
+              className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-colors w-full"
             >
               <svg
                 className="w-5 h-5 text-zinc-400 group-hover:-translate-x-1 transition-transform shrink-0 order-first"
@@ -69,7 +69,7 @@ export default function PortfolioPostNavigation({
         </div>
 
         {/* Next */}
-        <div className="flex flex-col md:items-end">
+        <div className="flex flex-col md:items-end w-full">
           {next ? (
             <Link
               href={`/portfolio/${next.slug}`}

@@ -47,7 +47,7 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
                                         src={iconImageUrl}
                                         alt={iconImageAlt || service.title.rendered}
                                         fill
-                                        className="object-contain p-2 transition-[filter] duration-300 group-hover:brightness-0"
+                                        className="object-contain p-2 service-icon-blue transition-[filter] duration-300 group-hover:brightness-0 dark:group-hover:brightness-0"
                                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     />
                                 </Link>

@@ -12,7 +12,7 @@ export default function ServicesUsed({ services, title = 'Services used' }: Serv
 
   return (
     <section
-      className="mt-16 pt-12 border-t border-zinc-200 dark:border-zinc-800"
+      className="mt-16 pt-12 border-t border-zinc-200 dark:border-zinc-800 w-full"
       aria-label="Services used in this project"
     >
       <h2 className="text-sm font-unbounded font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-6">
@@ -44,13 +44,13 @@ export default function ServicesUsed({ services, title = 'Services used' }: Serv
                       src={iconUrl}
                       alt={iconAlt || serviceTitle}
                       fill
-                      className="object-contain p-1.5"
+                      className="object-contain p-1.5 service-icon-blue"
                       sizes="40px"
                     />
                   </span>
                 ) : (
                   <span className="w-10 h-10 rounded-lg bg-zinc-200 dark:bg-zinc-800 shrink-0 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-blue-600 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </span>

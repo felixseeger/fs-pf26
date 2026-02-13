@@ -300,3 +300,13 @@ body.maintenance-page footer:not(main footer) {
 .skeleton-shimmer {
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
 }
+
+/* Service icon blue filter for light mode */
+.service-icon-blue {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(95%) saturate(2476%) hue-rotate(212deg) brightness(98%) contrast(96%);
+}
+
+html.dark .service-icon-blue,
+[data-theme='dark'] .service-icon-blue {
+  filter: none;
+}
