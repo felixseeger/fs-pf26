@@ -42,7 +42,7 @@ export function getPortfolioSliderMedia(item: WPPortfolioItem): SliderMediaItem[
         // Image ID - would need to fetch, but ACF usually returns object
         return null;
       } else if (typeof image === 'object' && image !== null) {
-        const imgObj = image as Record<string, unknown>;
+        const imgObj = image as unknown as Record<string, unknown>;
         if ('url' in imgObj && typeof imgObj.url === 'string') {
           url = imgObj.url;
           if ('alt' in imgObj && typeof imgObj.alt === 'string') altText = imgObj.alt;
