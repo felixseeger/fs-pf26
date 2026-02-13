@@ -84,7 +84,7 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
       }));
 
       // 3. Combine: Featured -> Content Images -> Attachments
-      carouselMedia = getPortfolioFallbackImages(item, featuredImage, contentImages, attachmentImages);
+      carouselMedia = getPortfolioFallbackImages(item, featuredImage || null, contentImages, attachmentImages);
     }
 
     // Convert to carousel format (images array for now, videos will be handled later)
