@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getSiteUrl } from '@/lib/site-config';
-import { getPortfolioItems, getPosts, getServiceItems, getPages } from '@/lib/wordpress';
+import { getPortfolioItems, getPosts, getAllServiceItems, getPages } from '@/lib/wordpress';
 
 export const dynamic = 'force-static';
 
@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const services = await getServiceItems(200, 1).catch(() => []);
+  const services = await getAllServiceItems().catch(() => []);
   const serviceUrls: MetadataRoute.Sitemap = services.map((s) => ({
     url: `${base}/services/${s.slug}`,
     lastModified: s.modified ? new Date(s.modified) : new Date(),

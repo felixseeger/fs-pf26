@@ -6,13 +6,15 @@
 import { WPServiceItem, FeaturedMedia, ACFImage } from '@/types/wordpress';
 import { fetchWordPress } from './api';
 
+const SERVICES_PAGE_SIZE = 100;
+
 /**
- * Get all service items with pagination
- * @param perPage - Number of items per page (default: 12)
+ * Get service items with pagination
+ * @param perPage - Number of items per page (default: 100)
  * @param page - Page number (default: 1)
  */
 export async function getServiceItems(
-    perPage: number = 100,
+    perPage: number = SERVICES_PAGE_SIZE,
     page: number = 1
 ): Promise<WPServiceItem[]> {
     try {
@@ -28,6 +30,22 @@ export async function getServiceItems(
         console.error('Error fetching service items:', error);
         return [];
     }
+}
+
+/**
+ * Fetch all service items by paginating until no more pages.
+ * Use this for the Services listing page so every service is shown regardless of WordPress per_page cap.
+ */
+export async function getAllServiceItems(): Promise<WPServiceItem[]> {
+    const all: WPServiceItem[] = [];
+    let page = 1;
+    let chunk: WPServiceItem[];
+    do {
+        chunk = await getServiceItems(SERVICES_PAGE_SIZE, page);
+        all.push(...chunk);
+        page++;
+    } while (chunk.length === SERVICES_PAGE_SIZE);
+    return all;
 }
 
 /**
@@ -58,7 +76,7 @@ export async function getServiceNeighbors(slug: string): Promise<{
     previous: { slug: string; title: string; thumbnailUrl: string | null; thumbnailAlt?: string } | null;
     next: { slug: string; title: string; thumbnailUrl: string | null; thumbnailAlt?: string } | null;
 }> {
-    const items = await getServiceItems(100, 1).catch(() => []);
+    const items = await getAllServiceItems().catch(() => []);
     const index = items.findIndex((s) => s.slug === slug);
     if (index === -1) return { previous: null, next: null };
 

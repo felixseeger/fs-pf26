@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getServiceItems } from '@/lib/wordpress';
+import { getAllServiceItems } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
 import ServiceGrid from '@/components/services/ServiceGrid';
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ServicesPage() {
-    const services = await getServiceItems(100);
+    const services = await getAllServiceItems();
 
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>

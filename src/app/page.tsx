@@ -8,10 +8,11 @@ export const metadata: Metadata = {
   alternates: { canonical: getCanonicalUrl('/') },
 };
 import SelectedWorksSection from "@/components/sections/SelectedWorksSection";
+import AboutSectionImage from "@/components/sections/AboutSectionImage";
+import AboutSectionContent from "@/components/sections/AboutSectionContent";
 import ServicesSection, { Service } from "@/components/sections/ServicesSection";
 import TiltCard from "@/components/ui/TiltCard";
 import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
-import Image from "next/image";
 import { Phone, Mail, ArrowRight } from "lucide-react";
 
 function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
@@ -73,10 +74,10 @@ export default async function Home() {
         {acf?.about_content && (
           <section id="about" className="mb-24" suppressHydrationWarning>
             <div className="max-w-6xl mx-auto px-4 relative" suppressHydrationWarning>
-              {/* Layout container with overlap effect */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[500px] lg:min-h-[600px]" suppressHydrationWarning>
+              {/* Layout: image + sticky content */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[500px] lg:min-h-[600px] lg:pt-[8vh] lg:items-start" suppressHydrationWarning>
 
-                {/* Image Column - extends beyond container */}
+                {/* Image Column - unmask on scroll */}
                 {(() => {
                   const aboutImageUrl = acf.about_image
                     ? typeof acf.about_image === 'string'
@@ -89,47 +90,19 @@ export default async function Home() {
                     ? (acf.about_image as ACFImage).alt || 'About image'
                     : homeFeaturedImage?.alt_text || 'About image';
                   return aboutImageUrl ? (
-                    <div className="lg:col-span-5 relative" suppressHydrationWarning>
-                      <div className="relative h-[400px] lg:h-full lg:absolute lg:inset-0 lg:-left-20 xl:-left-32" suppressHydrationWarning>
-                        <Image
-                          src={aboutImageUrl}
-                          alt={aboutImageAlt}
-                          fill
-                          className="object-cover object-center"
-                          sizes="(max-width: 1024px) 100vw, 50vw"
-                        />
-                      </div>
-                    </div>
+                    <AboutSectionImage
+                      src={aboutImageUrl}
+                      alt={aboutImageAlt}
+                      priority
+                    />
                   ) : null;
                 })()}
 
-                {/* Content Column - Primary colored block with overlap */}
-                <div className="lg:col-span-7 lg:col-start-6 relative z-10" suppressHydrationWarning>
-                  <div className="bg-primary p-8 md:p-12 lg:p-16 lg:-ml-20 min-h-full flex flex-col justify-center" suppressHydrationWarning>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-unbounded font-black text-primary-foreground mb-6 leading-tight">
-                      {acf.about_title || 'Unlock Revenue Growth for Your Business'}
-                    </h2>
-                    <div
-                      className="prose prose-lg max-w-none text-primary-foreground/80 mb-8 [&>p]:mb-4 [&>p]:leading-relaxed"
-                      dangerouslySetInnerHTML={{ __html: acf.about_content }}
-                      suppressHydrationWarning
-                    />
-                    <a
-                      href="/about"
-                      className="inline-flex items-center gap-2 text-primary-foreground font-bold uppercase tracking-widest text-sm hover:gap-4 transition-all group"
-                    >
-                      More About Me
-                      <svg
-                        className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
+                {/* Content Column - sticky, text reveals on scroll */}
+                <AboutSectionContent
+                  title={acf.about_title || 'Unlock Revenue Growth for Your Business'}
+                  contentHtml={acf.about_content}
+                />
               </div>
             </div>
           </section>

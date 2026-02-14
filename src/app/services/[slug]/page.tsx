@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getServiceItems, getServiceItemBySlug, getServiceNeighbors } from '@/lib/wordpress';
+import { getAllServiceItems, getServiceItemBySlug, getServiceNeighbors } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
 import { ACFImage } from '@/types/wordpress';
 import ServicePostNavigation from '@/components/services/ServicePostNavigation';
 
 export async function generateStaticParams() {
-    const services = await getServiceItems(100).catch(() => []);
+    const services = await getAllServiceItems().catch(() => []);
     // Return at least one param for static export, even if empty
     if (services.length === 0) return [{ slug: '__no-services__' }];
     return services.map((service) => ({
@@ -88,9 +88,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
         ? (servicesGallery as ACFImage).alt
         : featuredImage?.alt_text;
     const acf = service.acf;
-    // Use ACF when present; fallback to post title and excerpt/content so title and text always show (e.g. after static export build or when ACF not returned)
+    // Use ACF when present; fallback to post title
     const serviceTitle = (acf?.service_title?.trim() || '').replace(/<[^>]*>/g, '') || service.title?.rendered?.replace(/<[^>]*>/g, '').trim() || 'Service';
-    const serviceText = (acf?.service_text?.trim() || '') || (service.excerpt?.rendered || '').trim() || '';
+    // service_text overrides main content when present
+    const mainContent = (acf?.service_text?.trim() || '') || service.content.rendered || '';
 
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
@@ -108,25 +109,17 @@ export default async function ServicePage({ params }: ServicePageProps) {
                     </div>
                 ) : null}
 
-                {/* Service Title & Text (ACF with fallbacks to post title / excerpt / content) */}
-                {(serviceTitle || serviceText) && (
+                {/* Service Title */}
+                {serviceTitle && (
                     <header className="mb-12">
-                        {serviceTitle && (
-                            <h1 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-white mb-4 leading-tight">
-                                {serviceTitle}
-                            </h1>
-                        )}
-                        {serviceText && (
-                            <div
-                                className="prose prose-lg dark:prose-invert max-w-none prose-p:text-zinc-600 dark:prose-p:text-zinc-400"
-                                dangerouslySetInnerHTML={{ __html: serviceText }}
-                            />
-                        )}
+                        <h1 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-white mb-4 leading-tight">
+                            {serviceTitle}
+                        </h1>
                     </header>
                 )}
 
-                {/* Service Meta */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                {/* Service Meta (Duration, Price, Included) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                     {acf?.service_duration && (
                         <div className="bg-zinc-100 dark:bg-zinc-900 p-6 rounded-xl">
                             <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-2">
@@ -157,24 +150,28 @@ export default async function ServicePage({ params }: ServicePageProps) {
                             </p>
                         </div>
                     )}
-                    <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl flex items-center justify-center">
-                        <a 
-                            href="/contact"
-                            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 font-bold hover:gap-3 transition-all"
-                        >
-                            Get a Quote
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
-                    </div>
                 </div>
 
-                {/* Content */}
-                <div 
-                    className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400"
-                    dangerouslySetInnerHTML={{ __html: service.content.rendered }}
-                />
+                {/* Main content: service_text overrides post content when present, displayed above Get a Quote */}
+                {mainContent && (
+                    <div 
+                        className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-p:text-zinc-600 dark:prose-p:text-zinc-400 mb-12"
+                        dangerouslySetInnerHTML={{ __html: mainContent }}
+                    />
+                )}
+
+                {/* Get a Quote CTA */}
+                <div className="mb-12">
+                    <a 
+                        href="/contact"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold rounded-xl transition-colors hover:gap-3"
+                    >
+                        Get a Quote
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
+                </div>
 
                 {/* Features List */}
                 {acf?.service_features && acf.service_features.length > 0 && (

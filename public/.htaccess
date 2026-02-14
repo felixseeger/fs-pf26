@@ -1,5 +1,9 @@
 # Enable rewrite engine
 RewriteEngine On
+RewriteBase /
+
+# Services list: /services and /services/ must serve services.html (list), not the services/ directory (detail pages)
+RewriteRule ^services/?$ services.html [L]
 
 # Remove .html extension from URLs
 RewriteCond %{REQUEST_FILENAME} !-d

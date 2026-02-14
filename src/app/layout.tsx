@@ -9,8 +9,6 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import CookieConsentBanner from "@/components/ui/CookieConsentBanner";
 import CookieSettingsButton from "@/components/ui/CookieSettingsButton";
-import PageLoadSound from "@/components/PageLoadSound";
-import StrudelLoadSound from "@/components/StrudelLoadSound";
 import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import JsonLd from "@/components/seo/JsonLd";
@@ -92,8 +90,6 @@ export default function RootLayout({
             </PageTransitionProvider>
             <CookieConsentBanner />
             <CookieSettingsButton />
-            <PageLoadSound />
-            <StrudelLoadSound />
           </CookieConsentProvider>
         </ThemeProvider>
       </body>
