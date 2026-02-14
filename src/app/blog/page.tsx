@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
 import { getPosts } from '@/lib/wordpress';
+import { getCanonicalUrl } from '@/lib/site-config';
 import PostList from '@/components/blog/PostList';
 
 export const metadata: Metadata = {
-    title: 'Blog | Felix Seeger',
-    description: 'Sharing insights, tutorials, and thoughts on design and development.',
+    title: 'Blog',
+    description: 'Insights on design, development, and digital strategy. Read articles and tutorials — then get in touch for your project.',
+    alternates: { canonical: getCanonicalUrl('/blog') },
 };
 
 export default async function BlogPage() {

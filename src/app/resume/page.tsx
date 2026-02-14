@@ -2,14 +2,16 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getPageBySlug } from '@/lib/wordpress';
+import { getCanonicalUrl } from '@/lib/site-config';
 import { Download } from 'lucide-react';
 
 export async function generateMetadata(): Promise<Metadata> {
     const page = await getPageBySlug('resume');
-    if (!page) return { title: 'Resume | Lebenslauf' };
+    if (!page) return { title: 'Resume', alternates: { canonical: getCanonicalUrl('/resume') } };
     return {
-        title: page.title.rendered,
-        description: 'Resume / Lebenslauf - Professional experience, education, and skills',
+        title: page.title.rendered.replace(/<[^>]*>/g, '').trim() || 'Resume',
+        description: 'Resume / Lebenslauf — Professional experience, education, and skills. Download or view online.',
+        alternates: { canonical: getCanonicalUrl('/resume') },
     };
 }
 

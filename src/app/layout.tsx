@@ -12,6 +12,8 @@ import CookieSettingsButton from "@/components/ui/CookieSettingsButton";
 import PageLoadSound from "@/components/PageLoadSound";
 import StrudelLoadSound from "@/components/StrudelLoadSound";
 import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
+import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
+import JsonLd from "@/components/seo/JsonLd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,16 +36,26 @@ const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700", "800"],
 });
 
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Felix Seeger",
-    template: "%s | Felix Seeger",
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: "Personal website and blog of Felix Seeger",
+  description: "Web design, development, and digital strategy. Felix Seeger helps businesses grow with custom websites and high-performance frontends. Get in touch for a project quote.",
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "Felix Seeger",
+    siteName: SITE_NAME,
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -64,6 +76,7 @@ export default function RootLayout({
             __html: `window.addEventListener('unhandledrejection',function(e){var r=e.reason;if(r&&(r instanceof Event||(r.constructor&&r.constructor.name==='Event')||(r instanceof Error&&r.message==='[object Event]')))e.preventDefault();},true);`,
           }}
         />
+        <JsonLd />
         <ThemeProvider>
           <CookieConsentProvider>
             <PageTransitionProvider defaultTransition="slideRight">

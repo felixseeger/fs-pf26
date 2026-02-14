@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getMenuItems, getHomePage, getLegalPages } from '@/lib/wordpress';
 import { WPMenuItem, SocialLink, ACFImage } from '@/types/wordpress';
+import { getSiteUrl, DEFAULT_SOCIAL_URLS } from '@/lib/site-config';
 
 function SocialIcon({ platform, className }: { platform: SocialLink['platform']; className?: string }) {
   const c = className ?? 'w-6 h-6';
@@ -45,6 +46,21 @@ function SocialIcon({ platform, className }: { platform: SocialLink['platform'];
   }
 }
 
+const frontendOrigin = getSiteUrl();
+const backendOrigin = process.env.WORDPRESS_API_URL || '';
+
+function toFrontendHref(url: string): { href: string; external: boolean } {
+  if (url.startsWith('/')) return { href: url, external: false };
+  try {
+    const u = new URL(url);
+    if (backendOrigin && u.origin === new URL(backendOrigin).origin) return { href: u.pathname || '/', external: false };
+    if (u.origin === new URL(frontendOrigin).origin) return { href: u.pathname || '/', external: false };
+    return { href: url, external: true };
+  } catch {
+    return { href: url.startsWith('http') ? url : `/${url}`, external: url.startsWith('http') };
+  }
+}
+
 export default async function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -70,9 +86,8 @@ export default async function Footer() {
       : Array.isArray(secondaryMenu) ? secondaryMenu : [];
     if (Array.isArray(legalMenu) && legalMenu.length > 0) {
       legalLinks = legalMenu.map((item: WPMenuItem) => {
-        const isExternal = item.url.startsWith('http') && !item.url.includes(process.env.WORDPRESS_API_URL || '');
-        const href = isExternal ? item.url : item.url.startsWith('/') ? item.url : new URL(item.url, 'https://example.com').pathname;
-        return { title: item.title, href, external: isExternal };
+        const { href, external } = toFrontendHref(item.url);
+        return { title: item.title, href, external };
       });
     } else {
       legalLinks = legalPages.map((p) => ({ title: p.title, href: p.link }));
@@ -126,22 +141,27 @@ export default async function Footer() {
             <ul className="space-y-2">
               {quickLinksItems.length > 0 ? (
                 quickLinksItems.map((item: WPMenuItem) => {
-                  const isExternal = item.url.startsWith('http') && !item.url.includes(process.env.WORDPRESS_API_URL || '');
-                  const href = isExternal
-                    ? item.url
-                    : item.url.startsWith('/')
-                      ? item.url
-                      : new URL(item.url, 'https://example.com').pathname;
-
+                  const { href, external } = toFrontendHref(item.url);
                   return (
                     <li key={item.ID}>
-                      <Link
-                        href={href}
-                        className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm"
-                        target={item.target || '_self'}
-                      >
-                        {item.title}
-                      </Link>
+                      {external ? (
+                        <a
+                          href={href}
+                          className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm"
+                          target={item.target || '_blank'}
+                          rel="noopener noreferrer"
+                        >
+                          {item.title}
+                        </a>
+                      ) : (
+                        <Link
+                          href={href}
+                          className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm"
+                          target={item.target || '_self'}
+                        >
+                          {item.title}
+                        </Link>
+                      )}
                     </li>
                   );
                 })
@@ -223,15 +243,15 @@ export default async function Footer() {
                 ))
               ) : (
                 <>
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" aria-label="Twitter">
-                    <SocialIcon platform="twitter" />
-                  </a>
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" aria-label="GitHub">
-                    <SocialIcon platform="github" />
-                  </a>
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" aria-label="LinkedIn">
-                    <SocialIcon platform="linkedin" />
-                  </a>
+                  {(['linkedin', 'twitter', 'github'] as const).map((platform) => {
+                    const url = DEFAULT_SOCIAL_URLS[platform];
+                    if (!url) return null;
+                    return (
+                      <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" aria-label={platform}>
+                        <SocialIcon platform={platform} />
+                      </a>
+                    );
+                  })}
                 </>
               )}
             </div>

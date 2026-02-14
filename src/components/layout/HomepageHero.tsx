@@ -151,6 +151,7 @@ export default function HomepageHero({ items = [] }: HomepageHeroProps) {
 
         {/* Content Layer */}
         <div className="container-custom relative z-10 w-full h-full flex items-center pointer-events-none">
+          <h1 className="sr-only">Felix Seeger — Web design, development, and digital strategy</h1>
           <AnimatePresence mode="wait">
             {showContent && displayItems.map((item, index) => {
               // Varied position offsets based on slide index
@@ -196,7 +197,7 @@ export default function HomepageHero({ items = [] }: HomepageHeroProps) {
                           Portfolio
                         </span>
                       )}
-                      <h1
+                      <h2
                         className="text-5xl md:text-6xl lg:text-[10rem] font-unbounded font-black leading-[0.85] md:leading-[0.8] text-white mb-6 md:mb-10 drop-shadow-2xl uppercase italic tracking-tighter"
                         dangerouslySetInnerHTML={{ __html: item.title.rendered }}
                       />

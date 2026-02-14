@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { getPortfolioItems, getHomePage, getServiceItems } from "@/lib/wordpress";
 import { WPPortfolioItem, WPPage, ACFImage, WPServiceItem } from "@/types/wordpress";
+import { getCanonicalUrl } from "@/lib/site-config";
 import HomepageHero from "@/components/layout/HomepageHero";
+
+export const metadata: Metadata = {
+  alternates: { canonical: getCanonicalUrl('/') },
+};
 import SelectedWorksSection from "@/components/sections/SelectedWorksSection";
 import ServicesSection, { Service } from "@/components/sections/ServicesSection";
 import TiltCard from "@/components/ui/TiltCard";

@@ -59,6 +59,12 @@ export default function Mandala404Client({
         >
           {buttonText}
         </Link>
+        <nav className="mt-10 flex flex-wrap justify-center gap-4 text-sm" aria-label="Helpful links">
+          <Link href="/" className="opacity-90 hover:opacity-100 underline underline-offset-2" style={{ color: primaryColor }}>Home</Link>
+          <Link href="/portfolio" className="opacity-90 hover:opacity-100 underline underline-offset-2" style={{ color: primaryColor }}>Portfolio</Link>
+          <Link href="/services" className="opacity-90 hover:opacity-100 underline underline-offset-2" style={{ color: primaryColor }}>Services</Link>
+          <Link href="/contact" className="opacity-90 hover:opacity-100 underline underline-offset-2" style={{ color: primaryColor }}>Contact</Link>
+        </nav>
       </div>
     </div>
   );

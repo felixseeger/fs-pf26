@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
 import { getServiceItems } from '@/lib/wordpress';
+import { getCanonicalUrl } from '@/lib/site-config';
 import ServiceGrid from '@/components/services/ServiceGrid';
 
 export const metadata: Metadata = {
-    title: 'Services | Felix Seeger',
-    description: 'Professional digital services including web design, development, motion design, and more.',
+    title: 'Services',
+    description: 'Web design, development, and digital strategy. Book a consultation or request a quote for your project.',
+    alternates: { canonical: getCanonicalUrl('/services') },
 };
 
 export default async function ServicesPage() {

@@ -2,12 +2,14 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, getPortfolioNeighbors, extractImagesFromContent } from '@/lib/wordpress/portfolio';
 import { getServiceItems } from '@/lib/wordpress/services';
+import { getCanonicalUrl } from '@/lib/site-config';
 import { getServicesMatchingPortfolioCategories } from '@/lib/portfolio-utils';
 import { getPortfolioSliderMedia, getPortfolioFallbackImages, getPortfolioContentVideoUrl } from '@/lib/wordpress/portfolio-media';
 import Link from 'next/link';
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
 import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigation';
 import ServicesUsed from '@/components/portfolio/ServicesUsed';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 
 export async function generateStaticParams() {
   const items = await getPortfolioItems(100, 1).catch(() => []);
@@ -37,10 +39,11 @@ export async function generateMetadata({ params }: PortfolioItemPageProps): Prom
     const displayTitle = item.acf?.portfolio_title?.trim() || item.title?.rendered || 'Project Detail';
 
     return {
-        title: displayTitle,
+        title: displayTitle.replace(/<[^>]*>/g, '').trim() || 'Project',
         description: item.excerpt?.rendered
             ? item.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160)
-            : 'Portfolio project detail for ' + (item.title?.rendered || 'Felix Seeger'),
+            : 'Portfolio project: ' + (item.title?.rendered?.replace(/<[^>]*>/g, '') || 'Felix Seeger'),
+        alternates: { canonical: getCanonicalUrl(`/portfolio/${slug}`) },
         openGraph: {
             title: displayTitle,
             description: item.excerpt?.rendered
@@ -93,8 +96,15 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
 
     const matchingServices = getServicesMatchingPortfolioCategories(allServices, terms);
 
+    const breadcrumbs = [
+        { name: 'Home', path: '/' },
+        { name: 'Portfolio', path: '/portfolio' },
+        { name: displayTitle.replace(/<[^>]*>/g, '').trim() || 'Project', path: `/portfolio/${slug}` },
+    ];
+
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
+            <BreadcrumbJsonLd items={breadcrumbs} />
             <article className="max-w-6xl mx-auto px-4 py-24">
                 {/* Back Link */}
                 <div className="mb-8">

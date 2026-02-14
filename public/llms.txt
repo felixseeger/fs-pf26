@@ -1,0 +1,17 @@
+# Felix Seeger
+
+Felix Seeger — Web design, development, and digital strategy. Based in Düsseldorf, Germany.
+
+## About
+Personal and professional site: portfolio, services, blog, and contact. Built with Next.js and headless WordPress.
+
+## Links
+- Home: https://felixseeger.de/
+- About: https://felixseeger.de/about
+- Services: https://felixseeger.de/services
+- Portfolio: https://felixseeger.de/portfolio
+- Blog: https://felixseeger.de/blog
+- Contact: https://felixseeger.de/contact
+
+## Summary
+Freelance web designer and developer. Custom websites, high-performance frontends, and digital strategy. Get in touch for project inquiries.

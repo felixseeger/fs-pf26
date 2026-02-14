@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getServiceItems, getServiceItemBySlug, getServiceNeighbors } from '@/lib/wordpress';
+import { getCanonicalUrl } from '@/lib/site-config';
 import { ACFImage } from '@/types/wordpress';
 import ServicePostNavigation from '@/components/services/ServicePostNavigation';
 
@@ -40,8 +41,9 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
     const description = service.acf?.service_text?.replace(/<[^>]*>/g, '').trim().substring(0, 160)
         || service.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160);
     return {
-        title: `${title} | Services | Felix Seeger`,
+        title: title,
         description: description || undefined,
+        alternates: { canonical: getCanonicalUrl(`/services/${slug}`) },
         openGraph: {
             title,
             description: description || undefined,
@@ -86,6 +88,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
         ? (servicesGallery as ACFImage).alt
         : featuredImage?.alt_text;
     const acf = service.acf;
+    // Use ACF when present; fallback to post title and excerpt/content so title and text always show (e.g. after static export build or when ACF not returned)
+    const serviceTitle = (acf?.service_title?.trim() || '').replace(/<[^>]*>/g, '') || service.title?.rendered?.replace(/<[^>]*>/g, '').trim() || 'Service';
+    const serviceText = (acf?.service_text?.trim() || '') || (service.excerpt?.rendered || '').trim() || '';
 
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
@@ -103,18 +108,18 @@ export default async function ServicePage({ params }: ServicePageProps) {
                     </div>
                 ) : null}
 
-                {/* Service Title & Text (ACF) */}
-                {(acf?.service_title || acf?.service_text) && (
+                {/* Service Title & Text (ACF with fallbacks to post title / excerpt / content) */}
+                {(serviceTitle || serviceText) && (
                     <header className="mb-12">
-                        {acf?.service_title && (
+                        {serviceTitle && (
                             <h1 className="text-5xl md:text-6xl font-black text-zinc-900 dark:text-white mb-4 leading-tight">
-                                {acf.service_title}
+                                {serviceTitle}
                             </h1>
                         )}
-                        {acf?.service_text && (
+                        {serviceText && (
                             <div
                                 className="prose prose-lg dark:prose-invert max-w-none prose-p:text-zinc-600 dark:prose-p:text-zinc-400"
-                                dangerouslySetInnerHTML={{ __html: acf.service_text }}
+                                dangerouslySetInnerHTML={{ __html: serviceText }}
                             />
                         )}
                     </header>

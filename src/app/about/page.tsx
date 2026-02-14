@@ -2,18 +2,20 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPageBySlug } from '@/lib/wordpress';
+import { getCanonicalUrl } from '@/lib/site-config';
 import TrustSection from '@/components/sections/TrustSection';
 import type { TrustClientItem } from '@/types/wordpress';
 
 export async function generateMetadata(): Promise<Metadata> {
     const page = await getPageBySlug('about');
-    if (!page) return { title: 'About' };
+    if (!page) return { title: 'About', alternates: { canonical: getCanonicalUrl('/about') } };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const acf = (page as any).acf as Record<string, unknown> | undefined;
     const description = (acf?.about_text as string) || page.excerpt?.rendered?.replace(/<[^>]*>/g, '').substring(0, 160);
     return {
-        title: page.title.rendered,
+        title: page.title.rendered.replace(/<[^>]*>/g, '').trim() || 'About',
         description,
+        alternates: { canonical: getCanonicalUrl('/about') },
     };
 }
 

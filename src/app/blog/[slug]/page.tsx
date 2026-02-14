@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPostBySlug, getPosts } from '@/lib/wordpress';
+import { getCanonicalUrl } from '@/lib/site-config';
 
 export async function generateStaticParams() {
   const posts = await getPosts(100, 1).catch(() => []);
@@ -38,8 +39,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const featuredImage = post._embedded?.['wp:featuredmedia']?.[0];
 
   return {
-    title: post.title.rendered,
+    title: post.title.rendered.replace(/<[^>]*>/g, '').trim() || 'Post',
     description: post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160),
+    alternates: { canonical: getCanonicalUrl(`/blog/${slug}`) },
     openGraph: {
       title: post.title.rendered,
       description: post.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160),

@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
 import { getPortfolioItems } from '@/lib/wordpress';
+import { getCanonicalUrl } from '@/lib/site-config';
 import PortfolioGridWithFilter from '@/components/portfolio/PortfolioGridWithFilter';
 
 export const metadata: Metadata = {
-    title: 'Portfolio | Felix Seeger',
-    description: 'A collection of my recent projects, design work, and development case studies.',
+    title: 'Portfolio',
+    description: 'Selected works: web design, development, and digital projects. Explore case studies and get inspiration for your next project.',
+    alternates: { canonical: getCanonicalUrl('/portfolio') },
 };
 
 export default async function PortfolioPage() {

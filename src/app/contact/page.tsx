@@ -1,14 +1,16 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPageBySlug } from '@/lib/wordpress';
+import { getCanonicalUrl } from '@/lib/site-config';
 import ContactPageClient from './ContactPageClient';
 
 export async function generateMetadata(): Promise<Metadata> {
     const page = await getPageBySlug('contact');
-    if (!page) return { title: 'Contact' };
+    if (!page) return { title: 'Contact', alternates: { canonical: getCanonicalUrl('/contact') } };
     return {
-        title: page.title.rendered,
-        description: 'Get in touch with us. We are excited to hear from you.',
+        title: page.title.rendered.replace(/<[^>]*>/g, '').trim() || 'Contact',
+        description: 'Get in touch for project inquiries, quotes, and collaboration. Felix Seeger — Düsseldorf. Contact form and details.',
+        alternates: { canonical: getCanonicalUrl('/contact') },
     };
 }
 
