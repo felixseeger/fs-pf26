@@ -58,7 +58,7 @@ export default function PortfolioPostNavigation({
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <span className="font-unbounded font-bold text-zinc-900 dark:text-white group-hover:text-primary transition-colors line-clamp-2">
+                <span className="font-unbounded font-bold text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-primary transition-colors line-clamp-2">
                   {previous.title}
                 </span>
               </div>
@@ -92,7 +92,7 @@ export default function PortfolioPostNavigation({
                 )}
               </div>
               <div className="min-w-0 flex-1 md:text-right">
-                <span className="font-unbounded font-bold text-zinc-900 dark:text-white group-hover:text-primary transition-colors line-clamp-2">
+                <span className="font-unbounded font-bold text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-primary transition-colors line-clamp-2">
                   {next.title}
                 </span>
               </div>

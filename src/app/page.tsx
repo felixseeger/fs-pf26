@@ -1,8 +1,6 @@
-import { getPosts, getPortfolioItems, getHomePage, getServiceItems } from "@/lib/wordpress";
-import PostList from "@/components/blog/PostList";
-import { WPPost, WPPortfolioItem, WPPage, ACFImage, WPServiceItem } from "@/types/wordpress";
+import { getPortfolioItems, getHomePage, getServiceItems } from "@/lib/wordpress";
+import { WPPortfolioItem, WPPage, ACFImage, WPServiceItem } from "@/types/wordpress";
 import HomepageHero from "@/components/layout/HomepageHero";
-import ContactSection from "@/components/sections/ContactSection";
 import SelectedWorksSection from "@/components/sections/SelectedWorksSection";
 import ServicesSection, { Service } from "@/components/sections/ServicesSection";
 import TiltCard from "@/components/ui/TiltCard";
@@ -34,26 +32,21 @@ function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
 }
 
 export default async function Home() {
-  let posts: WPPost[] = [];
   let portfolioItems: WPPortfolioItem[] = [];
   let homePage: WPPage | null = null;
-  let error: string | null = null;
 
   let serviceItems: WPServiceItem[] = [];
 
   try {
-    const [postsData, portfolioData, homePageData, servicesData] = await Promise.all([
-      getPosts(6),
+    const [portfolioData, homePageData, servicesData] = await Promise.all([
       getPortfolioItems(12),
       getHomePage(),
       getServiceItems(24),
     ]);
-    posts = postsData || [];
     portfolioItems = portfolioData || [];
     homePage = homePageData;
     serviceItems = servicesData || [];
   } catch (err) {
-    error = err instanceof Error ? err.message : "Failed to fetch content";
     console.error("Error fetching content:", err);
   }
 
@@ -182,21 +175,21 @@ export default async function Home() {
             {(acf.contact_phone || acf.contact_email) && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12" suppressHydrationWarning>
                 {acf.contact_phone && (
-                  <TiltCard className="bg-zinc-800 dark:bg-zinc-900 rounded-2xl p-8 flex flex-col justify-between">
+                  <TiltCard className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-transparent rounded-2xl p-8 flex flex-col justify-between">
                     <div>
                       <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6">
                         <Phone size={24} className="text-primary-foreground" />
                       </div>
-                      <h3 className="text-2xl font-black text-white mb-3">
+                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-3">
                         {acf.faq_phone_card_title || 'Contact Me'}
                       </h3>
-                      <p className="text-zinc-400 leading-relaxed">
+                      <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                         {acf.faq_phone_card_description || "Ready to discuss your project? I'm here to answer any questions and provide personalized solutions for your business needs."}
                       </p>
                     </div>
                     <a
                       href={`tel:${acf.contact_phone.replace(/\s/g, '')}`}
-                      className="inline-flex items-center gap-2 text-white font-bold mt-8 group/link hover:text-primary transition-colors"
+                      className="inline-flex items-center gap-2 text-zinc-900 dark:text-white font-bold mt-8 group/link hover:text-primary transition-colors"
                     >
                       {acf.contact_phone}
                       <ArrowRight size={18} className="group-hover/link:translate-x-1 transition-transform" />
@@ -205,21 +198,21 @@ export default async function Home() {
                 )}
 
                 {acf.contact_email && (
-                  <TiltCard className="bg-zinc-800 dark:bg-zinc-900 rounded-2xl p-8 flex flex-col justify-between">
+                  <TiltCard className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-transparent rounded-2xl p-8 flex flex-col justify-between">
                     <div>
                       <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6">
                         <Mail size={24} className="text-primary-foreground" />
                       </div>
-                      <h3 className="text-2xl font-black text-white mb-3">
+                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-3">
                         {acf.faq_email_card_title || 'Send a Message'}
                       </h3>
-                      <p className="text-zinc-400 leading-relaxed">
+                      <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                         {acf.faq_email_card_description || 'Good website tells a story that will make users fully immerse themselves operating'}
                       </p>
                     </div>
                     <a
                       href={`mailto:${acf.contact_email}`}
-                      className="inline-flex items-center gap-2 text-white font-bold mt-8 group/link hover:text-primary transition-colors"
+                      className="inline-flex items-center gap-2 text-zinc-900 dark:text-white font-bold mt-8 group/link hover:text-primary transition-colors"
                     >
                       {acf.contact_email}
                       <ArrowRight size={18} className="group-hover/link:translate-x-1 transition-transform" />
@@ -231,47 +224,6 @@ export default async function Home() {
           </section>
         )}
 
-        {/* Contact Section - from WordPress ACF */}
-        {(acf?.contact_content || acf?.contact_email) && (
-          <ContactSection
-            contact_title={acf.contact_title}
-            contact_content={acf.contact_content}
-            contact_email={acf.contact_email}
-            contact_phone={acf.contact_phone}
-            contact_office_city={acf.contact_office_city}
-            contact_office_country={acf.contact_office_country}
-            contact_cta_title={acf.contact_cta_title}
-            contact_cta_description={acf.contact_cta_description}
-            contact_cta_badge={acf.contact_cta_badge}
-            contact_privacy_policy_url={acf.contact_privacy_policy_url}
-            contact_submit_button_text={acf.contact_submit_button_text}
-          />
-        )}
-
-        {/* Blog Section */}
-        <div className="max-w-6xl mx-auto px-4" suppressHydrationWarning>
-          <header className="mb-16">
-            <div className="flex items-center gap-4 mb-4" suppressHydrationWarning>
-              <span className="w-12 h-px bg-zinc-300 dark:bg-zinc-800" />
-              <span className="text-xs uppercase tracking-widest font-bold text-zinc-500">The Journal</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white">
-              Latest Thoughts
-            </h2>
-          </header>
-
-          {/* Error message */}
-          {error && (
-            <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <p className="text-red-800 dark:text-red-200">
-                Error loading content: {error}
-              </p>
-            </div>
-          )}
-
-          {/* Posts Grid */}
-          {!error && <PostList posts={posts} />}
-        </div>
       </div>
     </div>
     </HomePreloaderWrapper>

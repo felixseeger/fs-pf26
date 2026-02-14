@@ -64,9 +64,20 @@ export interface WPPost {
   };
 }
 
+/** ACF file field return (array format) */
+export interface ACFFile {
+  id?: number;
+  url?: string;
+  filename?: string;
+  alt?: string;
+}
+
 export interface PortfolioSliderMediaItem {
   media_type?: boolean | string; // Checkbox (true/false) or select ('image'/'video')
   media_image?: ACFImage | number | string | false;
+  media_video?: ACFFile | string | number | false; // File or URL
+  media_video_poster?: ACFImage | number | string | false;
+  media_caption?: string;
 }
 
 export interface WPPortfolioItem extends Omit<WPPost, 'categories' | 'tags'> {
@@ -81,7 +92,18 @@ export interface WPPortfolioItem extends Omit<WPPost, 'categories' | 'tags'> {
       width?: number;
       height?: number;
     }[];
+    /** Slider media at root (if repeater not inside a group) */
     portfolio_slider_media?: PortfolioSliderMediaItem[];
+    /** Slider media inside Portfolio Slider group (current ACF structure) */
+    portfolio_slider?: {
+      portfolio_slider_media?: PortfolioSliderMediaItem[];
+    };
+    /** Optional content/project video (URL or file) */
+    portfolio_video?: string | ACFFile | false;
+    /** Optional override for post title on front end */
+    portfolio_title?: string;
+    /** Optional intro/summary text */
+    portfolio_text?: string;
   };
 }
 

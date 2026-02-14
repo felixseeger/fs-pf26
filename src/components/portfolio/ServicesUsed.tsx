@@ -55,7 +55,7 @@ export default function ServicesUsed({ services, title = 'Services used' }: Serv
                     </svg>
                   </span>
                 )}
-                <span className="font-unbounded font-bold text-sm text-zinc-900 dark:text-white group-hover:text-primary transition-colors">
+                <span className="font-unbounded font-bold text-sm text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-primary transition-colors">
                   {serviceTitle}
                 </span>
                 <svg className="w-4 h-4 text-zinc-400 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

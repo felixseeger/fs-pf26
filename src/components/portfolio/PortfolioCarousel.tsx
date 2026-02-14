@@ -1,28 +1,23 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures';
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
-import { useTheme } from 'next-themes';
-
-interface CarouselImage {
-    url: string;
-    altText?: string;
-}
+import Lightbox from 'yet-another-react-lightbox';
+import Video from 'yet-another-react-lightbox/plugins/video';
+import 'yet-another-react-lightbox/styles.css';
+import type { SliderMediaItem } from '@/lib/wordpress/portfolio-media';
 
 interface PortfolioCarouselProps {
-    images: CarouselImage[];
+    /** Slider items: images and/or videos from ACF portfolio_slider_media */
+    slides: SliderMediaItem[];
 }
 
-export default function PortfolioCarousel({ images }: PortfolioCarouselProps) {
+export default function PortfolioCarousel({ slides }: PortfolioCarouselProps) {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
-    const { resolvedTheme } = useTheme();
     
     const [emblaRef, emblaApi] = useEmblaCarousel(
         { 
@@ -74,57 +69,74 @@ export default function PortfolioCarousel({ images }: PortfolioCarouselProps) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [scrollPrev, scrollNext, isOpen]);
 
-    if (!images || images.length === 0 || !mounted) return null;
+    if (!slides || slides.length === 0 || !mounted) return null;
+
+    const lightboxSlides = slides.map((s) =>
+        s.type === 'video'
+            ? { type: 'video' as const, sources: [{ src: s.url }], poster: s.posterUrl, width: 1920, height: 1080 }
+            : { src: s.url, alt: s.altText }
+    );
 
     return (
         <div className="relative group">
-            {/* Embla Viewport */}
-            <div 
-                className="overflow-hidden rounded-2xl shadow-2xl bg-muted aspect-[16/9] md:aspect-[21/9]" 
+            <div
+                className="overflow-hidden rounded-2xl shadow-2xl bg-muted aspect-[16/9] md:aspect-[21/9]"
                 ref={emblaRef}
             >
                 <div className="flex h-full">
-                    {images.map((image, index) => (
+                    {slides.map((slide, index) => (
                         <div
                             key={index}
-                            className="flex-none w-full h-full relative cursor-zoom-in active:cursor-grabbing"
-                            onClick={() => setIsOpen(true)}
+                            className="flex-none w-full h-full relative cursor-zoom-in active:cursor-grabbing flex flex-col"
+                            onClick={() => slide.type === 'image' && setIsOpen(true)}
                         >
-                            <div className={`absolute inset-0 ${index === 0 ? 'featured-image-write-in' : ''}`}>
-                            <img
-                                src={image.url}
-                                alt={image.altText || `Project image ${index + 1}`}
-                                className="w-full h-full object-cover pointer-events-none"
-                                loading={index === 0 ? "eager" : "lazy"}
-                            />
+                            <div className={`absolute inset-0 shrink-0 ${index === 0 ? 'featured-image-write-in' : ''}`}>
+                                {slide.type === 'video' ? (
+                                    <video
+                                        src={slide.url}
+                                        poster={slide.posterUrl}
+                                        className="w-full h-full object-cover pointer-events-none"
+                                        playsInline
+                                        muted
+                                        loop
+                                        preload="metadata"
+                                    />
+                                ) : (
+                                    <img
+                                        src={slide.url}
+                                        alt={slide.altText || `Project image ${index + 1}`}
+                                        className="w-full h-full object-cover pointer-events-none"
+                                        loading={index === 0 ? 'eager' : 'lazy'}
+                                    />
+                                )}
                             </div>
+                            {slide.caption && (
+                                <p className="absolute bottom-0 left-0 right-0 p-4 text-sm text-white bg-gradient-to-t from-black/70 to-transparent">
+                                    {slide.caption}
+                                </p>
+                            )}
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Navigation Dots */}
-            {images.length > 1 && (
+            {slides.length > 1 && (
                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-10 p-2 bg-black/20 backdrop-blur-md rounded-full border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {images.map((_, index) => (
+                    {slides.map((_, index) => (
                         <button
                             key={index}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 scrollTo(index);
                             }}
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${selectedIndex === index
-                                ? 'bg-primary w-6'
-                                : 'bg-white/40 hover:bg-white/60'
-                                }`}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${selectedIndex === index ? 'bg-primary w-6' : 'bg-white/40 hover:bg-white/60'}`}
                             aria-label={`Go to slide ${index + 1}`}
                         />
                     ))}
                 </div>
             )}
 
-            {/* Arrows */}
-            {images.length > 1 && (
+            {slides.length > 1 && (
                 <>
                     <button
                         onClick={(e) => {
@@ -153,12 +165,12 @@ export default function PortfolioCarousel({ images }: PortfolioCarouselProps) {
                 </>
             )}
 
-            {/* Lightbox */}
             <Lightbox
                 open={isOpen}
                 close={() => setIsOpen(false)}
                 index={selectedIndex}
-                slides={images.map(img => ({ src: img.url, alt: img.altText }))}
+                slides={lightboxSlides}
+                plugins={[Video]}
                 on={{
                     view: ({ index }) => {
                         setSelectedIndex(index);

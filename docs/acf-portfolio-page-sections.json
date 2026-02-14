@@ -1,0 +1,250 @@
+[
+  {
+    "key": "group_portfolio_page_sections",
+    "title": "Portfolio Page Sections",
+    "fields": [
+      {
+        "key": "field_portfolio_slider_group",
+        "label": "Portfolio Slider",
+        "name": "portfolio_slider",
+        "type": "group",
+        "instructions": "Hero carousel: add rows for images or videos. Reorder by drag and drop.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "block",
+        "sub_fields": [
+          {
+            "key": "field_portfolio_slider_media",
+            "label": "Slider items",
+            "name": "portfolio_slider_media",
+            "type": "repeater",
+            "instructions": "Add one row per carousel slide. Choose Image or Video for each row.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "layout": "block",
+            "button_label": "Add slide",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+              {
+                "key": "field_media_type",
+                "label": "Media type",
+                "name": "media_type",
+                "type": "select",
+                "instructions": "Image or video for this slide.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "30",
+                  "class": "",
+                  "id": ""
+                },
+                "choices": {
+                  "image": "Image",
+                  "video": "Video"
+                },
+                "default_value": "image",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "ui": 1,
+                "ajax": 0,
+                "placeholder": ""
+              },
+              {
+                "key": "field_media_image",
+                "label": "Image",
+                "name": "media_image",
+                "type": "image",
+                "instructions": "Image for this slide. Shown when Media type is Image.",
+                "required": 0,
+                "conditional_logic": [
+                  [
+                    {
+                      "field": "field_media_type",
+                      "operator": "==",
+                      "value": "image"
+                    }
+                  ]
+                ],
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "jpg, jpeg, png, gif, webp"
+              },
+              {
+                "key": "field_media_video",
+                "label": "Video",
+                "name": "media_video",
+                "type": "file",
+                "instructions": "Video file for this slide. Shown when Media type is Video. Prefer mp4, webm, or mov.",
+                "required": 0,
+                "conditional_logic": [
+                  [
+                    {
+                      "field": "field_media_type",
+                      "operator": "==",
+                      "value": "video"
+                    }
+                  ]
+                ],
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_size": "",
+                "max_size": "",
+                "mime_types": "mp4, webm, mov"
+              },
+              {
+                "key": "field_media_video_poster",
+                "label": "Video poster image",
+                "name": "media_video_poster",
+                "type": "image",
+                "instructions": "Optional poster/thumbnail for the video.",
+                "required": 0,
+                "conditional_logic": [
+                  [
+                    {
+                      "field": "field_media_type",
+                      "operator": "==",
+                      "value": "video"
+                    }
+                  ]
+                ],
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "jpg, jpeg, png, gif, webp"
+              },
+              {
+                "key": "field_media_caption",
+                "label": "Caption",
+                "name": "media_caption",
+                "type": "text",
+                "instructions": "Optional caption under the slide.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "field_portfolio_video",
+        "label": "Content video",
+        "name": "portfolio_video",
+        "type": "url",
+        "instructions": "Optional project/content video (URL). For YouTube/Vimeo you can use oEmbed in post content instead.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "placeholder": "https://"
+      },
+      {
+        "key": "field_portfolio_title",
+        "label": "Portfolio title (override)",
+        "name": "portfolio_title",
+        "type": "text",
+        "instructions": "Optional. If set, this overrides the post title on the front end.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": ""
+      },
+      {
+        "key": "field_portfolio_text",
+        "label": "Portfolio text (intro)",
+        "name": "portfolio_text",
+        "type": "textarea",
+        "instructions": "Optional intro or summary. Can be shown above or with the main content.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "maxlength": "",
+        "rows": 4,
+        "placeholder": "",
+        "new_lines": "br"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "portfolio"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Slider carousel, content video, and optional title/text overrides for Portfolio posts.",
+    "show_in_rest": 1
+  }
+]

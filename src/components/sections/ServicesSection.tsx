@@ -75,11 +75,11 @@ export default function ServicesSection({
                     />
                   </div>
                 ) : Icon ? (
-                  <div className="mb-6 text-primary group-hover:text-black dark:group-hover:text-black transition-colors duration-300">
+                  <div className="mb-6 text-blue-600 dark:text-primary group-hover:text-black dark:group-hover:text-black transition-colors duration-300">
                     <Icon className="w-12 h-12" strokeWidth={1.5} />
                   </div>
                 ) : (
-                  <div className="mb-6 w-12 h-12 text-primary group-hover:text-black dark:group-hover:text-black transition-colors duration-300 flex items-center justify-center">
+                  <div className="mb-6 w-12 h-12 text-blue-600 dark:text-primary group-hover:text-black dark:group-hover:text-black transition-colors duration-300 flex items-center justify-center">
                     <Code2 className="w-12 h-12" strokeWidth={1.5} />
                   </div>
                 )}

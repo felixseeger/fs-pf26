@@ -1,10 +1,9 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, getPortfolioNeighbors, extractImagesFromContent } from '@/lib/wordpress/portfolio';
 import { getServiceItems } from '@/lib/wordpress/services';
 import { getServicesMatchingPortfolioCategories } from '@/lib/portfolio-utils';
-import { getPortfolioSliderMedia, getPortfolioFallbackImages } from '@/lib/wordpress/portfolio-media';
+import { getPortfolioSliderMedia, getPortfolioFallbackImages, getPortfolioContentVideoUrl } from '@/lib/wordpress/portfolio-media';
 import Link from 'next/link';
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
 import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigation';
@@ -35,14 +34,15 @@ export async function generateMetadata({ params }: PortfolioItemPageProps): Prom
     }
 
     const featuredImage = item._embedded?.['wp:featuredmedia']?.[0];
+    const displayTitle = item.acf?.portfolio_title?.trim() || item.title?.rendered || 'Project Detail';
 
     return {
-        title: item.title?.rendered || 'Project Detail',
+        title: displayTitle,
         description: item.excerpt?.rendered
             ? item.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160)
             : 'Portfolio project detail for ' + (item.title?.rendered || 'Felix Seeger'),
         openGraph: {
-            title: item.title?.rendered || 'Project Detail',
+            title: displayTitle,
             description: item.excerpt?.rendered
                 ? item.excerpt.rendered.replace(/<[^>]*>/g, '').substring(0, 160)
                 : 'Portfolio project detail for ' + (item.title?.rendered || 'Felix Seeger'),
@@ -87,13 +87,9 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
       carouselMedia = getPortfolioFallbackImages(item, featuredImage || null, contentImages, attachmentImages);
     }
 
-    // Convert to carousel format (images array for now, videos will be handled later)
-    const carouselImages = carouselMedia
-      .filter(media => media.type === 'image')
-      .map(media => ({
-        url: media.url,
-        altText: media.altText,
-      }));
+    const displayTitle = item.acf?.portfolio_title?.trim() || item.title?.rendered || 'Untitled Project';
+    const portfolioText = item.acf?.portfolio_text?.trim();
+    const contentVideoUrl = getPortfolioContentVideoUrl(item);
 
     const matchingServices = getServicesMatchingPortfolioCategories(allServices, terms);
 
@@ -135,14 +131,38 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
 
                     <h1
                         className="text-4xl md:text-6xl font-black mb-6 text-zinc-900 dark:text-white leading-tight"
-                        dangerouslySetInnerHTML={{ __html: item.title?.rendered || 'Untitled Project' }}
+                        dangerouslySetInnerHTML={{ __html: displayTitle }}
                     />
                 </header>
 
                 {/* Hero Carousel */}
-                {carouselImages.length > 0 && (
+                {carouselMedia.length > 0 && (
                     <div className="mb-16">
-                        <PortfolioCarousel images={carouselImages} />
+                        <PortfolioCarousel slides={carouselMedia} />
+                    </div>
+                )}
+
+                {/* Content video (ACF portfolio_video) */}
+                {contentVideoUrl && (
+                    <div className="mb-16 rounded-2xl overflow-hidden shadow-2xl bg-zinc-900 aspect-video">
+                        <video
+                            src={contentVideoUrl}
+                            className="w-full h-full object-contain"
+                            controls
+                            playsInline
+                            preload="metadata"
+                        >
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                )}
+
+                {/* Optional intro text (ACF portfolio_text) */}
+                {portfolioText && (
+                    <div className="mb-10 prose prose-zinc lg:prose-lg dark:prose-invert max-w-none">
+                        <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed whitespace-pre-line">
+                            {portfolioText}
+                        </p>
                     </div>
                 )}
 

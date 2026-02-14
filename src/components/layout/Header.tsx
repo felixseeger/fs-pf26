@@ -19,7 +19,7 @@ const navLinks = [
     { name: 'About', href: '/#about' },
     { name: 'Services', href: '/#services' },
     { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Contact', href: '/#contact' },
+    { name: 'Contact', href: '/contact' },
 ];
 
 export default function Header() {
@@ -232,7 +232,7 @@ export default function Header() {
             <ul className="flex space-x-10 items-center">
                 {navLinks.slice(sliceStart, sliceEnd).map((link) => (
                     <li key={link.name}>
-                        <AnimatedLink href={link.href} className="font-unbounded text-xs font-bold tracking-widest uppercase text-black dark:text-primary hover:text-primary transition-colors">
+                        <AnimatedLink href={link.href} className="font-unbounded text-xs font-bold tracking-widest uppercase text-black dark:text-primary hover:text-blue-600 dark:hover:text-primary transition-colors">
                             {link.name}
                         </AnimatedLink>
                     </li>
@@ -264,7 +264,7 @@ export default function Header() {
                                 <AnimatedLink
                                     key={l.name}
                                     href={l.href}
-                                    className="text-4xl font-unbounded font-black uppercase hover:text-primary transition-colors"
+                                    className="text-4xl font-unbounded font-black uppercase hover:text-blue-600 dark:hover:text-primary transition-colors"
                                     onClick={() => setIsOpen(false)}
                                 >
                                     {l.name}

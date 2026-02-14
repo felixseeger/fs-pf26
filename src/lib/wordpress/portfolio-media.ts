@@ -3,63 +3,72 @@
  * Extracts and normalizes slider media from ACF portfolio_slider_media field
  */
 
-import { WPPortfolioItem, PortfolioSliderMediaItem, ACFImage, FeaturedMedia } from '@/types/wordpress';
+import { WPPortfolioItem, PortfolioSliderMediaItem, ACFImage, ACFFile, FeaturedMedia } from '@/types/wordpress';
 
 export interface SliderMediaItem {
   type: 'image' | 'video';
   url: string;
   altText?: string;
   caption?: string;
+  /** For video: poster image URL */
+  posterUrl?: string;
+}
+
+function getUrlFromImage(image: ACFImage | number | string | false | undefined): string | null {
+  if (!image) return null;
+  if (typeof image === 'string') return image;
+  if (typeof image === 'number') return null;
+  const obj = image as unknown as Record<string, unknown>;
+  if ('url' in obj && typeof obj.url === 'string') return obj.url;
+  if ('source_url' in obj && typeof obj.source_url === 'string') return obj.source_url;
+  return null;
+}
+
+function getUrlFromFile(file: ACFFile | string | number | false | undefined): string | null {
+  if (!file) return null;
+  if (typeof file === 'string') return file;
+  if (typeof file === 'number') return null;
+  const obj = file as unknown as Record<string, unknown>;
+  if ('url' in obj && typeof obj.url === 'string') return obj.url;
+  return null;
 }
 
 /**
  * Extract slider media from portfolio item ACF field.
- * Returns normalized array of images (and videos if media_type indicates video).
+ * Supports both: acf.portfolio_slider_media and acf.portfolio_slider.portfolio_slider_media (group).
  */
 export function getPortfolioSliderMedia(item: WPPortfolioItem): SliderMediaItem[] {
-  const sliderMedia = item.acf?.portfolio_slider_media;
+  const sliderMedia =
+    item.acf?.portfolio_slider_media ??
+    item.acf?.portfolio_slider?.portfolio_slider_media;
   if (!sliderMedia || !Array.isArray(sliderMedia) || sliderMedia.length === 0) {
     return [];
   }
 
   return sliderMedia
     .map((media): SliderMediaItem | null => {
-      // Handle media_type: checkbox (boolean) or select (string)
       const isVideo = media.media_type === true || media.media_type === 'video' || media.media_type === '1';
       const mediaType: 'image' | 'video' = isVideo ? 'video' : 'image';
+      const caption = media.media_caption?.trim() || undefined;
 
-      // Extract image data
-      const image = media.media_image;
-      if (!image) return null;
-
-      let url: string | null = null;
-      let altText: string | undefined;
-
-      // Handle different image field return formats
-      if (typeof image === 'string') {
-        url = image;
-      } else if (typeof image === 'number') {
-        // Image ID - would need to fetch, but ACF usually returns object
-        return null;
-      } else if (typeof image === 'object' && image !== null) {
-        const imgObj = image as unknown as Record<string, unknown>;
-        if ('url' in imgObj && typeof imgObj.url === 'string') {
-          url = imgObj.url;
-          if ('alt' in imgObj && typeof imgObj.alt === 'string') altText = imgObj.alt;
-        } else if ('source_url' in imgObj && typeof imgObj.source_url === 'string') {
-          // WordPress media object format
-          url = imgObj.source_url;
-          if ('alt_text' in imgObj && typeof imgObj.alt_text === 'string') altText = imgObj.alt_text;
-        }
+      if (mediaType === 'video') {
+        const videoUrl = getUrlFromFile(media.media_video);
+        if (!videoUrl) return null;
+        const posterUrl = getUrlFromImage(media.media_video_poster) ?? undefined;
+        return { type: 'video', url: videoUrl, caption, posterUrl };
       }
 
+      const image = media.media_image;
+      if (!image) return null;
+      const url = getUrlFromImage(image);
       if (!url) return null;
-
-      return {
-        type: mediaType,
-        url,
-        altText,
-      };
+      let altText: string | undefined;
+      if (typeof image === 'object' && image !== null) {
+        const imgObj = image as unknown as Record<string, unknown>;
+        if ('alt' in imgObj && typeof imgObj.alt === 'string') altText = imgObj.alt;
+        else if ('alt_text' in imgObj && typeof imgObj.alt_text === 'string') altText = imgObj.alt_text;
+      }
+      return { type: 'image', url, altText, caption };
     })
     .filter((item): item is SliderMediaItem => item !== null);
 }
@@ -106,4 +115,15 @@ export function getPortfolioFallbackImages(
     seen.add(baseUrl);
     return true;
   });
+}
+
+/**
+ * Content video URL from ACF portfolio_video (URL or file).
+ * Use for the optional project/content video block below the carousel.
+ */
+export function getPortfolioContentVideoUrl(item: WPPortfolioItem): string | null {
+  const pv = item.acf?.portfolio_video;
+  if (!pv) return null;
+  if (typeof pv === 'string') return pv.trim() || null;
+  return getUrlFromFile(pv as ACFFile);
 }
