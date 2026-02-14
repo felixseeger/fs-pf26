@@ -73,7 +73,7 @@ export default function PortfolioCarousel({ slides }: PortfolioCarouselProps) {
 
     const lightboxSlides = slides.map((s) =>
         s.type === 'video'
-            ? { type: 'video' as const, sources: [{ src: s.url }], poster: s.posterUrl, width: 1920, height: 1080 }
+            ? { type: 'video' as const, sources: [{ src: s.url, type: 'video/mp4' }], poster: s.posterUrl, width: 1920, height: 1080 }
             : { src: s.url, alt: s.altText }
     );
 
