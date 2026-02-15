@@ -1,0 +1,193 @@
+[
+  {
+    "key": "group_footer_fields",
+    "title": "Footer",
+    "fields": [
+      {
+        "key": "field_footer_about_title",
+        "label": "About Title",
+        "name": "footer_about_title",
+        "type": "text",
+        "instructions": "Heading for the About column.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "50", "class": "", "id": "" },
+        "default_value": "About",
+        "placeholder": "About"
+      },
+      {
+        "key": "field_footer_image",
+        "label": "Footer Image",
+        "name": "footer_image",
+        "type": "image",
+        "instructions": "Optional logo or image displayed in the footer.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "", "class": "", "id": "" },
+        "return_format": "array",
+        "library": "all",
+        "min_width": "",
+        "min_height": "",
+        "min_size": "",
+        "max_width": "",
+        "max_height": "",
+        "max_size": "",
+        "mime_types": "jpg, jpeg, png, gif, webp, svg"
+      },
+      {
+        "key": "field_footer_about_text",
+        "label": "About Text",
+        "name": "footer_about_text",
+        "type": "textarea",
+        "instructions": "Short description for the footer About section.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "", "class": "", "id": "" },
+        "default_value": "",
+        "rows": 4,
+        "new_lines": "br"
+      },
+      {
+        "key": "field_footer_quick_links_title",
+        "label": "Quick Links Title",
+        "name": "footer_quick_links_title",
+        "type": "text",
+        "instructions": "Heading for the Quick Links column.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "50", "class": "", "id": "" },
+        "default_value": "Quick Links",
+        "placeholder": "Quick Links"
+      },
+      {
+        "key": "field_footer_quick_links_menu",
+        "label": "Quick Links Menu",
+        "name": "footer_quick_links_menu",
+        "type": "text",
+        "instructions": "WordPress menu slug for Quick Links (e.g. quick-links).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "50", "class": "", "id": "" },
+        "default_value": "quick-links",
+        "placeholder": "quick-links"
+      },
+      {
+        "key": "field_footer_legal_title",
+        "label": "Legal Title",
+        "name": "footer_legal_title",
+        "type": "text",
+        "instructions": "Heading for the Legal column.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "50", "class": "", "id": "" },
+        "default_value": "Legal",
+        "placeholder": "Legal"
+      },
+      {
+        "key": "field_footer_legal_menu",
+        "label": "Legal Menu",
+        "name": "footer_legal_menu",
+        "type": "text",
+        "instructions": "WordPress menu slug for Legal links (e.g. footer-legal).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "50", "class": "", "id": "" },
+        "default_value": "footer-legal",
+        "placeholder": "footer-legal"
+      },
+      {
+        "key": "field_footer_connect_title",
+        "label": "Connect Title",
+        "name": "footer_connect_title",
+        "type": "text",
+        "instructions": "Heading for the Connect / social links column.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "50", "class": "", "id": "" },
+        "default_value": "Connect",
+        "placeholder": "Connect"
+      },
+      {
+        "key": "field_footer_text",
+        "label": "Copyright / Footer Text",
+        "name": "footer_text",
+        "type": "textarea",
+        "instructions": "Copyright or bottom line text. Use {{year}} for current year.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "", "class": "", "id": "" },
+        "default_value": "© {{year}} All rights reserved.",
+        "rows": 2,
+        "new_lines": "br"
+      },
+      {
+        "key": "field_social_links",
+        "label": "Social Links",
+        "name": "social_links",
+        "type": "repeater",
+        "instructions": "Add social media links for the footer.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "", "class": "", "id": "" },
+        "layout": "block",
+        "button_label": "Add link",
+        "min": 0,
+        "max": 0,
+        "sub_fields": [
+          {
+            "key": "field_social_platform",
+            "label": "Platform",
+            "name": "platform",
+            "type": "select",
+            "required": 1,
+            "wrapper": { "width": "50", "class": "", "id": "" },
+            "choices": {
+              "twitter": "Twitter / X",
+              "github": "GitHub",
+              "linkedin": "LinkedIn",
+              "instagram": "Instagram",
+              "facebook": "Facebook"
+            },
+            "default_value": "",
+            "return_format": "value",
+            "allow_null": 0
+          },
+          {
+            "key": "field_social_url",
+            "label": "URL",
+            "name": "url",
+            "type": "url",
+            "required": 1,
+            "wrapper": { "width": "50", "class": "", "id": "" },
+            "placeholder": "https://"
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page_type",
+          "operator": "==",
+          "value": "front_page"
+        }
+      ],
+      [
+        {
+          "param": "options_page",
+          "operator": "==",
+          "value": "acf-options-home"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Footer content: about text, Quick Links/Legal menus, social links, and copyright. Shown on the front page or ACF Options (if using Options page).",
+    "show_in_rest": 1
+  }
+]

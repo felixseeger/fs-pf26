@@ -100,7 +100,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
             <article className="max-w-4xl mx-auto px-6 py-20">
                 {/* Featured / service icon image – above headline, full image visible, no background */}
                 {iconImageUrl ? (
-                    <div className="featured-image-write-in bg-zinc-100 dark:bg-zinc-900 relative w-full max-w-2xl mx-auto min-h-[200px] aspect-2/1 mb-12 rounded-2xl flex items-center justify-center">
+                    <div className="featured-image-write-in relative w-full max-w-2xl mx-auto min-h-[200px] aspect-2/1 mb-12 rounded-2xl flex items-center justify-center">
                         <Image
                             src={iconImageUrl}
                             alt={iconImageAlt || service.title.rendered}

@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import ThemeLogo from './ThemeLogo';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { WPMenuItem } from '@/lib/wordpress';
+import { toFrontendHref } from '@/lib/site-config';
 
 interface MobileMenuProps {
     menuItems: WPMenuItem[];
@@ -129,17 +130,7 @@ export default function MobileMenu({ menuItems }: MobileMenuProps) {
                 {/* Navigation Links with Staggered Animation */}
                 <nav className="flex flex-col py-4 overflow-y-auto max-h-[calc(100vh-73px)]">
                     {items.map((item, index) => {
-                        // Convert WordPress URL to relative path if it's from the same site
-                        const isExternal = item.url.startsWith('http') && !item.url.includes(process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '');
-                        let href = item.url;
-
-                        try {
-                            href = isExternal ? item.url : new URL(item.url).pathname;
-                        } catch {
-                            // If URL parsing fails, use the original URL
-                            href = item.url;
-                        }
-
+                        const { href, external } = toFrontendHref(item.url);
                         const isActive = pathname === href;
 
                         // Staggered animation delay for each item

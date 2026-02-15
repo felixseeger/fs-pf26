@@ -195,6 +195,10 @@ export interface HomepageMetaBox {
   footer_image?: ACFImage | number | false;
   footer_about_title?: string;
   footer_about_text?: string;
+  footer_quick_links_title?: string;
+  footer_quick_links_menu?: string;
+  footer_legal_title?: string;
+  footer_legal_menu?: string;
   footer_connect_title?: string;
   footer_text?: string;
   social_links?: SocialLink[];

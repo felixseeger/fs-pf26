@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getMenuItems, getHomePage, getLegalPages } from '@/lib/wordpress';
 import { WPMenuItem, SocialLink, ACFImage } from '@/types/wordpress';
-import { getSiteUrl, DEFAULT_SOCIAL_URLS } from '@/lib/site-config';
+import { getSiteUrl, DEFAULT_SOCIAL_URLS, toFrontendHref } from '@/lib/site-config';
 
 function SocialIcon({ platform, className }: { platform: SocialLink['platform']; className?: string }) {
   const c = className ?? 'w-6 h-6';
@@ -46,21 +46,6 @@ function SocialIcon({ platform, className }: { platform: SocialLink['platform'];
   }
 }
 
-const frontendOrigin = getSiteUrl();
-const backendOrigin = process.env.WORDPRESS_API_URL || '';
-
-function toFrontendHref(url: string): { href: string; external: boolean } {
-  if (url.startsWith('/')) return { href: url, external: false };
-  try {
-    const u = new URL(url);
-    if (backendOrigin && u.origin === new URL(backendOrigin).origin) return { href: u.pathname || '/', external: false };
-    if (u.origin === new URL(frontendOrigin).origin) return { href: u.pathname || '/', external: false };
-    return { href: url, external: true };
-  } catch {
-    return { href: url.startsWith('http') ? url : `/${url}`, external: url.startsWith('http') };
-  }
-}
-
 export default async function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -68,19 +53,26 @@ export default async function Footer() {
   let legalLinks: { title: string; href: string; external?: boolean }[] = [];
   let footerAboutTitle = 'About';
   let footerAboutText = 'A modern blog powered by WordPress and Next.js, delivering fast and seamless reading experience.';
+  let footerQuickLinksTitle = 'Quick Links';
+  let footerLegalTitle = 'Legal';
   let footerConnectTitle = 'Connect';
   let footerCopyright = `© ${currentYear} Felix Seeger. All rights reserved.`;
   let socialLinks: SocialLink[] = [];
   let footerImage: ACFImage | null = null;
 
   try {
-    const [quickLinksMenu, secondaryMenu, legalMenu, legalPages, homePage] = await Promise.all([
-      getMenuItems('quick-links'),
+    const homePage = await getHomePage();
+    const acf = homePage?.meta_box ?? homePage?.acf;
+    const quickLinksMenuSlug = acf?.footer_quick_links_menu?.trim() || 'quick-links';
+    const legalMenuSlug = acf?.footer_legal_menu?.trim() || 'footer-legal';
+
+    const [quickLinksMenu, secondaryMenu, legalMenu, legalPages] = await Promise.all([
+      getMenuItems(quickLinksMenuSlug),
       getMenuItems('secondary-navigation'),
-      getMenuItems('footer-legal'),
+      getMenuItems(legalMenuSlug),
       getLegalPages(),
-      getHomePage(),
     ]);
+
     quickLinksItems = Array.isArray(quickLinksMenu) && quickLinksMenu.length > 0
       ? quickLinksMenu
       : Array.isArray(secondaryMenu) ? secondaryMenu : [];
@@ -92,13 +84,15 @@ export default async function Footer() {
     } else {
       legalLinks = legalPages.map((p) => ({ title: p.title, href: p.link }));
     }
-    const acf = homePage?.meta_box ?? homePage?.acf;
+
     if (acf) {
       if (acf.footer_image && typeof acf.footer_image === 'object' && 'url' in acf.footer_image && acf.footer_image.url) {
         footerImage = acf.footer_image as ACFImage;
       }
       if (acf.footer_about_title?.trim()) footerAboutTitle = acf.footer_about_title.trim();
       if (acf.footer_about_text?.trim()) footerAboutText = acf.footer_about_text.trim();
+      if (acf.footer_quick_links_title?.trim()) footerQuickLinksTitle = acf.footer_quick_links_title.trim();
+      if (acf.footer_legal_title?.trim()) footerLegalTitle = acf.footer_legal_title.trim();
       if (acf.footer_connect_title?.trim()) footerConnectTitle = acf.footer_connect_title.trim();
       if (acf.footer_text?.trim()) footerCopyright = acf.footer_text.trim().replace(/\{\{year\}\}/g, String(currentYear));
       if (acf.social_links && Array.isArray(acf.social_links)) socialLinks = acf.social_links;
@@ -117,7 +111,7 @@ export default async function Footer() {
               alt={footerImage.alt || 'Footer logo'}
               width={footerImage.width || 160}
               height={footerImage.height || 48}
-              className="h-12 w-auto object-contain object-left"
+              className="h-12 w-auto object-contain object-left transition-[filter] duration-300 brightness-0 saturate-100 invert-[0.65] dark:brightness-0 dark:invert"
               unoptimized={process.env.NEXT_IMAGE_UNOPTIMIZED === 'true'}
             />
           </div>
@@ -133,10 +127,10 @@ export default async function Footer() {
             </p>
           </div>
 
-          {/* Quick Links – from WordPress menu (quick-links, fallback: secondary-navigation) */}
+          {/* Quick Links – from WordPress menu (footer_quick_links_menu or quick-links) */}
           <div suppressHydrationWarning>
             <h3 className="text-lg font-bold text-black dark:text-white mb-4">
-              Quick Links
+              {footerQuickLinksTitle}
             </h3>
             <ul className="space-y-2">
               {quickLinksItems.length > 0 ? (
@@ -181,10 +175,10 @@ export default async function Footer() {
             </ul>
           </div>
 
-          {/* Legal – from WordPress menu (footer-legal) or legal pages by slug */}
+          {/* Legal – from WordPress menu (footer_legal_menu or footer-legal) or legal pages */}
           <div suppressHydrationWarning>
             <h3 className="text-lg font-bold text-black dark:text-white mb-4">
-              Legal
+              {footerLegalTitle}
             </h3>
             <ul className="space-y-2">
               {legalLinks.length > 0 ? (
