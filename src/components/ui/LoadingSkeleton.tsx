@@ -2,36 +2,36 @@ export function PostCardSkeleton() {
   return (
     <article className="bg-white dark:bg-zinc-900 rounded-lg overflow-hidden shadow-sm">
       {/* Featured Image Skeleton */}
-      <div className="relative w-full aspect-video bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+      <div className="relative w-full aspect-video skeleton-bg animate-pulse" />
 
       {/* Content Skeleton */}
       <div className="p-6 flex flex-col gap-4">
         {/* Category Badge Skeleton */}
         <div className="flex gap-2">
-          <div className="h-6 w-16 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-6 w-16 skeleton-bg rounded animate-pulse" />
         </div>
 
         {/* Title Skeleton */}
         <div className="space-y-2">
-          <div className="h-7 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-7 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-7 skeleton-bg rounded animate-pulse" />
+          <div className="h-7 w-3/4 skeleton-bg rounded animate-pulse" />
         </div>
 
         {/* Excerpt Skeleton */}
         <div className="space-y-2 grow">
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 w-2/3 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 w-2/3 skeleton-bg rounded animate-pulse" />
         </div>
 
         {/* Meta Skeleton */}
         <div className="flex items-center justify-between">
-          <div className="h-4 w-20 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 w-20 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 w-24 skeleton-bg rounded animate-pulse" />
         </div>
 
         {/* Read More Skeleton */}
-        <div className="h-5 w-24 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+        <div className="h-5 w-24 skeleton-bg rounded animate-pulse" />
       </div>
     </article>
   );
@@ -55,36 +55,36 @@ export function PostContentSkeleton() {
         <header className="mb-8">
           {/* Category Skeleton */}
           <div className="flex gap-2 mb-4">
-            <div className="h-6 w-16 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
+            <div className="h-6 w-16 skeleton-bg rounded-full animate-pulse" />
           </div>
 
           {/* Title Skeleton */}
           <div className="space-y-3 mb-4">
-            <div className="h-10 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-            <div className="h-10 w-2/3 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+            <div className="h-10 skeleton-bg rounded animate-pulse" />
+            <div className="h-10 w-2/3 skeleton-bg rounded animate-pulse" />
           </div>
 
           {/* Meta Skeleton */}
           <div className="flex items-center gap-4">
-            <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-            <div className="h-4 w-32 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+            <div className="h-4 w-24 skeleton-bg rounded animate-pulse" />
+            <div className="h-4 w-32 skeleton-bg rounded animate-pulse" />
           </div>
         </header>
 
         {/* Featured Image Skeleton */}
-        <div className="relative w-full aspect-video mb-8 rounded-lg bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+        <div className="relative w-full aspect-video mb-8 rounded-lg skeleton-bg animate-pulse" />
 
         {/* Content Skeleton */}
         <div className="space-y-4">
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 w-5/6 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 w-4/5 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-6 mt-8 mb-4 w-1/3 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 w-5/6 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 w-4/5 skeleton-bg rounded animate-pulse" />
+          <div className="h-6 mt-8 mb-4 w-1/3 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 w-3/4 skeleton-bg rounded animate-pulse" />
         </div>
       </article>
     </div>
@@ -94,8 +94,8 @@ export function PostContentSkeleton() {
 export function CategoryHeaderSkeleton() {
   return (
     <header className="mb-16 text-center">
-      <div className="h-12 w-48 mx-auto bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-4" />
-      <div className="h-5 w-32 mx-auto bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+      <div className="h-12 w-48 mx-auto skeleton-bg rounded animate-pulse mb-4" />
+      <div className="h-5 w-32 mx-auto skeleton-bg rounded animate-pulse" />
     </header>
   );
 }
@@ -104,9 +104,9 @@ export function CategoryHeaderSkeleton() {
 export function PageHeaderSkeleton() {
   return (
     <header className="max-w-3xl mb-16">
-      <div className="h-14 md:h-20 w-full max-w-2xl bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-6" />
-      <div className="h-6 w-full bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-      <div className="h-6 w-4/5 mt-2 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+      <div className="h-14 md:h-20 w-full max-w-2xl skeleton-bg rounded animate-pulse mb-6" />
+      <div className="h-6 w-full skeleton-bg rounded animate-pulse" />
+      <div className="h-6 w-4/5 mt-2 skeleton-bg rounded animate-pulse" />
     </header>
   );
 }
@@ -114,16 +114,16 @@ export function PageHeaderSkeleton() {
 function PortfolioCardSkeleton() {
   return (
     <article className="bg-white dark:bg-zinc-900 rounded-lg overflow-hidden shadow-sm flex flex-col">
-      <div className="relative w-full aspect-video bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+      <div className="relative w-full aspect-video skeleton-bg animate-pulse" />
       <div className="p-6 flex flex-col gap-3">
         <div className="flex gap-2">
-          <div className="h-5 w-14 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-5 w-20 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-5 w-14 skeleton-bg rounded animate-pulse" />
+          <div className="h-5 w-20 skeleton-bg rounded animate-pulse" />
         </div>
-        <div className="h-7 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+        <div className="h-7 w-3/4 skeleton-bg rounded animate-pulse" />
         <div className="space-y-2">
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 w-5/6 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 w-5/6 skeleton-bg rounded animate-pulse" />
         </div>
       </div>
     </article>
@@ -135,7 +135,7 @@ export function PortfolioGridSkeleton({ count = 6 }: { count?: number }) {
     <section className="w-full">
       <div className="flex flex-wrap gap-2 mb-8">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-9 w-24 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
+          <div key={i} className="h-9 w-24 skeleton-bg rounded-full animate-pulse" />
         ))}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -150,15 +150,15 @@ export function PortfolioGridSkeleton({ count = 6 }: { count?: number }) {
 function ServiceCardSkeleton() {
   return (
     <article className="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm flex flex-col h-full">
-      <div className="w-full h-24 bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+      <div className="w-full h-24 skeleton-bg animate-pulse" />
       <div className="p-6 flex flex-col grow">
-        <div className="h-8 w-3/4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-3" />
+        <div className="h-8 w-3/4 skeleton-bg rounded animate-pulse mb-3" />
         <div className="space-y-2 grow">
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
-          <div className="h-4 w-2/3 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 skeleton-bg rounded animate-pulse" />
+          <div className="h-4 w-2/3 skeleton-bg rounded animate-pulse" />
         </div>
-        <div className="h-5 w-24 mt-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+        <div className="h-5 w-24 mt-4 skeleton-bg rounded animate-pulse" />
       </div>
     </article>
   );

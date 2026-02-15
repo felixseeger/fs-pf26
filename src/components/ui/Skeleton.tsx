@@ -16,7 +16,7 @@ export function Skeleton({ className, shimmer, ...props }: SkeletonProps) {
       role="status"
       aria-label="Loading"
       className={cn(
-        'rounded-md bg-zinc-200 dark:bg-zinc-800',
+        'rounded-md skeleton-bg',
         shimmer ? 'skeleton-shimmer' : 'animate-pulse',
         className
       )}

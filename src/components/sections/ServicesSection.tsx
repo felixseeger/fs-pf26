@@ -65,7 +65,7 @@ export default function ServicesSection({
                           cursor-pointer"
               >
                 {service.iconUrl ? (
-                  <div className="featured-image-write-in mb-6 w-12 h-12 service-icon relative shrink-0 overflow-hidden">
+                  <div className="featured-image-write-in bg-zinc-100 dark:bg-zinc-900 mb-6 w-12 h-12 service-icon service-icon-blue relative shrink-0 overflow-hidden rounded-lg">
                     <Image
                       src={service.iconUrl}
                       alt={service.iconAlt || `${service.title} icon`}
@@ -75,11 +75,11 @@ export default function ServicesSection({
                     />
                   </div>
                 ) : Icon ? (
-                  <div className="mb-6 text-blue-600 dark:text-primary group-hover:text-black dark:group-hover:text-black transition-colors duration-300">
+                  <div className="bg-zinc-100 dark:bg-zinc-900 mb-6 w-12 h-12 rounded-lg flex items-center justify-center text-blue-600 dark:text-primary group-hover:text-black dark:group-hover:text-black transition-colors duration-300">
                     <Icon className="w-12 h-12" strokeWidth={1.5} />
                   </div>
                 ) : (
-                  <div className="mb-6 w-12 h-12 text-blue-600 dark:text-primary group-hover:text-black dark:group-hover:text-black transition-colors duration-300 flex items-center justify-center">
+                  <div className="bg-zinc-100 dark:bg-zinc-900 mb-6 w-12 h-12 rounded-lg flex items-center justify-center text-blue-600 dark:text-primary group-hover:text-black dark:group-hover:text-black transition-colors duration-300">
                     <Code2 className="w-12 h-12" strokeWidth={1.5} />
                   </div>
                 )}

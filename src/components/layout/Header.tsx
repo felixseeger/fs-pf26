@@ -193,20 +193,20 @@ export default function Header() {
             ease: "power2.inOut"
         }, 0);
 
-        // Right Nav -> Move to Right Edge
+        // Right Nav (Portfolio, Contact) -> Left of Theme/Resume
         scrollTl.to(rightLinksRef.current, {
             left: '100%',
             xPercent: -100,
-            x: -40,
+            x: -350,
             duration: 0.8,
             ease: "power2.inOut"
         }, 0);
 
-        // Move Secondary Actions to correct position
+        // Secondary Actions (Theme, Resume) -> Far right
         scrollTl.to(secondaryActionsRef.current, {
             left: '100%',
             xPercent: -100,
-            x: -350,
+            x: -40,
             duration: 0.8,
             ease: "power2.inOut"
         }, 0);
@@ -300,9 +300,14 @@ export default function Header() {
                                 </Link>
                             </div>
                         </nav>
-                        <button onClick={() => setIsOpen(true)} className="md:hidden ml-auto p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20" aria-label="Open menu" aria-expanded={isOpen}>
-                            <Menu size={20} className="text-foreground" aria-hidden />
-                        </button>
+                        <div className="md:hidden ml-auto flex items-center gap-3">
+                            <button onClick={toggleTheme} className="p-2 bg-muted rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+                                {resolvedTheme === 'dark' ? <Sun size={16} className="text-foreground" aria-hidden /> : <Moon size={16} className="text-foreground" aria-hidden />}
+                            </button>
+                            <button onClick={() => setIsOpen(true)} className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20" aria-label="Open menu" aria-expanded={isOpen}>
+                                <Menu size={20} className="text-foreground" aria-hidden />
+                            </button>
+                        </div>
                     </div>
                 </header>
             )}

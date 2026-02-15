@@ -11,17 +11,19 @@ import SelectedWorksSection from "@/components/sections/SelectedWorksSection";
 import AboutSectionImage from "@/components/sections/AboutSectionImage";
 import AboutSectionContent from "@/components/sections/AboutSectionContent";
 import ServicesSection, { Service } from "@/components/sections/ServicesSection";
-import TiltCard from "@/components/ui/TiltCard";
+import FAQSection from "@/components/sections/FAQSection";
 import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
-import { Phone, Mail, ArrowRight } from "lucide-react";
+
+import { getServiceIconUrl } from '@/lib/service-icons';
 
 function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
   return services.map((service) => {
     const featuredImage = service._embedded?.['wp:featuredmedia']?.[0];
     const servicesGallery = service.acf?.services_gallery;
-    const iconUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery
+    const wpIconUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery
       ? (servicesGallery as ACFImage).url
       : featuredImage?.source_url;
+    const iconUrl = getServiceIconUrl(service.slug, wpIconUrl);
     const iconAlt = servicesGallery && typeof servicesGallery === 'object' && 'alt' in servicesGallery
       ? (servicesGallery as ACFImage).alt
       : featuredImage?.alt_text;
@@ -122,85 +124,16 @@ export default async function Home() {
 
         {/* FAQ Section - from WordPress ACF */}
         {acf?.faq_items && acf.faq_items.length > 0 && (
-          <section id="faq" className="mb-24 max-w-6xl mx-auto px-4" suppressHydrationWarning>
-            <header className="mb-8">
-              <div className="flex items-center gap-4 mb-4" suppressHydrationWarning>
-                <span className="w-12 h-px bg-zinc-300 dark:bg-zinc-800" />
-                <span className="text-xs uppercase tracking-widest font-bold text-zinc-500">FAQ</span>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white">
-                {acf.faq_title || 'Frequently Asked Questions'}
-              </h2>
-            </header>
-            <div className="space-y-4" suppressHydrationWarning>
-              {acf.faq_items.map((faq, index) => (
-                <TiltCard key={index} className="rounded-lg">
-                  <details className="group p-6 bg-zinc-50 dark:bg-zinc-900 rounded-lg h-full">
-                    <summary className="flex justify-between items-center cursor-pointer list-none text-lg font-bold text-black dark:text-white">
-                      {faq.question}
-                      <span className="ml-4 text-2xl group-open:rotate-45 transition-transform" aria-hidden>+</span>
-                    </summary>
-                    <div
-                      className="mt-4 text-zinc-600 dark:text-zinc-400 prose dark:prose-invert"
-                      dangerouslySetInnerHTML={{ __html: faq.answer }}
-                      suppressHydrationWarning
-                    />
-                  </details>
-                </TiltCard>
-              ))}
-            </div>
-
-            {/* FAQ Contact CTA Cards */}
-            {(acf.contact_phone || acf.contact_email) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12" suppressHydrationWarning>
-                {acf.contact_phone && (
-                  <TiltCard className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-transparent rounded-2xl p-8 flex flex-col justify-between">
-                    <div>
-                      <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6">
-                        <Phone size={24} className="text-primary-foreground" />
-                      </div>
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-3">
-                        {acf.faq_phone_card_title || 'Contact Me'}
-                      </h3>
-                      <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                        {acf.faq_phone_card_description || "Ready to discuss your project? I'm here to answer any questions and provide personalized solutions for your business needs."}
-                      </p>
-                    </div>
-                    <a
-                      href={`tel:${acf.contact_phone.replace(/\s/g, '')}`}
-                      className="inline-flex items-center gap-2 text-zinc-900 dark:text-white font-bold mt-8 group/link hover:text-primary transition-colors"
-                    >
-                      {acf.contact_phone}
-                      <ArrowRight size={18} className="group-hover/link:translate-x-1 transition-transform" />
-                    </a>
-                  </TiltCard>
-                )}
-
-                {acf.contact_email && (
-                  <TiltCard className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-transparent rounded-2xl p-8 flex flex-col justify-between">
-                    <div>
-                      <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6">
-                        <Mail size={24} className="text-primary-foreground" />
-                      </div>
-                      <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-3">
-                        {acf.faq_email_card_title || 'Send a Message'}
-                      </h3>
-                      <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                        {acf.faq_email_card_description || 'Good website tells a story that will make users fully immerse themselves operating'}
-                      </p>
-                    </div>
-                    <a
-                      href={`mailto:${acf.contact_email}`}
-                      className="inline-flex items-center gap-2 text-zinc-900 dark:text-white font-bold mt-8 group/link hover:text-primary transition-colors"
-                    >
-                      {acf.contact_email}
-                      <ArrowRight size={18} className="group-hover/link:translate-x-1 transition-transform" />
-                    </a>
-                  </TiltCard>
-                )}
-              </div>
-            )}
-          </section>
+          <FAQSection
+            faqTitle={acf.faq_title || 'Frequently Asked Questions'}
+            faqItems={acf.faq_items}
+            contactPhone={acf.contact_phone}
+            contactEmail={acf.contact_email}
+            faqPhoneCardTitle={acf.faq_phone_card_title}
+            faqPhoneCardDescription={acf.faq_phone_card_description}
+            faqEmailCardTitle={acf.faq_email_card_title}
+            faqEmailCardDescription={acf.faq_email_card_description}
+          />
         )}
 
       </div>

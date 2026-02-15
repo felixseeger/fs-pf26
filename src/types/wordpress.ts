@@ -329,6 +329,8 @@ export interface FeatureHighlight {
 }
 
 export interface ContactPageMetaBox {
+  // Contact section title (above contact info cards)
+  contact_title?: string;
   // Contact Info Cards
   headquarters_title?: string;
   headquarters_address?: string;
@@ -353,6 +355,8 @@ export interface ContactPageMetaBox {
   // Feature Banner
   feature_highlights?: Array<FeatureHighlight | string>;
   show_feature_banner?: boolean;
+  // Contact Form 7
+  cf7_form_id?: number | string;
 }
 
 // Resume/Lebenslauf Types

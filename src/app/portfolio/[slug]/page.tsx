@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, getPortfolioNeighbors, extractImagesFromContent } from '@/lib/wordpress/portfolio';
+import { getPortfolioItemBySlug, getPortfolioAttachments, getPortfolioItems, getPortfolioNeighbors } from '@/lib/wordpress/portfolio';
 import { getServiceItems } from '@/lib/wordpress/services';
 import { getCanonicalUrl } from '@/lib/site-config';
 import { getServicesMatchingPortfolioCategories } from '@/lib/portfolio-utils';
@@ -73,21 +73,15 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
     // Priority 1: Get slider media from ACF portfolio_slider_media field
     const sliderMedia = getPortfolioSliderMedia(item);
     
-    // Priority 2: Fallback to existing sources if slider media is empty
+    // Priority 2: Fallback to featured image + attachments if slider media is empty
     let carouselMedia = sliderMedia;
     if (carouselMedia.length === 0) {
-      // 1. Get images from Gutenberg content
-      const contentImages = extractImagesFromContent(item.content?.rendered || '');
-      
-      // 2. Get standard attachments (fallback)
       const attachments = await getPortfolioAttachments(item.id);
       const attachmentImages = attachments.map(a => ({ 
           url: a.source_url, 
           altText: a.alt_text || item.title.rendered 
       }));
-
-      // 3. Combine: Featured -> Content Images -> Attachments
-      carouselMedia = getPortfolioFallbackImages(item, featuredImage || null, contentImages, attachmentImages);
+      carouselMedia = getPortfolioFallbackImages(item, featuredImage || null, [], attachmentImages);
     }
 
     const displayTitle = item.acf?.portfolio_title?.trim() || item.title?.rendered || 'Untitled Project';
@@ -167,7 +161,7 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
                     </div>
                 )}
 
-                {/* Optional intro text (ACF portfolio_text) */}
+                {/* Portfolio Text (Intro) */}
                 {portfolioText && (
                     <div className="mb-10 prose prose-zinc lg:prose-lg dark:prose-invert max-w-none">
                         <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed whitespace-pre-line">
@@ -175,18 +169,6 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
                         </p>
                     </div>
                 )}
-
-                {/* Project Content */}
-                <div className="max-w-none">
-                    <div
-                        className="prose prose-zinc lg:prose-xl dark:prose-invert max-w-none 
-                prose-headings:font-bold prose-headings:text-zinc-900 dark:prose-headings:text-white
-                prose-p:text-zinc-600 dark:prose-p:text-zinc-400 prose-p:leading-relaxed
-                prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:underline
-                [&_img]:hidden shadow-img shadow-zinc-200 dark:shadow-none"
-                        dangerouslySetInnerHTML={{ __html: item.content?.rendered || '<p>No content available.</p>' }}
-                    />
-                </div>
 
                 {/* Previous / Next portfolio posts */}
                 <PortfolioPostNavigation

@@ -284,6 +284,20 @@ body.maintenance-page footer:not(main footer) {
   background: hsl(var(--background) / 0.85);
 }
 
+/* Skeleton loading: texture backgrounds */
+.skeleton-bg {
+  background-color: rgb(228 228 231);
+  background-image: url('/2x2_w.png');
+  background-repeat: repeat;
+}
+
+.dark .skeleton-bg,
+html.dark .skeleton-bg,
+[data-theme='dark'] .skeleton-bg {
+  background-color: rgb(39 39 42);
+  background-image: url('/2x2.png');
+}
+
 /* Skeleton loading: shimmer animation */
 @keyframes skeleton-shimmer {
   0% {
@@ -301,12 +315,15 @@ body.maintenance-page footer:not(main footer) {
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
 }
 
-/* Service icon blue filter for light mode */
+/* Service icon – colorized for light/dark toggle and hover */
 .service-icon-blue {
   filter: brightness(0) saturate(100%) invert(27%) sepia(95%) saturate(2476%) hue-rotate(212deg) brightness(98%) contrast(96%);
+  transition: filter 0.3s ease;
 }
 
+/* Dark mode: invert to white for visibility on dark backgrounds */
 html.dark .service-icon-blue,
 [data-theme='dark'] .service-icon-blue {
-  filter: none;
+  filter: brightness(0) invert(1);
 }
+

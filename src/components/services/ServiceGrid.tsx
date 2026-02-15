@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { WPServiceItem, ACFImage } from '@/types/wordpress';
 import TiltCard from '@/components/ui/TiltCard';
 
+import { getServiceIconUrl } from '@/lib/service-icons';
+
 interface ServiceGridProps {
     services: WPServiceItem[];
 }
@@ -26,10 +28,10 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
                 {services.map((service) => {
                     const featuredImage = service._embedded?.['wp:featuredmedia']?.[0];
                     const servicesGallery = service.acf?.services_gallery;
-                    // Use services_gallery if available, otherwise fallback to featured image
-                    const iconImageUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery 
+                    const wpIconUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery 
                         ? (servicesGallery as ACFImage).url 
                         : featuredImage?.source_url;
+                    const iconImageUrl = getServiceIconUrl(service.slug, wpIconUrl);
                     const iconImageAlt = servicesGallery && typeof servicesGallery === 'object' && 'alt' in servicesGallery
                         ? (servicesGallery as ACFImage).alt
                         : featuredImage?.alt_text;
@@ -42,7 +44,7 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
                         >
                             {/* Image - Use services_gallery icon or fallback to featured image */}
                             {iconImageUrl ? (
-                                <Link href={`/services/${service.slug}`} className="featured-image-write-in relative w-full h-24 flex items-center justify-center p-4 bg-zinc-50 dark:bg-zinc-800">
+                                <Link href={`/services/${service.slug}`} className="featured-image-write-in bg-zinc-100 dark:bg-zinc-900 relative w-full h-24 flex items-center justify-center p-4">
                                     <Image
                                         src={iconImageUrl}
                                         alt={iconImageAlt || service.title.rendered}
@@ -52,7 +54,7 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
                                     />
                                 </Link>
                             ) : (
-                                <div className="w-full h-24 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                                <div className="bg-zinc-100 dark:bg-zinc-900 w-full h-24 flex items-center justify-center">
                                     <svg className="w-8 h-8 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>

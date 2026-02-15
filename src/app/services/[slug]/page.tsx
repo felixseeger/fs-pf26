@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getAllServiceItems, getServiceItemBySlug, getServiceNeighbors } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
+import { getServiceIconUrl } from '@/lib/service-icons';
 import { ACFImage } from '@/types/wordpress';
 import ServicePostNavigation from '@/components/services/ServicePostNavigation';
 
@@ -33,9 +34,10 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 
     const featuredImage = service._embedded?.['wp:featuredmedia']?.[0];
     const servicesGallery = service.acf?.services_gallery;
-    const iconImageUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery
+    const wpIconUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery
         ? (servicesGallery as ACFImage).url
         : featuredImage?.source_url;
+    const iconImageUrl = getServiceIconUrl(service.slug, wpIconUrl);
 
     const title = service.acf?.service_title || service.title.rendered?.replace(/<[^>]*>/g, '').trim();
     const description = service.acf?.service_text?.replace(/<[^>]*>/g, '').trim().substring(0, 160)
@@ -80,10 +82,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
     const featuredImage = service._embedded?.['wp:featuredmedia']?.[0];
     const servicesGallery = service.acf?.services_gallery;
-    // Use services_gallery icon if available, otherwise fallback to featured image
-    const iconImageUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery
+    const wpIconUrl = servicesGallery && typeof servicesGallery === 'object' && 'url' in servicesGallery
         ? (servicesGallery as ACFImage).url
         : featuredImage?.source_url;
+    const iconImageUrl = getServiceIconUrl(service.slug, wpIconUrl);
     const iconImageAlt = servicesGallery && typeof servicesGallery === 'object' && 'alt' in servicesGallery
         ? (servicesGallery as ACFImage).alt
         : featuredImage?.alt_text;
@@ -98,12 +100,12 @@ export default async function ServicePage({ params }: ServicePageProps) {
             <article className="max-w-4xl mx-auto px-6 py-20">
                 {/* Featured / service icon image – above headline, full image visible, no background */}
                 {iconImageUrl ? (
-                    <div className="featured-image-write-in relative w-full max-w-2xl mx-auto min-h-[200px] aspect-2/1 mb-12 rounded-2xl flex items-center justify-center">
+                    <div className="featured-image-write-in bg-zinc-100 dark:bg-zinc-900 relative w-full max-w-2xl mx-auto min-h-[200px] aspect-2/1 mb-12 rounded-2xl flex items-center justify-center">
                         <Image
                             src={iconImageUrl}
                             alt={iconImageAlt || service.title.rendered}
                             fill
-                            className="object-contain"
+                            className="object-contain service-icon-blue"
                             priority
                         />
                     </div>
@@ -164,7 +166,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                 <div className="mb-12">
                     <a 
                         href="/contact"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold rounded-xl transition-colors hover:gap-3"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-lime-500 hover:bg-lime-600 dark:bg-lime-500 dark:hover:bg-lime-600 text-zinc-900 font-bold rounded-xl transition-colors hover:gap-3"
                     >
                         Get a Quote
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

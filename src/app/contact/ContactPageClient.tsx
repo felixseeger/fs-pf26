@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Mail, Phone, ArrowRight, Star, LucideIcon } from 'lucide-react';
+import { MapPin, Mail, Phone, ArrowRight, LucideIcon } from 'lucide-react';
 
 interface ContactData {
+    contactTitle?: string;
+    cf7FormId?: string;
     headquarters: {
         title: string;
         address: string;
@@ -89,26 +91,74 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setSubmitStatus('idle');
+        setErrorMessage('');
 
         try {
-            // Simulate form submission - replace with actual API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            setSubmitStatus('success');
-            setFormData({
-                fullName: '',
-                email: '',
-                subject: '',
-                service: '',
-                message: '',
-                heardFrom: '',
-                privacy: false,
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json',
+            };
+            if (contactData.cf7FormId) {
+                headers['x-cf7-form-id'] = contactData.cf7FormId;
+            }
+
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    fullName: formData.fullName,
+                    email: formData.email,
+                    subject: formData.subject,
+                    service: formData.service || undefined,
+                    message: formData.message,
+                    heardFrom: formData.heardFrom || undefined,
+                }),
             });
-        } catch {
+
+            const text = await res.text();
+            const data = (() => {
+                try {
+                    return JSON.parse(text) as { status?: string; message?: string; details?: { invalid_fields?: { field: string }[] } };
+                } catch {
+                    return {};
+                }
+            })();
+
+            if (res.ok && data.status === 'success') {
+                setSubmitStatus('success');
+                setFormData({
+                    fullName: '',
+                    email: '',
+                    subject: '',
+                    service: '',
+                    message: '',
+                    heardFrom: '',
+                    privacy: false,
+                });
+            } else {
+                setSubmitStatus('error');
+                const details = data.details as Record<string, unknown> | undefined;
+                let msg =
+                    (data.message as string) ||
+                    (details?.message as string) ||
+                    `Request failed (${res.status})`;
+                if (details?.invalid_fields && Array.isArray(details.invalid_fields)) {
+                    const fields = (details.invalid_fields as { field?: string }[]).map((f) => f.field).filter(Boolean);
+                    if (fields.length) msg += ` — invalid: ${fields.join(', ')}`;
+                }
+                if (!data.message && !details?.message && text && text.length < 300) {
+                    msg += ` — ${text}`;
+                }
+                setErrorMessage(msg);
+            }
+        } catch (err) {
             setSubmitStatus('error');
+            setErrorMessage(err instanceof Error ? err.message : 'Network error. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -129,49 +179,23 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
 
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
-            {/* Contact Info Cards Section */}
-            <section className="pt-28 pb-12 px-6 lg:px-10">
-                <div className="max-w-6xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0 md:divide-x divide-zinc-200 dark:divide-zinc-800">
-                        {/* Headquarters */}
-                        <ContactCard
-                            icon={MapPin}
-                            title={contactData.headquarters.title}
-                            action="GET DIRECTION"
-                            href={contactData.headquarters.mapUrl}
-                        >
-                            <p>{contactData.headquarters.address}</p>
-                        </ContactCard>
-
-                        {/* Email */}
-                        <ContactCard
-                            icon={Mail}
-                            title={contactData.email.title}
-                            action="SEND MESSAGE"
-                            href={`mailto:${contactData.email.addresses[0]}`}
-                        >
-                            {contactData.email.addresses.map((email, i) => (
-                                <p key={i}>{email}</p>
-                            ))}
-                        </ContactCard>
-
-                        {/* Phone */}
-                        <ContactCard
-                            icon={Phone}
-                            title={contactData.phone.title}
-                            action="CALL ANYTIME"
-                            href={`tel:${contactData.phone.numbers[0].replace(/\s/g, '')}`}
-                        >
-                            {contactData.phone.numbers.map((phone, i) => (
-                                <p key={i}>{phone}</p>
-                            ))}
-                        </ContactCard>
+            {/* Page Title - Top, Left Aligned */}
+            {contactData.contactTitle && (
+                <header className="pt-28 pb-8 px-6 lg:px-10">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="flex items-center gap-4 mb-4">
+                            <span className="w-12 h-px bg-zinc-300 dark:bg-zinc-800" />
+                            <span className="text-xs uppercase tracking-widest font-bold text-zinc-500">Contact</span>
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-unbounded font-black text-zinc-900 dark:text-white">
+                            {contactData.contactTitle}
+                        </h1>
                     </div>
-                </div>
-            </section>
+                </header>
+            )}
 
             {/* Form Section with Image */}
-            <section className="pb-16">
+            <section className={`pb-16 ${!contactData.contactTitle ? 'pt-28' : ''}`}>
                 <div className="max-w-6xl mx-auto px-6 lg:px-10">
                     <div className="grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-2xl">
                         {/* Left - Image */}
@@ -343,8 +367,8 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
 
                                     {/* Error Message */}
                                     {submitStatus === 'error' && (
-                                        <div className="p-3 bg-red-100 border border-red-300 rounded text-red-800 text-sm">
-                                            Something went wrong. Please try again.
+                                        <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-800 rounded text-red-800 dark:text-red-200 text-sm">
+                                            {errorMessage}
                                         </div>
                                     )}
 
@@ -384,21 +408,46 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
                 </div>
             </section>
 
-            {/* Yellow Banner Section */}
-            {contactData.showFeatureBanner && contactData.features.length > 0 && (
-                <section className="bg-[#d4e542] py-6 overflow-hidden">
-                    <div className="flex items-center justify-center gap-8 md:gap-16 flex-wrap">
-                        {contactData.features.map((feature, index) => (
-                            <div key={index} className="flex items-center gap-3 px-4">
-                                <Star size={20} className="text-zinc-900 fill-zinc-900" />
-                                <span className="font-unbounded font-bold text-sm md:text-base text-zinc-900 whitespace-nowrap">
-                                    {feature}
-                                </span>
-                            </div>
-                        ))}
+            {/* Contact Info Cards Section - Below Form */}
+            <section className="pt-16 pb-24 px-6 lg:px-10">
+                <div className="max-w-6xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0 md:divide-x divide-zinc-200 dark:divide-zinc-800">
+                        {/* Headquarters */}
+                        <ContactCard
+                            icon={MapPin}
+                            title={contactData.headquarters.title}
+                            action="GET DIRECTION"
+                            href={contactData.headquarters.mapUrl}
+                        >
+                            <p>{contactData.headquarters.address}</p>
+                        </ContactCard>
+
+                        {/* Email */}
+                        <ContactCard
+                            icon={Mail}
+                            title={contactData.email.title}
+                            action="SEND MESSAGE"
+                            href={`mailto:${contactData.email.addresses[0]}`}
+                        >
+                            {contactData.email.addresses.map((email, i) => (
+                                <p key={i}>{email}</p>
+                            ))}
+                        </ContactCard>
+
+                        {/* Phone */}
+                        <ContactCard
+                            icon={Phone}
+                            title={contactData.phone.title}
+                            action="CALL ANYTIME"
+                            href={`tel:${contactData.phone.numbers[0].replace(/\s/g, '')}`}
+                        >
+                            {contactData.phone.numbers.map((phone, i) => (
+                                <p key={i}>{phone}</p>
+                            ))}
+                        </ContactCard>
                     </div>
-                </section>
-            )}
+                </div>
+            </section>
         </div>
     );
 }

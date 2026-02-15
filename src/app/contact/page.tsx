@@ -124,8 +124,13 @@ export default async function ContactPage() {
 
     const featuredImage = page._embedded?.['wp:featuredmedia']?.[0];
 
+    // CF7 form ID: from ACF or env (for API route fallback)
+    const cf7FormId = acf.cf7_form_id ?? process.env.CONTACT_FORM_7_ID ?? undefined;
+
     // Build contact data from custom fields with fallbacks
     const contactData = {
+        contactTitle: acf.contact_title || undefined,
+        cf7FormId: cf7FormId ? String(cf7FormId) : undefined,
         headquarters: {
             title: acf.headquarters_title || defaultContactData.headquarters.title,
             address: getAddress(),
