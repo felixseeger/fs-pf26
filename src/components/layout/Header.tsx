@@ -6,7 +6,7 @@ import AnimatedLink from '@/components/ui/AnimatedLink';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Download, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -19,7 +19,6 @@ const navLinks = [
     { name: 'About', href: '/#about' },
     { name: 'Services', href: '/#services' },
     { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Contact', href: '/contact' },
 ];
 
 export default function Header() {
@@ -290,14 +289,14 @@ export default function Header() {
                             </Link>
                         </div>
                         <nav className="hidden md:flex flex-1 justify-end items-center gap-10" aria-label="Secondary navigation">
-                            {renderNavLinks(2, 4)}
+                            {renderNavLinks(2, 3)}
                             <div className="hidden lg:flex items-center gap-6">
+                                <Link href="/resume" className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
+                                    Resume
+                                </Link>
                                 <button onClick={toggleTheme} className="p-2 bg-muted rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
                                     {resolvedTheme === 'dark' ? <Sun size={16} className="text-foreground" aria-hidden /> : <Moon size={16} className="text-foreground" aria-hidden />}
                                 </button>
-                                <Link href="/resume.pdf" className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
-                                    Resume <Download size={14} aria-hidden />
-                                </Link>
                             </div>
                         </nav>
                         <div className="md:hidden ml-auto flex items-center gap-3">
@@ -362,7 +361,7 @@ export default function Header() {
                                 ref={rightLinksRef}
                                 className="hidden md:flex pointer-events-auto items-center gap-12"
                             >
-                                {renderNavLinks(2, 4)}
+                                {renderNavLinks(2, 3)}
                             </div>
 
                             {/* Theme and Resume (Secondary Actions) - Hidden on mobile/tablet, shown on desktop */}
@@ -370,12 +369,12 @@ export default function Header() {
                                 ref={secondaryActionsRef}
                                 className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 items-center gap-6"
                             >
+                                <Link href="/resume" className="bg-primary text-primary-foreground px-6 py-3 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-xl pointer-events-auto inline-flex items-center gap-2">
+                                    Resume
+                                </Link>
                                 <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-muted transition-colors pointer-events-auto bg-white/10 backdrop-blur-md" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
                                     {resolvedTheme === 'dark' ? <Sun size={20} className="text-foreground" aria-hidden /> : <Moon size={20} className="text-foreground" aria-hidden />}
                                 </button>
-                                <Link href="/resume.pdf" className="bg-primary text-primary-foreground px-6 py-3 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-xl pointer-events-auto inline-flex items-center gap-2">
-                                    Resume <Download size={16} aria-hidden />
-                                </Link>
                             </div>
                         </div>
                     </header>

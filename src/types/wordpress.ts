@@ -191,6 +191,12 @@ export interface HomepageMetaBox {
   contact_form_shortcode?: string;
   contact_privacy_policy_url?: string;
   contact_submit_button_text?: string;
+  // WhatsApp Chat Widget
+  whatsapp_phone?: string;
+  whatsapp_message?: string;
+  whatsapp_contact_name?: string;
+  whatsapp_contact_role?: string;
+  whatsapp_header_text?: string;
   // Footer (editable in WordPress via Homepage / Front Page ACF or Meta Box)
   footer_image?: ACFImage | number | false;
   footer_about_title?: string;

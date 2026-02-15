@@ -12,6 +12,8 @@ import CookieSettingsButton from "@/components/ui/CookieSettingsButton";
 import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import JsonLd from "@/components/seo/JsonLd";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
+import { getHomePage } from "@/lib/wordpress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,11 +59,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch homepage ACF fields for WhatsApp config (build-time)
+  const homepage = await getHomePage().catch(() => null);
+  const acf = homepage?.acf ?? homepage?.meta_box;
+
+  const waPhone = acf?.whatsapp_phone?.trim() || '';
+
   return (
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <body
@@ -90,6 +98,15 @@ export default function RootLayout({
             </PageTransitionProvider>
             <CookieConsentBanner />
             <CookieSettingsButton />
+            {waPhone && (
+              <WhatsAppButton
+                phone={waPhone}
+                message={acf?.whatsapp_message?.trim() || undefined}
+                contactName={acf?.whatsapp_contact_name?.trim() || undefined}
+                contactRole={acf?.whatsapp_contact_role?.trim() || undefined}
+                headerText={acf?.whatsapp_header_text?.trim() || undefined}
+              />
+            )}
           </CookieConsentProvider>
         </ThemeProvider>
       </body>

@@ -12,6 +12,7 @@ import AboutSectionImage from "@/components/sections/AboutSectionImage";
 import AboutSectionContent from "@/components/sections/AboutSectionContent";
 import ServicesSection, { Service } from "@/components/sections/ServicesSection";
 import FAQSection from "@/components/sections/FAQSection";
+import NewsletterCollect from "@/components/ui/NewsletterCollect";
 import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
 
 import { getServiceIconUrl } from '@/lib/service-icons';
@@ -135,6 +136,18 @@ export default async function Home() {
             faqEmailCardDescription={acf.faq_email_card_description}
           />
         )}
+
+        {/* Newsletter Signup */}
+        <section className="max-w-3xl mx-auto px-4 mt-24">
+          <NewsletterCollect
+            variant="card"
+            group="blog"
+            source="homepage"
+            title="Stay in the loop"
+            description="Get weekly insights on AI, web development, and building digital products. No spam, unsubscribe anytime."
+            ctaText="Subscribe"
+          />
+        </section>
 
       </div>
     </div>

@@ -1,0 +1,94 @@
+[
+  {
+    "key": "group_whatsapp_chat",
+    "title": "WhatsApp Chat Widget",
+    "fields": [
+      {
+        "key": "field_whatsapp_phone",
+        "label": "Phone Number",
+        "name": "whatsapp_phone",
+        "type": "text",
+        "instructions": "International format without + or spaces (e.g. 4917612345678). Leave empty to hide the widget.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "50", "class": "", "id": "" },
+        "default_value": "",
+        "placeholder": "4917612345678"
+      },
+      {
+        "key": "field_whatsapp_message",
+        "label": "Default Message",
+        "name": "whatsapp_message",
+        "type": "textarea",
+        "instructions": "Pre-filled message when visitor opens the chat.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "50", "class": "", "id": "" },
+        "default_value": "Hi! I visited your website and would like to get in touch.",
+        "placeholder": "",
+        "rows": 3,
+        "new_lines": ""
+      },
+      {
+        "key": "field_whatsapp_contact_name",
+        "label": "Contact Name",
+        "name": "whatsapp_contact_name",
+        "type": "text",
+        "instructions": "Name shown in the chat bubble (e.g. Felix).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "33", "class": "", "id": "" },
+        "default_value": "Felix",
+        "placeholder": "Felix"
+      },
+      {
+        "key": "field_whatsapp_contact_role",
+        "label": "Contact Role",
+        "name": "whatsapp_contact_role",
+        "type": "text",
+        "instructions": "Short role or title (e.g. Web Developer).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "33", "class": "", "id": "" },
+        "default_value": "",
+        "placeholder": "Web Developer"
+      },
+      {
+        "key": "field_whatsapp_header_text",
+        "label": "Header Text",
+        "name": "whatsapp_header_text",
+        "type": "text",
+        "instructions": "Title shown in the chat popup header.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": { "width": "34", "class": "", "id": "" },
+        "default_value": "Chat with us",
+        "placeholder": "Chat with us"
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "31"
+        }
+      ],
+      [
+        {
+          "param": "page_type",
+          "operator": "==",
+          "value": "front_page"
+        }
+      ]
+    ],
+    "menu_order": 15,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "WhatsApp floating chat button settings. Leave phone empty to disable."
+  }
+]
