@@ -107,8 +107,26 @@ export interface WPPortfolioItem extends Omit<WPPost, 'categories' | 'tags'> {
   };
 }
 
+// Service subpage (sales layout) repeater items
+export interface ServiceProcessItem {
+  title?: string;
+  description?: string;
+}
+
+export interface ServiceDeliverableItem {
+  item_text?: string;
+}
+
+export interface ServiceKeyFeatureItem {
+  item_text?: string;
+}
+
+export interface ServiceUseCaseItem {
+  item_text?: string;
+}
+
 export interface WPServiceItem extends Omit<WPPost, 'categories' | 'tags'> {
-  // Services CPT fields
+  // Services CPT fields (legacy + sales layout)
   service_categories?: number[];
   service_tags?: number[];
   acf?: {
@@ -120,7 +138,83 @@ export interface WPServiceItem extends Omit<WPPost, 'categories' | 'tags'> {
     service_features?: string[];
     service_pricing?: string;
     service_duration?: string;
+    // Service subpage (sales layout)
+    hero_headline?: string;
+    hero_subheadline?: string;
+    problem_headline?: string;
+    problem_body?: string;
+    solution_headline?: string;
+    solution_body?: string;
+    process_section_title?: string;
+    process_items?: ServiceProcessItem[];
+    key_features_title?: string;
+    key_features?: ServiceKeyFeatureItem[];
+    use_cases_title?: string;
+    use_cases?: ServiceUseCaseItem[];
+    deliverables?: ServiceDeliverableItem[];
+    cta_button_text?: string;
+    cta_button_link?: string;
   };
+}
+
+// Course sales page ACF (post type: course)
+export interface CourseTrustBarLogo {
+  logo_image?: ACFImage | number | false;
+  logo_url?: string;
+}
+
+export interface CourseTransformationItem {
+  title?: string;
+  description?: string;
+}
+
+export interface CourseCurriculumModule {
+  module_number?: string;
+  title?: string;
+  description?: string;
+}
+
+export interface CourseFAQItem {
+  question?: string;
+  answer?: string;
+}
+
+export interface CourseOfferInclude {
+  item_text?: string;
+}
+
+export interface CourseACF {
+  course_goal?: string;
+  primary_cta_text?: string;
+  price_type?: string;
+  price_amount?: number;
+  price_currency?: string;
+  hero_headline?: string;
+  hero_subheadline?: string;
+  hero_cta_text?: string;
+  hero_cta_subtext?: string;
+  hero_visual?: ACFImage | number | false;
+  /** ACF Gallery: array of image objects (return format "array") or attachment IDs */
+  courses_gallery?: (ACFImage | number)[];
+  trust_bar_text?: string;
+  trust_bar_logos?: CourseTrustBarLogo[];
+  problem_headline?: string;
+  problem_body?: string;
+  solution_headline?: string;
+  solution_body?: string;
+  transformation_headline?: string;
+  transformation_items?: CourseTransformationItem[];
+  curriculum_modules?: CourseCurriculumModule[];
+  faq_items?: CourseFAQItem[];
+  offer_headline?: string;
+  offer_includes?: CourseOfferInclude[];
+  offer_guarantee_heading?: string;
+  offer_guarantee_text?: string;
+  offer_final_cta?: string;
+}
+
+export interface WPCourseItem extends Omit<WPPost, 'categories' | 'tags'> {
+  acf?: CourseACF;
 }
 
 // Meta Box Field Types for Homepage
@@ -242,6 +336,23 @@ export interface NotFoundPageMetaBox {
   notfound_primary_color?: string;
 }
 
+// Services page (Page with slug "services") – Hero, Trust, CTA ACF
+export interface ServicesPageTrustItem {
+  title?: string;
+  description?: string;
+}
+
+export interface ServicesPageACF {
+  hero_headline?: string;
+  hero_subheadline?: string;
+  trust_headline?: string;
+  trust_body?: string;
+  trust_items?: ServicesPageTrustItem[];
+  cta_headline?: string;
+  cta_button_text?: string;
+  cta_button_link?: string;
+}
+
 // Legacy ACF support (alias)
 export type HomepageACF = HomepageMetaBox;
 
@@ -267,7 +378,7 @@ export interface WPPage {
   meta: unknown[];
   parent: number;
   // Custom fields (ACF or Meta Box)
-  acf?: HomepageACF & ContactPageMetaBox & ResumeMetaBox & AboutPageMetaBox & LoadingPageMetaBox & NotFoundPageMetaBox;
+  acf?: HomepageACF & ContactPageMetaBox & ResumeMetaBox & AboutPageMetaBox & LoadingPageMetaBox & NotFoundPageMetaBox & ServicesPageACF;
   meta_box?: HomepageMetaBox & ContactPageMetaBox & ResumeMetaBox & AboutPageMetaBox & LoadingPageMetaBox & NotFoundPageMetaBox;
   _embedded?: {
     author?: Author[];

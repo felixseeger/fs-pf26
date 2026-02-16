@@ -1,0 +1,333 @@
+[
+  {
+    "key": "group_service_subpage",
+    "title": "Service Subpage (Sales Layout)",
+    "fields": [
+      {
+        "key": "field_svc_tab_hero",
+        "label": "Hero",
+        "name": "",
+        "type": "tab",
+        "instructions": "Headline and subheadline for this service page.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_svc_hero_headline",
+        "label": "Hero Headline",
+        "name": "hero_headline",
+        "type": "text",
+        "instructions": "Main headline. Leave empty to use Service Title.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "",
+        "placeholder": "Design That Converts Visitors into Customers."
+      },
+      {
+        "key": "field_svc_hero_subheadline",
+        "label": "Hero Subheadline",
+        "name": "hero_subheadline",
+        "type": "textarea",
+        "instructions": "Supporting line under the headline.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "",
+        "rows": 3,
+        "new_lines": "br"
+      },
+      {
+        "key": "field_svc_tab_problem",
+        "label": "The Problem",
+        "name": "",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_svc_problem_headline",
+        "label": "Problem Section Headline",
+        "name": "problem_headline",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "The Problem",
+        "placeholder": "The Problem"
+      },
+      {
+        "key": "field_svc_problem_body",
+        "label": "Problem Body",
+        "name": "problem_body",
+        "type": "wysiwyg",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "",
+        "tabs": "all",
+        "toolbar": "full",
+        "media_upload": 1,
+        "delay": 0
+      },
+      {
+        "key": "field_svc_tab_solution",
+        "label": "The Solution",
+        "name": "",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_svc_solution_headline",
+        "label": "Solution Section Headline",
+        "name": "solution_headline",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "The Solution",
+        "placeholder": "The Solution"
+      },
+      {
+        "key": "field_svc_solution_body",
+        "label": "Solution Body",
+        "name": "solution_body",
+        "type": "wysiwyg",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "",
+        "tabs": "all",
+        "toolbar": "full",
+        "media_upload": 1,
+        "delay": 0
+      },
+      {
+        "key": "field_svc_tab_process",
+        "label": "Process / Features / Use Cases",
+        "name": "",
+        "type": "tab",
+        "instructions": "Variable section: My Process, Key Features, Use Cases, What We Cover, etc.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_svc_process_section_title",
+        "label": "Section Title",
+        "name": "process_section_title",
+        "type": "text",
+        "instructions": "e.g. My Process, Key Features, Use Cases, What's Included.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "",
+        "placeholder": "My Process"
+      },
+      {
+        "key": "field_svc_process_items",
+        "label": "Items",
+        "name": "process_items",
+        "type": "repeater",
+        "instructions": "Add rows: title (e.g. Discovery & Research), optional description.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "layout": "block",
+        "button_label": "Add item",
+        "sub_fields": [
+          {
+            "key": "field_svc_process_item_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {"width": "40", "class": "", "id": ""},
+            "default_value": "",
+            "placeholder": "Discovery & Research"
+          },
+          {
+            "key": "field_svc_process_item_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {"width": "60", "class": "", "id": ""},
+            "default_value": "",
+            "rows": 2,
+            "new_lines": "br",
+            "placeholder": "Understanding your users and competitors."
+          }
+        ]
+      },
+      {
+        "key": "field_svc_key_features_title",
+        "label": "Key Features Section Title",
+        "name": "key_features_title",
+        "type": "text",
+        "instructions": "e.g. Key Features. Leave empty to hide section.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "Key Features",
+        "placeholder": "Key Features"
+      },
+      {
+        "key": "field_svc_key_features",
+        "label": "Key Features",
+        "name": "key_features",
+        "type": "repeater",
+        "instructions": "One row per feature.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "layout": "table",
+        "button_label": "Add feature",
+        "sub_fields": [
+          {
+            "key": "field_svc_key_feature_item",
+            "label": "Feature",
+            "name": "item_text",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {"width": "", "class": "", "id": ""},
+            "default_value": "",
+            "placeholder": ""
+          }
+        ]
+      },
+      {
+        "key": "field_svc_use_cases_title",
+        "label": "Use Cases Section Title",
+        "name": "use_cases_title",
+        "type": "text",
+        "instructions": "e.g. Use Cases. Leave empty to hide section.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "Use Cases",
+        "placeholder": "Use Cases"
+      },
+      {
+        "key": "field_svc_use_cases",
+        "label": "Use Cases",
+        "name": "use_cases",
+        "type": "repeater",
+        "instructions": "One row per use case.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "layout": "table",
+        "button_label": "Add use case",
+        "sub_fields": [
+          {
+            "key": "field_svc_use_case_item",
+            "label": "Use Case",
+            "name": "item_text",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {"width": "", "class": "", "id": ""},
+            "default_value": "",
+            "placeholder": ""
+          }
+        ]
+      },
+      {
+        "key": "field_svc_tab_deliverables",
+        "label": "Deliverables",
+        "name": "",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_svc_deliverables",
+        "label": "Deliverables List",
+        "name": "deliverables",
+        "type": "repeater",
+        "instructions": "One row per deliverable (e.g. User Journey Maps, Wireframes).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "layout": "table",
+        "button_label": "Add deliverable",
+        "sub_fields": [
+          {
+            "key": "field_svc_deliverable_item_text",
+            "label": "Item",
+            "name": "item_text",
+            "type": "text",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {"width": "", "class": "", "id": ""},
+            "default_value": "",
+            "placeholder": "User Journey Maps"
+          }
+        ]
+      },
+      {
+        "key": "field_svc_tab_cta",
+        "label": "CTA",
+        "name": "",
+        "type": "tab",
+        "instructions": "Primary button for this service.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_svc_cta_button_text",
+        "label": "Button Text",
+        "name": "cta_button_text",
+        "type": "text",
+        "instructions": "e.g. Audit My Current Design, Discuss Your Web Project.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "Get a Quote",
+        "placeholder": "Start Your Project"
+      },
+      {
+        "key": "field_svc_cta_button_link",
+        "label": "Button Link",
+        "name": "cta_button_link",
+        "type": "url",
+        "instructions": "Leave empty for /contact.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": ""
+      }
+    ],
+    "location": [
+      [
+        {"param": "post_type", "operator": "==", "value": "service"}
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Sales-style layout for single service pages: Hero, Problem, Solution, Process/Features, Deliverables, CTA. Source: services_subpages_copy.md.",
+    "show_in_rest": 1
+  }
+]

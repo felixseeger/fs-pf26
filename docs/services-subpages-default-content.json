@@ -1,0 +1,182 @@
+{
+  "_source": "docs/services_subpages_copy.md",
+  "_note": "Copy each service into the corresponding Service post in WordPress (match by slug).",
+  "services": [
+    {
+      "slug": "ux-ui-design",
+      "hero_headline": "Design That Converts Visitors into Customers.",
+      "hero_subheadline": "Stop losing users to confusing interfaces. I design data-driven, intuitive digital experiences that guide your users exactly where you want them to go.",
+      "problem_headline": "The Problem",
+      "problem_body": "<p>A pretty website is useless if users can't find what they need. High bounce rates and low conversion rates are often symptoms of poor UX (User Experience), not poor product.</p>",
+      "solution_headline": "The Solution",
+      "solution_body": "<p>I don't just \"draw\" screens. I map user journeys. My design process bridges the gap between your business goals and your user's needs, creating a seamless path to purchase.</p>",
+      "process_section_title": "My Process",
+      "process_items": [
+        { "title": "Discovery & Research", "description": "Understanding your users and competitors." },
+        { "title": "Wireframing", "description": "Mapping the structure and flow without distraction." },
+        { "title": "Visual Design (UI)", "description": "Applying your brand identity to create stunning, modern interfaces." },
+        { "title": "Prototyping", "description": "Interactive mockups to test the flow before a single line of code is written." }
+      ],
+      "deliverables": [
+        { "item_text": "User Journey Maps" },
+        { "item_text": "Low & High-Fidelity Wireframes" },
+        { "item_text": "Interactive Prototypes (Figma)" },
+        { "item_text": "Design Systems & Style Guides" }
+      ],
+      "cta_button_text": "Audit My Current Design",
+      "cta_button_link": ""
+    },
+    {
+      "slug": "web-development",
+      "hero_headline": "Fast, Scalable, and SEO-Ready Web Applications.",
+      "hero_subheadline": "Your website is your 24/7 salesperson. I build high-performance web apps using modern technologies that load instantly and rank high on Google.",
+      "problem_headline": "The Problem",
+      "problem_body": "<p>Slow, outdated websites kill credibility. If your site takes more than 3 seconds to load, you've already lost 40% of your traffic. Template builders (Wix/Squarespace) often can't scale with your business.</p>",
+      "solution_headline": "The Solution",
+      "solution_body": "<p>Custom development without the bloat. I use a modern tech stack (Next.js, React, TypeScript) to build websites that are secure, lightning-fast, and easy to manage.</p>",
+      "process_section_title": "Key Features",
+      "process_items": [
+        { "title": "Performance First", "description": "Optimized for Core Web Vitals (Green scores on Google PageSpeed)." },
+        { "title": "Mobile Responsive", "description": "Flawless experience on every device size." },
+        { "title": "Headless CMS", "description": "Manage your content easily (Sanity, Strapi, WordPress) while keeping the frontend fast." }
+      ],
+      "deliverables": [
+        { "item_text": "Custom Front-End Development" },
+        { "item_text": "Backend API Integration" },
+        { "item_text": "CMS Setup & Configuration" },
+        { "item_text": "SEO Technical Optimization" }
+      ],
+      "cta_button_text": "Discuss Your Web Project",
+      "cta_button_link": ""
+    },
+    {
+      "slug": "mobile-apps",
+      "hero_headline": "Native Quality, Half the Cost.",
+      "hero_subheadline": "Launch on iOS and Android simultaneously. I build cross-platform mobile applications that deliver a premium, native user experience.",
+      "problem_headline": "The Problem",
+      "problem_body": "<p>Building separate apps for iOS and Android is expensive and doubles your maintenance time. But users demand a smooth, app-store quality experience.</p>",
+      "solution_headline": "The Solution",
+      "solution_body": "<p>Using frameworks like React Native or Flutter, I build a single codebase that deploys to both platforms. You get the performance of a native app with the efficiency of web development.</p>",
+      "process_section_title": "Use Cases",
+      "process_items": [
+        { "title": "E-commerce & Marketplaces", "description": "" },
+        { "title": "SaaS Companion Apps", "description": "" },
+        { "title": "Internal Business Tools", "description": "" },
+        { "title": "Social & Community Platforms", "description": "" }
+      ],
+      "deliverables": [
+        { "item_text": "iOS & Android App Development" },
+        { "item_text": "App Store Submission & Approval Support" },
+        { "item_text": "Push Notification Integration" },
+        { "item_text": "Offline Functionality" }
+      ],
+      "cta_button_text": "Turn Your Idea Into an App",
+      "cta_button_link": ""
+    },
+    {
+      "slug": "digital-strategy",
+      "hero_headline": "A Clear Roadmap to Digital Growth.",
+      "hero_subheadline": "Stop throwing spaghetti at the wall. I help you define clear goals, identify your audience, and build a technical roadmap to achieve ROI.",
+      "problem_headline": "The Problem",
+      "problem_body": "<p>Many businesses invest in technology without a plan. They build features nobody wants or market to audiences that don't exist.</p>",
+      "solution_headline": "The Solution",
+      "solution_body": "<p>We start with the \"Why.\" I analyze your market position and business objectives to create a step-by-step digital strategy. We define what to build, when to build it, and how to measure success.</p>",
+      "process_section_title": "What We Cover",
+      "process_items": [
+        { "title": "Tech Stack Selection", "description": "Choosing the right tools for your budget and scale." },
+        { "title": "Competitor Analysis", "description": "Finding gaps in the market you can exploit." },
+        { "title": "MVP Definition", "description": "What is the smallest version of your product that provides value?" }
+      ],
+      "deliverables": [
+        { "item_text": "Digital Roadmap Document" },
+        { "item_text": "Technical Architecture Plan" },
+        { "item_text": "Go-to-Market Strategy Support" }
+      ],
+      "cta_button_text": "Book a Strategy Session",
+      "cta_button_link": ""
+    },
+    {
+      "slug": "brand-identity",
+      "hero_headline": "Build a Brand That Commands Trust.",
+      "hero_subheadline": "Your brand is more than a logo. It's how the world perceives you. I craft cohesive visual identities that make your business unforgettable.",
+      "problem_headline": "The Problem",
+      "problem_body": "<p>Inconsistent branding confuses customers. If your website, social media, and emails look like they come from different companies, you lose trust.</p>",
+      "solution_headline": "The Solution",
+      "solution_body": "<p>I create complete design systems. From typography and color palettes to logo usage and voice, I ensure every touchpoint communicates quality and professionalism.</p>",
+      "process_section_title": "",
+      "process_items": [],
+      "deliverables": [
+        { "item_text": "Logo Design (Primary, Secondary, Marks)" },
+        { "item_text": "Color Palette & Typography Selection" },
+        { "item_text": "Brand Guidelines (The \"Rulebook\")" },
+        { "item_text": "Social Media Assets & Templates" }
+      ],
+      "cta_button_text": "Elevate Your Brand",
+      "cta_button_link": ""
+    },
+    {
+      "slug": "support-maintenance",
+      "hero_headline": "Focus on Your Business. I'll Handle the Tech.",
+      "hero_subheadline": "Websites break. Plugins need updates. Security threats evolve. I provide proactive maintenance so you never have to worry about downtime.",
+      "problem_headline": "The Problem",
+      "problem_body": "<p>A hacked site or a broken checkout page costs you money every minute it's down. Reacting to problems is expensive; preventing them is cheap.</p>",
+      "solution_headline": "The Solution",
+      "solution_body": "<p>Think of this as insurance for your digital product. I monitor your site 24/7, apply security patches immediately, and optimize performance monthly.</p>",
+      "process_section_title": "What's Included",
+      "process_items": [
+        { "title": "24/7 Uptime Monitoring", "description": "" },
+        { "title": "Daily/Weekly Backups", "description": "" },
+        { "title": "Security Patches & Plugin Updates", "description": "" },
+        { "title": "Priority Bug Fixes", "description": "" }
+      ],
+      "deliverables": [],
+      "cta_button_text": "Secure Your Website",
+      "cta_button_link": ""
+    },
+    {
+      "slug": "concept",
+      "hero_headline": "Validate Your Idea Before You Build.",
+      "hero_subheadline": "Save months of development time and budget. I help you turn vague ideas into tangible prototypes to test with real users and investors.",
+      "problem_headline": "The Problem",
+      "problem_body": "<p>The biggest risk in software is building something nobody wants. Coding is expensive; prototyping is fast.</p>",
+      "solution_headline": "The Solution",
+      "solution_body": "<p>We run a \"Design Sprint\" style process. We define the core problem, sketch solutions, and build a clickable prototype in days, not months. You get something you can put in a user's hand immediately.</p>",
+      "process_section_title": "Perfect For",
+      "process_items": [
+        { "title": "Founders pitching to investors", "description": "" },
+        { "title": "Validating new features for existing products", "description": "" },
+        { "title": "Testing market demand", "description": "" }
+      ],
+      "deliverables": [
+        { "item_text": "Clickable High-Fidelity Prototype" },
+        { "item_text": "User Flow Documentation" },
+        { "item_text": "Feasibility Report" }
+      ],
+      "cta_button_text": "Start Prototyping",
+      "cta_button_link": ""
+    },
+    {
+      "slug": "seo",
+      "hero_headline": "Get Found by Customers Who Are Looking for You.",
+      "hero_subheadline": "Organic traffic is the highest ROI marketing channel. I optimize your digital presence to rank for the keywords that drive revenue.",
+      "problem_headline": "The Problem",
+      "problem_body": "<p>You have a great website, but nobody visits it. You're on page 2 (or 10) of Google, while your competitors get all the leads.</p>",
+      "solution_headline": "The Solution",
+      "solution_body": "<p>SEO isn't magic; it's engineering. I fix the technical errors holding you back, optimize your content structure, and help you build authority in your niche.</p>",
+      "process_section_title": "My Approach",
+      "process_items": [
+        { "title": "Technical SEO", "description": "Fixing speed, mobile issues, and crawl errors." },
+        { "title": "On-Page SEO", "description": "Optimizing titles, meta tags, and content structure." },
+        { "title": "Local SEO", "description": "Getting you found in your specific geographic area." }
+      ],
+      "deliverables": [
+        { "item_text": "Comprehensive SEO Audit" },
+        { "item_text": "Keyword Strategy Document" },
+        { "item_text": "Technical Fix Implementation" },
+        { "item_text": "Monthly Performance Reporting" }
+      ],
+      "cta_button_text": "Get a Free SEO Audit",
+      "cta_button_link": ""
+    }
+  ]
+}
