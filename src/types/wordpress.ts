@@ -119,6 +119,13 @@ export interface ServiceDeliverableItem {
 
 export interface ServiceKeyFeatureItem {
   item_text?: string;
+  /** Alternate sub-field names (e.g. from feature_lists repeater) */
+  text?: string;
+  feature?: string;
+  title?: string;
+  /** ACF repeater sub-fields from features_items group */
+  features_title?: string;
+  features_description?: string;
 }
 
 export interface ServiceUseCaseItem {
@@ -149,8 +156,18 @@ export interface WPServiceItem extends Omit<WPPost, 'categories' | 'tags'> {
     process_items?: ServiceProcessItem[];
     key_features_title?: string;
     key_features?: ServiceKeyFeatureItem[];
+    /** Alternate: features_section_title (same as key_features_title) */
+    features_section_title?: string;
+    /** Alternate: features_items (same as key_features) */
+    features_items?: ServiceKeyFeatureItem[];
+    /** Alternate: feature_lists (used on some services e.g. UI/UI Design, Brand Identity, 3D) */
+    feature_lists?: ServiceKeyFeatureItem[];
+    /** Alternate: feature_lists section title */
+    feature_lists_title?: string;
     use_cases_title?: string;
     use_cases?: ServiceUseCaseItem[];
+    /** Alternate: use_cases_items (same as use_cases) */
+    use_cases_items?: ServiceUseCaseItem[];
     deliverables?: ServiceDeliverableItem[];
     cta_button_text?: string;
     cta_button_link?: string;

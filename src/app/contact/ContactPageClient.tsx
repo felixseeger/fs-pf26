@@ -7,7 +7,6 @@ import { MapPin, Mail, Phone, ArrowRight, LucideIcon } from 'lucide-react';
 
 interface ContactData {
     contactTitle?: string;
-    cf7FormId?: string;
     headquarters: {
         title: string;
         address: string;
@@ -99,53 +98,25 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
         setSubmitStatus('idle');
         setErrorMessage('');
 
-        const raw = typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_WORDPRESS_API_URL : undefined;
-        const baseUrl = (typeof raw === 'string' ? raw.replace(/\/+$/, '') : '') || '';
-        let formId = contactData.cf7FormId || '';
-        if (formId && /^[a-fA-F0-9]+$/.test(formId) && /[a-fA-F]/.test(formId)) {
-            const decimal = parseInt(formId, 16);
-            if (!Number.isNaN(decimal)) formId = String(decimal);
-        }
-
-        if (!formId || !baseUrl) {
-            setSubmitStatus('error');
-            setErrorMessage('Contact form is not configured. Please set NEXT_PUBLIC_WORDPRESS_API_URL and form ID.');
-            setIsSubmitting(false);
-            return;
-        }
-
-        const cf7Fields: Record<string, string> = {
-            _wpcf7_unit_tag: `wpcf7-f${formId}-o1`,
-            _wpcf7: formId,
-            _wpcf7_version: '5.8',
-            _wpcf7_locale: 'en_US',
-            'your-name': formData.fullName,
-            'your-email': formData.email,
-            'your-subject': formData.subject,
-            'your-message': formData.message,
-        };
-        if (formData.service) cf7Fields['your-service'] = formData.service;
-        if (formData.heardFrom) cf7Fields['your-heard-from'] = formData.heardFrom;
-
-        const formBody = new FormData();
-        for (const [key, value] of Object.entries(cf7Fields)) {
-            formBody.append(key, value);
-        }
-
         try {
-            const res = await fetch(`${baseUrl}/wp-json/contact-form-7/v1/contact-forms/${formId}/feedback`, {
+            const res = await fetch('/api/contact', {
                 method: 'POST',
-                body: formBody,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fullName: formData.fullName,
+                    email: formData.email,
+                    subject: formData.subject,
+                    service: formData.service,
+                    message: formData.message,
+                    heardFrom: formData.heardFrom,
+                }),
             });
 
-            const text = await res.text();
-            const data = (() => {
-                try {
-                    return JSON.parse(text) as { status?: string; message?: string; invalid_fields?: { field: string }[] };
-                } catch {
-                    return {};
-                }
-            })();
+            const data = await res.json().catch(() => ({})) as {
+                status?: string;
+                message?: string;
+                invalid_fields?: { field: string }[];
+            };
 
             if (res.ok && data.status === 'mail_sent') {
                 setSubmitStatus('success');
@@ -160,12 +131,11 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
                 });
             } else {
                 setSubmitStatus('error');
-                let msg = (data.message as string) || `Request failed (${res.status})`;
+                let msg = data.message || `Request failed (${res.status})`;
                 if (data.invalid_fields && Array.isArray(data.invalid_fields)) {
                     const fields = data.invalid_fields.map((f) => f.field).filter(Boolean);
                     if (fields.length) msg += ` — invalid: ${fields.join(', ')}`;
                 }
-                if (!data.message && text && text.length < 300) msg += ` — ${text}`;
                 setErrorMessage(msg);
             }
         } catch (err) {

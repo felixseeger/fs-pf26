@@ -114,20 +114,20 @@
       },
       {
         "key": "field_svc_tab_process",
-        "label": "Process / Features / Use Cases",
+        "label": "Process",
         "name": "",
         "type": "tab",
-        "instructions": "Variable section: My Process, Key Features, Use Cases, What We Cover, etc.",
+        "instructions": "My Process / steps list (own tab).",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {"width": "", "class": "", "id": ""}
       },
       {
         "key": "field_svc_process_section_title",
-        "label": "Section Title",
+        "label": "Process Section Title",
         "name": "process_section_title",
         "type": "text",
-        "instructions": "e.g. My Process, Key Features, Use Cases, What's Included.",
+        "instructions": "e.g. My Process, How I Work. Leave empty to hide section.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {"width": "", "class": "", "id": ""},
@@ -136,10 +136,10 @@
       },
       {
         "key": "field_svc_process_items",
-        "label": "Items",
+        "label": "Process Items",
         "name": "process_items",
         "type": "repeater",
-        "instructions": "Add rows: title (e.g. Discovery & Research), optional description.",
+        "instructions": "Add rows: title and optional description per step.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {"width": "", "class": "", "id": ""},
@@ -171,6 +171,16 @@
             "placeholder": "Understanding your users and competitors."
           }
         ]
+      },
+      {
+        "key": "field_svc_tab_key_features",
+        "label": "Key Features",
+        "name": "",
+        "type": "tab",
+        "instructions": "Key features list (own tab).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
       },
       {
         "key": "field_svc_key_features_title",
@@ -208,6 +218,16 @@
             "placeholder": ""
           }
         ]
+      },
+      {
+        "key": "field_svc_tab_use_cases",
+        "label": "Use Cases",
+        "name": "",
+        "type": "tab",
+        "instructions": "Use cases / applications list (own tab).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
       },
       {
         "key": "field_svc_use_cases_title",

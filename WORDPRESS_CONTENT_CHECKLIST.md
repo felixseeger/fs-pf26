@@ -157,3 +157,22 @@ Service **single** pages (e.g. `/services/ux-ui-design`) get their content from 
 
 4. **Redeploy**  
    Content is baked in at build time. After changing WordPress, run `pnpm run deploy` and hard-refresh the live site.
+
+---
+
+## 9. Service ACF → Frontend mapping (Process, Key Features, Use Cases)
+
+The Service subpage uses **three separate list sections**, each with its own tab in ACF and its own inputs. The frontend accepts **two naming conventions** (so you can use either in WordPress).
+
+| Section | Title field (ACF) | Items field (ACF) | Repeater sub-fields | Frontend |
+|--------|--------------------|--------------------|---------------------|----------|
+| **Process** | `process_section_title` | `process_items` | `title`, `description` | Section heading + numbered list (steps) |
+| **Key Features** | `features_section_title`, `key_features_title`, or `feature_lists_title` | `features_items`, `key_features`, or `feature_lists` | `item_text`, `text`, `feature`, or `title` | Section heading + bullet list |
+| **Use Cases** | `use_cases_title` (Use Cases Section Title) | `use_cases_items` **or** `use_cases` | `item_text` | Section heading + bullet list |
+
+- **Process:** one title field + repeater `process_items` with **title** and **description** per row → ordered list on the frontend.
+- **Key Features:** title from `features_section_title`, `key_features_title`, or `feature_lists_title`; list from `features_items`, `key_features`, or `feature_lists`. Each row can use **item_text**, **text**, **feature**, or **title** → bullet list. (Useful for UI/UI Design, Brand Identity, 3D where WordPress may use `feature_lists`.)
+- **Use Cases:** title from `use_cases_title`; list from `use_cases_items` or `use_cases`; each row has **item_text** → bullet list.
+- If a section title is empty, the frontend can still show the list; if both title and list are empty, that section is hidden.
+- **Features list not showing?** (1) In ACF, edit the “Service Subpage (Sales Layout)” field group → set **Show in REST API** to **Yes** (so `acf.key_features` and `acf.key_features_title` are in the API response). (2) In WordPress, the field names are `key_features_title` and `key_features`; the frontend also accepts `features_section_title` / `features_items`. (3) Repeaters are normalized from array or object, so the list will render once the API returns the data.
+- Code: `src/app/services/[slug]/page.tsx` and `src/types/wordpress.ts` (WPServiceItem.acf).

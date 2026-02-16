@@ -50,7 +50,20 @@ export default function PreloaderClient({
     setLoaderVisible(false);
     setHeroVisible(true);
     if (redirectUrl) {
-      router.push(redirectUrl);
+      const url = redirectUrl.trim();
+      // In dev, avoid redirecting to another origin (e.g. production URL) so the app stays on localhost
+      if (typeof window !== 'undefined' && url.startsWith('http')) {
+        try {
+          const target = new URL(url);
+          if (target.origin !== window.location.origin) {
+            router.push(target.pathname || '/');
+            return;
+          }
+        } catch {
+          // fall through to router.push(url) if URL parsing fails
+        }
+      }
+      router.push(url);
     }
   };
 

@@ -5,6 +5,7 @@
 
 import { WPServiceItem, FeaturedMedia, ACFImage } from '@/types/wordpress';
 import { fetchWordPress } from './api';
+import { getServiceIconUrl } from '@/lib/service-icons';
 
 const SERVICES_PAGE_SIZE = 100;
 
@@ -85,7 +86,7 @@ export async function getServiceNeighbors(slug: string): Promise<{
 
     const toNavItem = (s: WPServiceItem) => {
         const gallery = s.acf?.services_gallery;
-        const iconUrl =
+        const wpIconUrl =
             gallery && typeof gallery === 'object' && 'url' in gallery
                 ? (gallery as ACFImage).url
                 : s._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? null;
@@ -94,10 +95,11 @@ export async function getServiceNeighbors(slug: string): Promise<{
                 ? (gallery as ACFImage).alt
                 : s._embedded?.['wp:featuredmedia']?.[0]?.alt_text;
         const title = s.title?.rendered?.replace(/<[^>]*>/g, '').trim() || 'Untitled';
+        const thumbnailUrl = getServiceIconUrl(s.slug, wpIconUrl) ?? null;
         return {
             slug: s.slug,
             title,
-            thumbnailUrl: iconUrl ?? null,
+            thumbnailUrl,
             thumbnailAlt: iconAlt ?? title,
         };
     };

@@ -2,10 +2,10 @@
  * Site-wide config for SEO, canonicals, and social.
  * NEXT_PUBLIC_SITE_URL should be set in .env (e.g. https://felixseeger.de).
  */
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : 'https://felixseeger.de');
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : 'https://felixseeger.de')).trim();
 
 export function getSiteUrl(): string {
-  return SITE_URL.replace(/\/$/, '');
+  return SITE_URL.replace(/\/+$/, '').trim();
 }
 
 export function getCanonicalUrl(path: string): string {

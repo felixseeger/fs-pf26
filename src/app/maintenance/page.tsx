@@ -172,7 +172,7 @@ export default function MaintenancePage() {
               className="text-sm text-zinc-500 flex items-center justify-center gap-2 flex-wrap"
               style={{ fontFamily: 'var(--font-poppins), sans-serif' }}
             >
-              <span>© {new Date().getFullYear()} {pageData.impressumParts.company || 'Felix Seeger'}. All rights reserved.</span>
+              <span>© {new Date().getFullYear()} {pageData.impressumParts.company || 'Felix Seeger'}.</span>
               <span className="text-zinc-600">|</span>
               <Link 
                 href="/impressum" 

@@ -51,12 +51,7 @@ export default async function Footer() {
 
   let quickLinksItems: WPMenuItem[] = [];
   let legalLinks: { title: string; href: string; external?: boolean }[] = [];
-  let footerAboutTitle = 'About';
-  let footerAboutText = 'A modern blog powered by WordPress and Next.js, delivering fast and seamless reading experience.';
-  let footerQuickLinksTitle = 'Quick Links';
-  let footerLegalTitle = 'Legal';
-  let footerConnectTitle = 'Connect';
-  let footerCopyright = `© ${currentYear} Felix Seeger. All rights reserved.`;
+  let footerCopyright = `© ${currentYear} Felix Seeger.`;
   let socialLinks: SocialLink[] = [];
   let footerImage: ACFImage | null = null;
 
@@ -89,11 +84,6 @@ export default async function Footer() {
       if (acf.footer_image && typeof acf.footer_image === 'object' && 'url' in acf.footer_image && acf.footer_image.url) {
         footerImage = acf.footer_image as ACFImage;
       }
-      if (acf.footer_about_title?.trim()) footerAboutTitle = acf.footer_about_title.trim();
-      if (acf.footer_about_text?.trim()) footerAboutText = acf.footer_about_text.trim();
-      if (acf.footer_quick_links_title?.trim()) footerQuickLinksTitle = acf.footer_quick_links_title.trim();
-      if (acf.footer_legal_title?.trim()) footerLegalTitle = acf.footer_legal_title.trim();
-      if (acf.footer_connect_title?.trim()) footerConnectTitle = acf.footer_connect_title.trim();
       if (acf.footer_text?.trim()) footerCopyright = acf.footer_text.trim().replace(/\{\{year\}\}/g, String(currentYear));
       if (acf.social_links && Array.isArray(acf.social_links)) socialLinks = acf.social_links;
     }
@@ -101,127 +91,46 @@ export default async function Footer() {
     console.error('Footer: failed to fetch menu or homepage:', error);
   }
 
+  const navLinks: { title: string; href: string; external?: boolean }[] = [];
+  if (quickLinksItems.length > 0) {
+    quickLinksItems.forEach((item: WPMenuItem) => {
+      const { href, external } = toFrontendHref(item.url);
+      navLinks.push({ title: item.title, href, external });
+    });
+  } else {
+    navLinks.push({ title: 'Home', href: '/' }, { title: 'About', href: '/about' }, { title: 'Contact', href: '/contact' });
+  }
+  legalLinks.forEach((item) => navLinks.push(item));
+  if (legalLinks.length === 0) {
+    navLinks.push({ title: 'Privacy Policy', href: '/privacy-policy' });
+  }
+  const hasImpress = navLinks.some((item) => item.href === '/impress' || item.href.endsWith('/impress') || item.href === '/impressum' || item.href.endsWith('/impressum'));
+  if (!hasImpress) {
+    navLinks.push({ title: 'Impress', href: '/impress' });
+  }
+
+  // Strip "All rights reserved" from copyright (default or from WordPress)
+  const copyrightDisplay = footerCopyright.replace(/\s*[\.]?\s*All rights reserved\.?/gi, '').trim();
+
   return (
     <footer className="bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 mt-auto">
-      <div className="max-w-6xl mx-auto px-4 py-12" suppressHydrationWarning>
-        {footerImage && (
-          <div className="mb-8 flex justify-start" suppressHydrationWarning>
-            <Image
-              src={footerImage.url}
-              alt={footerImage.alt || 'Footer logo'}
-              width={footerImage.width || 160}
-              height={footerImage.height || 48}
-              className="h-12 w-auto object-contain object-left transition-[filter] duration-300 brightness-0 saturate-100 invert-[0.65] dark:brightness-0 dark:invert"
-              unoptimized={process.env.NEXT_IMAGE_UNOPTIMIZED === 'true'}
-            />
-          </div>
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8" suppressHydrationWarning>
-          {/* About Section – from WordPress */}
-          <div suppressHydrationWarning>
-            <h3 className="text-lg font-bold text-black dark:text-white mb-4">
-              {footerAboutTitle}
-            </h3>
-            <p className="text-zinc-600 dark:text-zinc-400 text-sm whitespace-pre-line">
-              {footerAboutText}
-            </p>
-          </div>
-
-          {/* Quick Links – from WordPress menu (footer_quick_links_menu or quick-links) */}
-          <div suppressHydrationWarning>
-            <h3 className="text-lg font-bold text-black dark:text-white mb-4">
-              {footerQuickLinksTitle}
-            </h3>
-            <ul className="space-y-2">
-              {quickLinksItems.length > 0 ? (
-                quickLinksItems.map((item: WPMenuItem) => {
-                  const { href, external } = toFrontendHref(item.url);
-                  return (
-                    <li key={item.ID}>
-                      {external ? (
-                        <a
-                          href={href}
-                          className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm"
-                          target={item.target || '_blank'}
-                          rel="noopener noreferrer"
-                        >
-                          {item.title}
-                        </a>
-                      ) : (
-                        <Link
-                          href={href}
-                          className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm"
-                          target={item.target || '_self'}
-                        >
-                          {item.title}
-                        </Link>
-                      )}
-                    </li>
-                  );
-                })
-              ) : (
-                <>
-                  <li>
-                    <Link href="/" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm">Home</Link>
-                  </li>
-                  <li>
-                    <Link href="/about" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm">About</Link>
-                  </li>
-                  <li>
-                    <Link href="/contact" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm">Contact</Link>
-                  </li>
-                </>
-              )}
-            </ul>
-          </div>
-
-          {/* Legal – from WordPress menu (footer_legal_menu or footer-legal) or legal pages */}
-          <div suppressHydrationWarning>
-            <h3 className="text-lg font-bold text-black dark:text-white mb-4">
-              {footerLegalTitle}
-            </h3>
-            <ul className="space-y-2">
-              {legalLinks.length > 0 ? (
-                legalLinks.map((item, index) => (
-                  <li key={item.href + index}>
-                    {item.external ? (
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm"
-                      >
-                        {item.title}
-                      </a>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm"
-                      >
-                        {item.title}
-                      </Link>
-                    )}
-                  </li>
-                ))
-              ) : (
-                <>
-                  <li>
-                    <Link href="/impressum" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm">Impressum</Link>
-                  </li>
-                  <li>
-                    <Link href="/privacy-policy" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors text-sm">Privacy Policy</Link>
-                  </li>
-                </>
-              )}
-            </ul>
-          </div>
-
-          {/* Social / Connect – from WordPress */}
-          <div suppressHydrationWarning>
-            <h3 className="text-lg font-bold text-black dark:text-white mb-4">
-              {footerConnectTitle}
-            </h3>
-            <div className="flex gap-4" suppressHydrationWarning>
+      <div className="max-w-6xl mx-auto px-4 py-6" suppressHydrationWarning>
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4" suppressHydrationWarning>
+          {/* Logo + Social icons */}
+          <div className="flex items-center gap-3 shrink-0" suppressHydrationWarning>
+            {footerImage && (
+              <Link href="/" suppressHydrationWarning>
+                <Image
+                  src={footerImage.url}
+                  alt={footerImage.alt || 'Footer logo'}
+                  width={footerImage.width || 160}
+                  height={footerImage.height || 48}
+                  className="h-10 w-auto object-contain object-left transition-[filter] duration-300 brightness-0 saturate-100 invert-[0.65] dark:brightness-0 dark:invert"
+                  unoptimized={process.env.NEXT_IMAGE_UNOPTIMIZED === 'true'}
+                />
+              </Link>
+            )}
+            <div className="flex items-center gap-4 shrink-0" suppressHydrationWarning>
               {socialLinks.length > 0 ? (
                 socialLinks.map((link, index) => (
                   <a
@@ -232,31 +141,52 @@ export default async function Footer() {
                     className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
                     aria-label={link.platform}
                   >
-                    <SocialIcon platform={link.platform} />
+                    <SocialIcon platform={link.platform} className="w-5 h-5" />
                   </a>
                 ))
               ) : (
-                <>
-                  {(['linkedin', 'twitter', 'github'] as const).map((platform) => {
-                    const url = DEFAULT_SOCIAL_URLS[platform];
-                    if (!url) return null;
-                    return (
-                      <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" aria-label={platform}>
-                        <SocialIcon platform={platform} />
-                      </a>
-                    );
-                  })}
-                </>
+                (['linkedin', 'twitter', 'github'] as const).map((platform) => {
+                  const url = DEFAULT_SOCIAL_URLS[platform];
+                  if (!url) return null;
+                  return (
+                    <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" aria-label={platform}>
+                      <SocialIcon platform={platform} className="w-5 h-5" />
+                    </a>
+                  );
+                })
               )}
             </div>
           </div>
-        </div>
 
-        {/* Copyright – from WordPress footer_text */}
-        <div className="mt-8 pt-8 border-t border-zinc-200 dark:border-zinc-800 text-center" suppressHydrationWarning>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-pre-line">
-            {footerCopyright}
-          </p>
+          {/* Navigation links */}
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-1" aria-label="Footer navigation" suppressHydrationWarning>
+            {navLinks.map((item, index) => (
+              <span key={item.href + index} className="inline-flex items-center gap-x-4">
+                {index > 0 && <span className="text-zinc-400 dark:text-zinc-500 select-none" aria-hidden>|</span>}
+                {item.external ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                  >
+                    {item.title}
+                  </a>
+                ) : (
+                  <Link href={item.href} className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
+                    {item.title}
+                  </Link>
+                )}
+              </span>
+            ))}
+          </nav>
+
+          {/* Copyright */}
+          <div className="flex items-center shrink-0" suppressHydrationWarning>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-nowrap" suppressHydrationWarning>
+              {copyrightDisplay}
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -42,12 +42,12 @@ export default function ServicePostNavigation({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
                             {previous.thumbnailUrl && (
-                                <div className="featured-image-write-in relative w-12 h-12 shrink-0 flex items-center justify-center">
+                                <div className="featured-image-write-in service-icon service-icon-blue relative w-12 h-12 shrink-0 flex items-center justify-center overflow-hidden rounded-lg">
                                     <Image
                                         src={previous.thumbnailUrl}
                                         alt={previous.thumbnailAlt || previous.title}
                                         fill
-                                        className="object-contain group-hover:scale-105 transition-transform duration-300"
+                                        className="object-contain p-1.5 group-hover:scale-105 transition-transform duration-300"
                                         sizes="48px"
                                     />
                                 </div>
@@ -73,12 +73,12 @@ export default function ServicePostNavigation({
                                 {next.title}
                             </span>
                             {next.thumbnailUrl && (
-                                <div className="featured-image-write-in relative w-12 h-12 shrink-0 flex items-center justify-center">
+                                <div className="featured-image-write-in service-icon service-icon-blue relative w-12 h-12 shrink-0 flex items-center justify-center overflow-hidden rounded-lg">
                                     <Image
                                         src={next.thumbnailUrl}
                                         alt={next.thumbnailAlt || next.title}
                                         fill
-                                        className="object-contain group-hover:scale-105 transition-transform duration-300"
+                                        className="object-contain p-1.5 group-hover:scale-105 transition-transform duration-300"
                                         sizes="48px"
                                     />
                                 </div>

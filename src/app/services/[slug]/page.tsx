@@ -7,6 +7,19 @@ import { getServiceIconUrl } from '@/lib/service-icons';
 import { ACFImage } from '@/types/wordpress';
 import ServicePostNavigation from '@/components/services/ServicePostNavigation';
 
+/** Ensure ACF repeater is always an array (WP can return object with numeric keys). */
+function toRepeaterArray<T>(value: T[] | Record<string, T> | null | undefined): T[] {
+    if (value == null) return [];
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'object' && !Array.isArray(value)) {
+        const entries = Object.entries(value).filter(([k]) => /^\d+$/.test(k));
+        if (entries.length === 0) return [];
+        entries.sort(([a], [b]) => Number(a) - Number(b));
+        return entries.map(([, v]) => v);
+    }
+    return [];
+}
+
 export async function generateStaticParams() {
     const services = await getAllServiceItems().catch(() => []);
     // Return at least one param for static export, even if empty
@@ -93,13 +106,21 @@ export default async function ServicePage({ params }: ServicePageProps) {
         ? (servicesGallery as ACFImage).alt
         : featuredImage?.alt_text;
     const acf = service.acf;
+    // Support both naming conventions: process_section_title, features_section_title / features_items, use_cases_title / use_cases_items
+    const processSectionTitle = acf?.process_section_title?.trim() ?? '';
+    const processItems = toRepeaterArray(acf?.process_items);
+    const featuresSectionTitle = (acf?.features_section_title ?? acf?.key_features_title ?? acf?.feature_lists_title)?.trim() ?? '';
+    const featuresItems = toRepeaterArray(acf?.features_items ?? acf?.key_features ?? acf?.feature_lists);
+    const useCasesSectionTitle = (acf?.use_cases_title)?.trim() ?? '';
+    const useCasesItems = toRepeaterArray(acf?.use_cases_items ?? acf?.use_cases);
+
     const useSalesLayout = Boolean(
         acf?.hero_headline
         || acf?.problem_body
         || acf?.solution_body
-        || (acf?.process_items?.length ?? 0) > 0
-        || (acf?.key_features?.length ?? 0) > 0
-        || (acf?.use_cases?.length ?? 0) > 0
+        || processItems.length > 0
+        || featuresItems.length > 0
+        || useCasesItems.length > 0
         || (acf?.deliverables?.length ?? 0) > 0
     );
 
@@ -199,18 +220,25 @@ export default async function ServicePage({ params }: ServicePageProps) {
                     </section>
                 )}
 
-                {/* Process / My Process (sales layout) */}
-                {useSalesLayout && ((acf?.process_section_title ?? '') || (acf?.process_items?.length ?? 0) > 0) && (
+                {/* Process (sales layout): process_section_title + process_items */}
+                {useSalesLayout && (processSectionTitle || processItems.length > 0) && (
                     <section className="mb-12">
-                        {(acf?.process_section_title ?? '').trim() && (
-                            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{acf?.process_section_title?.replace(/<[^>]*>/g, '')}</h2>
+                        {processSectionTitle && (
+                            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{processSectionTitle.replace(/<[^>]*>/g, '')}</h2>
                         )}
-                        {acf?.process_items && acf.process_items.length > 0 && (
-                            <ol className="list-decimal list-inside space-y-4 text-zinc-700 dark:text-zinc-300">
-                                {acf.process_items.map((item, index) => (
-                                    <li key={index}>
-                                        {item.title && <span className="font-semibold text-zinc-900 dark:text-white">{item.title.replace(/<[^>]*>/g, '')}</span>}
-                                        {item.description && <span className="block pl-6 mt-1">{item.description.replace(/<[^>]*>/g, '')}</span>}
+                        {processItems.length > 0 && (
+                            <ol className="space-y-4 text-zinc-700 dark:text-zinc-300 list-none pl-0">
+                                {processItems.map((item, index) => (
+                                    <li key={index} className="flex items-start gap-3">
+                                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lime-500/15 text-lime-600 dark:text-lime-400" aria-hidden>
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                            </svg>
+                                        </span>
+                                        <span>
+                                            {item.title && <span className="font-semibold text-zinc-900 dark:text-white">{item.title.replace(/<[^>]*>/g, '')}</span>}
+                                            {item.description && <span className="block mt-1">{item.description.replace(/<[^>]*>/g, '')}</span>}
+                                        </span>
                                     </li>
                                 ))}
                             </ol>
@@ -218,39 +246,54 @@ export default async function ServicePage({ params }: ServicePageProps) {
                     </section>
                 )}
 
-                {/* Key Features (sales layout) */}
-                {useSalesLayout && ((acf?.key_features_title ?? '') || (acf?.key_features?.length ?? 0) > 0) && (
+                {/* Key Features (sales layout): features_section_title / key_features_title + features_items / key_features */}
+                {useSalesLayout && (featuresSectionTitle || featuresItems.length > 0) && (
                     <section className="mb-12">
-                        {(acf?.key_features_title ?? '').trim() && (
-                            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{acf?.key_features_title?.replace(/<[^>]*>/g, '')}</h2>
+                        {featuresSectionTitle && (
+                            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{featuresSectionTitle.replace(/<[^>]*>/g, '')}</h2>
                         )}
-                        {acf?.key_features && acf.key_features.length > 0 && (
+                        {featuresItems.length > 0 && (
                             <ul className="space-y-2 text-zinc-700 dark:text-zinc-300">
-                                {acf.key_features.map((item, index) => (
-                                    item.item_text ? (
+                                {featuresItems.map((item, index) => {
+                                    const label = item.features_title ?? item.item_text ?? item.text ?? item.feature ?? item.title ?? '';
+                                    const description = item.features_description;
+                                    return label ? (
                                         <li key={index} className="flex items-start gap-3">
-                                            <span className="text-lime-500 shrink-0 mt-1">•</span>
-                                            <span dangerouslySetInnerHTML={{ __html: item.item_text }} />
+                                            <span className="shrink-0 mt-0.5 text-lime-500 dark:text-lime-400" aria-hidden>
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>
+                                                <span dangerouslySetInnerHTML={{ __html: label }} />
+                                                {description && (
+                                                    <span className="block text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">{description.replace(/<[^>]*>/g, '')}</span>
+                                                )}
+                                            </span>
                                         </li>
-                                    ) : null
-                                ))}
+                                    ) : null;
+                                })}
                             </ul>
                         )}
                     </section>
                 )}
 
-                {/* Use Cases (sales layout) */}
-                {useSalesLayout && ((acf?.use_cases_title ?? '') || (acf?.use_cases?.length ?? 0) > 0) && (
+                {/* Use Cases (sales layout): use_cases_title + use_cases_items / use_cases */}
+                {useSalesLayout && (useCasesSectionTitle || useCasesItems.length > 0) && (
                     <section className="mb-12">
-                        {(acf?.use_cases_title ?? '').trim() && (
-                            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{acf?.use_cases_title?.replace(/<[^>]*>/g, '')}</h2>
+                        {useCasesSectionTitle && (
+                            <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-6">{useCasesSectionTitle.replace(/<[^>]*>/g, '')}</h2>
                         )}
-                        {acf?.use_cases && acf.use_cases.length > 0 && (
+                        {useCasesItems.length > 0 && (
                             <ul className="space-y-2 text-zinc-700 dark:text-zinc-300">
-                                {acf.use_cases.map((item, index) => (
+                                {useCasesItems.map((item, index) => (
                                     item.item_text ? (
                                         <li key={index} className="flex items-start gap-3">
-                                            <span className="text-lime-500 shrink-0 mt-1">•</span>
+                                            <span className="shrink-0 mt-0.5 text-lime-500 dark:text-lime-400" aria-hidden>
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                                </svg>
+                                            </span>
                                             <span>{item.item_text.replace(/<[^>]*>/g, '')}</span>
                                         </li>
                                     ) : null
