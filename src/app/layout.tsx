@@ -13,6 +13,7 @@ import { PageTransitionProvider } from "@/components/providers/PageTransitionPro
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import JsonLd from "@/components/seo/JsonLd";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getHomePage } from "@/lib/wordpress";
 
 const geistSans = Geist({
@@ -109,6 +110,7 @@ export default async function RootLayout({
             )}
           </CookieConsentProvider>
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

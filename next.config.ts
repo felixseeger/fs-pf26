@@ -1,11 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: false },
   images: {
-    unoptimized: process.env.NEXT_IMAGE_UNOPTIMIZED === 'true',
     remotePatterns: [
       {
         protocol: 'http',

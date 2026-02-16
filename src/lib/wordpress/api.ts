@@ -22,9 +22,9 @@ export const WORDPRESS_API_URL = _WORDPRESS_API_URL;
 /** Standard WordPress REST API v2 base path */
 export const WP_REST_BASE = '/wp-json/wp/v2';
 
-/** Default fetch options for static generation - compatible with output: 'export' */
+/** Default fetch options: ISR revalidates every 60 seconds for fresh WordPress data. */
 export const DEFAULT_FETCH_OPTIONS: RequestInit = {
-  cache: 'force-cache',
+  next: { revalidate: 60 },
   headers: {
     'Content-Type': 'application/json',
   },
@@ -45,6 +45,8 @@ export interface FetchOptions extends RequestInit {
   skipRestBase?: boolean;
   /** Suppress console error logging for gracefully handled failures */
   suppressErrorLogging?: boolean;
+  /** On 404, return undefined instead of throwing (e.g. for optional CPTs) */
+  returnUndefinedOn404?: boolean;
 }
 
 export type QueryParams = Record<string, string | number | boolean | undefined>;
@@ -158,7 +160,7 @@ export async function fetchWordPress<T>(
   params?: QueryParams,
   options: FetchOptions = {}
 ): Promise<T> {
-  const { skipRestBase = false, suppressErrorLogging = false, ...fetchOptions } = options;
+  const { skipRestBase = false, suppressErrorLogging = false, returnUndefinedOn404 = false, ...fetchOptions } = options;
   const url = buildUrl(endpoint, params, skipRestBase);
 
   console.log('Fetching from WordPress API:', url);
@@ -176,6 +178,9 @@ export async function fetchWordPress<T>(
     console.log('WordPress API response status:', response.status);
 
     if (!response.ok) {
+      if (returnUndefinedOn404 && response.status === 404) {
+        return undefined as T;
+      }
       const errorText = await response.text();
 
       // Suppress verbose logging for 502 errors (WordPress server down)

@@ -1,8 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getSiteUrl } from '@/lib/site-config';
-import { getPortfolioItems, getPosts, getAllServiceItems, getPages } from '@/lib/wordpress';
-
-export const dynamic = 'force-static';
+import { getPortfolioItems, getPosts, getAllServiceItems, getPages, getCourses } from '@/lib/wordpress';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
@@ -14,6 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/portfolio`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/services`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${base}/courses`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${base}/resume`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
   ];
 
@@ -41,6 +40,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  const courses = await getCourses(500, 1).catch(() => []);
+  const courseUrls: MetadataRoute.Sitemap = courses.map((c) => ({
+    url: `${base}/courses/${c.slug}`,
+    lastModified: c.modified ? new Date(c.modified) : new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
   const pages = await getPages(100, 1).catch(() => []);
   const pageSlugs = new Set(['about', 'contact', 'home', 'homepage', 'not-found']);
   const otherPages: MetadataRoute.Sitemap = pages
@@ -52,5 +59,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     }));
 
-  return [...staticRoutes, ...portfolioUrls, ...blogUrls, ...serviceUrls, ...otherPages];
+  return [...staticRoutes, ...portfolioUrls, ...blogUrls, ...serviceUrls, ...courseUrls, ...otherPages];
 }

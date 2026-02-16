@@ -13,29 +13,20 @@ const RESERVED_SLUGS = [
   'contact',
   'resume',
   'services',
+  'courses',
   'loading',
   'maintenance',
 ];
-
-/** Strip .html suffix (static export generates .html files; dev server may receive those requests) */
-function normalizeSlug(raw: string): string {
-  return raw.endsWith('.html') ? raw.slice(0, -5) : raw;
-}
 
 export async function generateStaticParams() {
   const pages = await getPages(100, 1).catch(() => []);
   const slugs = pages
     .filter((p) => !RESERVED_SLUGS.includes(p.slug))
-    .flatMap((p) => [{ slug: p.slug }, { slug: `${p.slug}.html` }]);
+    .map((p) => ({ slug: p.slug }));
 
-  // Also generate .html variants for reserved slugs so requests like /about.html
-  // don't crash with "missing param" (the page component will notFound() them)
-  const reservedHtml = RESERVED_SLUGS.map((s) => ({ slug: `${s}.html` }));
-
-  const all = [...slugs, ...reservedHtml];
-  // Next.js static export requires at least one param when API fails
-  if (all.length === 0) return [{ slug: '__no-pages__' }];
-  return all;
+  // Fallback so build succeeds even if WP is down
+  if (slugs.length === 0) return [{ slug: '__no-pages__' }];
+  return slugs;
 }
 
 interface PageProps {
@@ -45,8 +36,7 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const rawSlug = (await params).slug;
-  const slug = normalizeSlug(rawSlug);
+  const slug = (await params).slug;
 
   // Handle fallback slug or reserved slugs (they have their own routes)
   if (slug === '__no-pages__' || RESERVED_SLUGS.includes(slug)) {
@@ -78,8 +68,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function Page({ params }: PageProps) {
-  const rawSlug = (await params).slug;
-  const slug = normalizeSlug(rawSlug);
+  const slug = (await params).slug;
 
   // Reserved slugs have dedicated routes — 404 if hit here (e.g. via .html suffix)
   if (RESERVED_SLUGS.includes(slug)) {
