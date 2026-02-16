@@ -317,7 +317,7 @@
     ],
     "location": [
       [
-        {"param": "post_type", "operator": "==", "value": "service"}
+        {"param": "post_type", "operator": "==", "value": "services"}
       ]
     ],
     "menu_order": 0,

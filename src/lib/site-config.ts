@@ -15,11 +15,13 @@ export function getCanonicalUrl(path: string): string {
 }
 
 /**
- * Origins treated as internal (convert to pathname for frontend routing).
- * WordPress menu URLs may use backend API URL, Site URL, or frontend URL.
+ * Hostnames treated as internal (convert to pathname for frontend routing).
+ * Compares hostnames only (ignoring protocol) so http/https mismatches don't matter.
+ * Also derives the base domain from subdomains to catch WordPress "Site Address" URLs.
+ * e.g. fs26-back.felixseeger.de → also adds felixseeger.de
  */
-function getInternalOrigins(): string[] {
-  const origins: string[] = [];
+function getInternalHostnames(): string[] {
+  const hostnames: string[] = [];
   const urls = [
     process.env.NEXT_PUBLIC_WORDPRESS_API_URL,
     process.env.WORDPRESS_API_URL,
@@ -29,18 +31,28 @@ function getInternalOrigins(): string[] {
   ].filter(Boolean) as string[];
   for (const u of urls) {
     try {
-      const origin = new URL(u.replace(/\/+$/, '')).origin;
-      if (origin && !origins.includes(origin)) origins.push(origin);
+      const hostname = new URL(u.replace(/\/+$/, '')).hostname.toLowerCase();
+      if (hostname && !hostnames.includes(hostname)) hostnames.push(hostname);
+      // Derive base domain (e.g. fs26-back.felixseeger.de → felixseeger.de)
+      const parts = hostname.split('.');
+      if (parts.length > 2) {
+        const baseDomain = parts.slice(-2).join('.');
+        if (baseDomain && !hostnames.includes(baseDomain)) hostnames.push(baseDomain);
+      }
     } catch {
       // skip invalid URLs
     }
   }
-  return origins;
+  return hostnames;
 }
+
+/** WordPress language prefixes to strip from paths (e.g. /en/impressum → /impressum) */
+const WP_LANG_PREFIXES = /^\/(?:en|de|fr|es|it|nl|pt|ru|ja|zh|ko|ar|tr|pl)\//i;
 
 /**
  * Convert a WordPress/site URL to a frontend href.
  * Strips origin for internal links so Next.js routing works.
+ * Also strips WordPress language prefixes (e.g. /en/).
  */
 export function toFrontendHref(url: string): { href: string; external: boolean } {
   if (typeof url !== 'string' || !url.trim()) {
@@ -48,13 +60,15 @@ export function toFrontendHref(url: string): { href: string; external: boolean }
   }
   const trimmed = url.trim();
   if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
-    return { href: trimmed, external: false };
+    const cleaned = trimmed.replace(WP_LANG_PREFIXES, '/');
+    return { href: cleaned, external: false };
   }
   try {
     const u = new URL(trimmed);
-    const internalOrigins = getInternalOrigins();
-    if (internalOrigins.includes(u.origin)) {
-      const path = u.pathname || '/';
+    const internalHostnames = getInternalHostnames();
+    const hostname = u.hostname.toLowerCase();
+    if (internalHostnames.includes(hostname)) {
+      const path = (u.pathname || '/').replace(WP_LANG_PREFIXES, '/');
       return { href: path, external: false };
     }
     return { href: trimmed, external: true };

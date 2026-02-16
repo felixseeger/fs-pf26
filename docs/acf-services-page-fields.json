@@ -1,0 +1,181 @@
+[
+  {
+    "key": "group_services_page",
+    "title": "Services Page",
+    "fields": [
+      {
+        "key": "field_services_tab_hero",
+        "label": "Hero",
+        "name": "",
+        "type": "tab",
+        "instructions": "Main page header (above the fold).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_services_hero_headline",
+        "label": "Headline",
+        "name": "hero_headline",
+        "type": "text",
+        "instructions": "Main headline for the Services page.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "Digital Products That Drive Business Growth.",
+        "placeholder": "Digital Products That Drive Business Growth.",
+        "maxlength": ""
+      },
+      {
+        "key": "field_services_hero_subheadline",
+        "label": "Subheadline",
+        "name": "hero_subheadline",
+        "type": "textarea",
+        "instructions": "Supporting line under the headline.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "I don't just build websites or apps. I engineer digital ecosystems designed to convert visitors, engage users, and scale your business.",
+        "rows": 3,
+        "new_lines": "br",
+        "placeholder": ""
+      },
+      {
+        "key": "field_services_tab_trust",
+        "label": "Why Work With Me",
+        "name": "",
+        "type": "tab",
+        "instructions": "Trust / differentiator section.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_services_trust_headline",
+        "label": "Trust Section Headline",
+        "name": "trust_headline",
+        "type": "text",
+        "instructions": "e.g. More Than Just a Freelancer.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "More Than Just a Freelancer.",
+        "placeholder": "More Than Just a Freelancer."
+      },
+      {
+        "key": "field_services_trust_body",
+        "label": "Trust Section Body",
+        "name": "trust_body",
+        "type": "wysiwyg",
+        "instructions": "Intro paragraph before the bullet list.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "Most developers deliver code and disappear. I partner with you. From the first concept sketch to the final deployment and beyond, I am invested in the commercial success of your product.",
+        "tabs": "all",
+        "toolbar": "full",
+        "media_upload": 1,
+        "delay": 0
+      },
+      {
+        "key": "field_services_trust_items",
+        "label": "Trust Items",
+        "name": "trust_items",
+        "type": "repeater",
+        "instructions": "List of differentiators (title + description).",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "layout": "block",
+        "button_label": "Add item",
+        "sub_fields": [
+          {
+            "key": "field_services_trust_item_title",
+            "label": "Title",
+            "name": "title",
+            "type": "text",
+            "instructions": "e.g. Full-Stack Expertise",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {"width": "40", "class": "", "id": ""},
+            "default_value": "",
+            "placeholder": "Full-Stack Expertise"
+          },
+          {
+            "key": "field_services_trust_item_description",
+            "label": "Description",
+            "name": "description",
+            "type": "textarea",
+            "instructions": "Short supporting line.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {"width": "60", "class": "", "id": ""},
+            "default_value": "",
+            "rows": 2,
+            "new_lines": "br",
+            "placeholder": "I understand the whole picture, from design to database."
+          }
+        ]
+      },
+      {
+        "key": "field_services_tab_cta",
+        "label": "Global CTA",
+        "name": "",
+        "type": "tab",
+        "instructions": "Footer call-to-action block.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""}
+      },
+      {
+        "key": "field_services_cta_headline",
+        "label": "CTA Headline",
+        "name": "cta_headline",
+        "type": "text",
+        "instructions": "Headline above the button.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "", "class": "", "id": ""},
+        "default_value": "Ready to Build Something Great?",
+        "placeholder": "Ready to Build Something Great?"
+      },
+      {
+        "key": "field_services_cta_button_text",
+        "label": "Button Text",
+        "name": "cta_button_text",
+        "type": "text",
+        "instructions": "Button label.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": "Start Your Project",
+        "placeholder": "Start Your Project"
+      },
+      {
+        "key": "field_services_cta_button_link",
+        "label": "Button Link",
+        "name": "cta_button_link",
+        "type": "url",
+        "instructions": "Optional. Leave empty to use /contact or #contact.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {"width": "50", "class": "", "id": ""},
+        "default_value": ""
+      }
+    ],
+    "location": [
+      [
+        {"param": "post_type", "operator": "==", "value": "page"}
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Hero, Why Work With Me (trust), and Global CTA for the Services page (slug: services).",
+    "show_in_rest": 1
+  }
+]

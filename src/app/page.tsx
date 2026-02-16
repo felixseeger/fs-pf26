@@ -3,6 +3,7 @@ import { getPortfolioItems, getHomePage, getServiceItems } from "@/lib/wordpress
 import { WPPortfolioItem, WPPage, ACFImage, WPServiceItem } from "@/types/wordpress";
 import { getCanonicalUrl } from "@/lib/site-config";
 import HomepageHero from "@/components/layout/HomepageHero";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   alternates: { canonical: getCanonicalUrl('/') },

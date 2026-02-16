@@ -1,0 +1,24 @@
+{
+  "_source": "docs/services_page_copy.md – Services Page Copy: Felix Seeger",
+  "hero_headline": "Digital Products That Drive Business Growth.",
+  "hero_subheadline": "I don't just build websites or apps. I engineer digital ecosystems designed to convert visitors, engage users, and scale your business.",
+  "trust_headline": "More Than Just a Freelancer.",
+  "trust_body": "<p>Most developers deliver code and disappear. I partner with you. From the first concept sketch to the final deployment and beyond, I am invested in the commercial success of your product.</p>",
+  "trust_items": [
+    {
+      "title": "Full-Stack Expertise",
+      "description": "I understand the whole picture, from design to database."
+    },
+    {
+      "title": "Business-First Approach",
+      "description": "Every line of code is written with your business goals in mind."
+    },
+    {
+      "title": "Direct Communication",
+      "description": "No account managers. You talk directly to the expert."
+    }
+  ],
+  "cta_headline": "Ready to Build Something Great?",
+  "cta_button_text": "Start Your Project",
+  "cta_button_link": ""
+}

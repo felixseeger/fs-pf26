@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /**
- * Full deploy: prepare live env → build → FTP upload
+ * Full deploy: prepare live env → clear cache → build → FTP upload
  * Cross-platform (works on Windows PowerShell)
  */
 
 import { spawnSync } from 'child_process';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { rmSync, existsSync } from 'fs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -26,8 +27,15 @@ function run(cmd, args = [], opts = {}) {
 // 1. Prepare live env from conf/start.md
 run('node', ['scripts/prepare-live-env.mjs']);
 
-// 2. Build
+// 2. Clear Next.js cache so build always fetches fresh WordPress data
+const nextDir = join(rootDir, '.next');
+if (existsSync(nextDir)) {
+  rmSync(nextDir, { recursive: true });
+  console.log('Cleared .next cache');
+}
+
+// 3. Build
 run('pnpm', ['build']);
 
-// 3. FTP upload
+// 4. FTP upload
 run('node', ['scripts/deploy-ftp.mjs']);

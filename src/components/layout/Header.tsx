@@ -19,6 +19,7 @@ const navLinks = [
     { name: 'About', href: '/#about' },
     { name: 'Services', href: '/#services' },
     { name: 'Portfolio', href: '/portfolio' },
+    { name: 'Courses', href: '/courses' },
 ];
 
 export default function Header() {
@@ -289,7 +290,7 @@ export default function Header() {
                             </Link>
                         </div>
                         <nav className="hidden md:flex flex-1 justify-end items-center gap-10" aria-label="Secondary navigation">
-                            {renderNavLinks(2, 3)}
+                            {renderNavLinks(2, 4)}
                             <div className="hidden lg:flex items-center gap-6">
                                 <Link href="/resume" className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
                                     Resume
@@ -361,7 +362,7 @@ export default function Header() {
                                 ref={rightLinksRef}
                                 className="hidden md:flex pointer-events-auto items-center gap-12"
                             >
-                                {renderNavLinks(2, 3)}
+                                {renderNavLinks(2, 4)}
                             </div>
 
                             {/* Theme and Resume (Secondary Actions) - Hidden on mobile/tablet, shown on desktop */}

@@ -6,4 +6,5 @@ export * from './taxonomies';
 export * from './menus';
 export * from './portfolio';
 export * from './services';
+export * from './course';
 

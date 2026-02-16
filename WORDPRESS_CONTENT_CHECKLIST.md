@@ -74,3 +74,86 @@ Other blocks (Kontaktperson, Standorte, Team, Karriere) may be used by other tem
 - **About:** Edit the page with slug **about** (e.g. post 1968); fill main content and Trust section so the frontend shows text and "Trusted by" clients.
 
 Once these are filled and you redeploy, the frontend will show the WordPress data.
+
+---
+
+## 6. Courses (no course posts fetched)
+
+The frontend calls the WordPress REST API for the **Course** post type. If `/courses` shows "No courses published yet", either there are no published Course posts or the CPT is **not exposed to the REST API**.
+
+**Diagnose from this repo (optional):**
+
+```bash
+node scripts/diagnose-courses.mjs
+```
+
+This checks your backend’s `wp/v2/types` for a `course` type and tries both `/courses` and `/course`. If it reports "Course CPT: NOT REGISTERED in REST API", the fix is below.
+
+**Do this in WordPress:**
+
+1. **Expose the Course post type to the REST API**  
+   Where the Course post type is registered (theme `functions.php`, plugin, or code snippet), ensure:
+   - `'show_in_rest' => true`
+   - Optionally set `'rest_base' => 'courses'` or `'rest_base' => 'course'` (the frontend tries both).
+
+   Example when registering the CPT:
+   ```php
+   register_post_type('course', [
+     'label'       => 'Courses',
+     'public'      => true,
+     'show_in_rest'=> true,
+     'rest_base'   => 'courses',
+     // ... other args
+   ]);
+   ```
+
+2. **Check the route**  
+   Open in the browser:  
+   `https://your-wp-site.com/wp-json/wp/v2/`  
+   You should see either `"courses"` or `"course"` in the list of namespaces/routes. If it’s missing, the CPT is still not in the REST API.
+
+3. **Publish at least one Course**  
+   Create or edit a Course post and set status to **Published**.
+
+4. **Resave permalinks**  
+   WordPress → Settings → Permalinks → click **Save** (no need to change anything).
+
+5. **Redeploy or restart dev**  
+   Then reload `/courses` on the frontend.
+
+---
+
+## 7. Services page (ACF not showing on frontend)
+
+The frontend fetches the **Page** with slug **`services`** and uses its ACF for Hero, Trust, and CTA. If those sections still show fallback text or are missing:
+
+1. **Page exists and slug is `services`**  
+   Create or edit a Page, set the slug to **services** (URL slug), and publish it.
+
+2. **Field group location**  
+   The “Services Page” ACF field group must be assigned to **Page** and (if your ACF supports it) to the specific “Services” page. Fill Hero, Trust, and CTA fields on that page and save.
+
+3. **Show in REST API**  
+   Edit the “Services Page” field group in ACF → set **Show in REST API** to **Yes**. Without this, the REST response for the page will not include the `acf` object.
+
+4. **Redeploy or restart dev**  
+   Rebuild or restart so the app fetches the page again; then reload `/services`.
+
+---
+
+## 8. Service single pages (e.g. /services/ux-ui-design) – no content on live
+
+Service **single** pages (e.g. `/services/ux-ui-design`) get their content from the WordPress **Services** custom post type at **build time**. The CPT is registered as **`services`** (plural). If the live site shows empty content or only the title:
+
+1. **ACF field group must target post type `services` (plural)**  
+   The “Service Subpage (Sales Layout)” field group must be assigned to **Post Type is equal to `services`** (not `service`). If it was set to `service` (singular), the fields never attach and the REST API returns empty `acf`.  
+   In ACF: edit the field group → Location → Post Type **equals** **Services** (or `services`). Save. Re-import `docs/acf-service-subpage-fields.json` if needed; its location value is `services`.
+
+2. **Show in REST API**  
+   For that field group, set **Show in REST API** to **Yes** so the `acf` object is included in `/wp-json/wp/v2/services?slug=...`.
+
+3. **Fill and save each Service post**  
+   Edit each Service (e.g. “UX/UI Design”) and fill Hero, Problem, Solution, Process/Key Features/Use Cases, Deliverables, CTA. Save.
+
+4. **Redeploy**  
+   Content is baked in at build time. After changing WordPress, run `pnpm run deploy` and hard-refresh the live site.
