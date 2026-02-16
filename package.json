@@ -2,6 +2,7 @@
     "name": "fs-pf26",
     "version": "0.1.0",
     "private": true,
+    "packageManager": "pnpm@10.28.2",
     "scripts": {
         "dev": "node --require ./dns-fix.js ./node_modules/next/dist/bin/next dev",
         "build": "next build",
