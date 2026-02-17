@@ -110,7 +110,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
           {acf.hero_cta_text && (
             <div>
               <a
-                href="#offer"
+                href={`/courses/signup?course=${slug}`}
                 className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-lg transition-colors"
               >
                 {acf.hero_cta_text}
@@ -262,7 +262,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
           )}
           {acf.offer_final_cta && (
             <a
-              href="#offer"
+              href={`/courses/signup?course=${slug}`}
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-lg transition-colors"
             >
               {acf.offer_final_cta}
