@@ -269,10 +269,17 @@ export interface ACFImage {
 }
 
 export interface HomepageMetaBox {
-  // Hero Section
+  // Hero Section (generic)
   hero_title?: string;
   hero_subtitle?: string;
   hero_background?: ACFImage | number | false;
+  // Hero Carousel — First Slide
+  hero_slide_title?: string;
+  hero_slide_badge?: string;
+  hero_slide_subtitle?: string;
+  hero_slide_cta_primary_label?: string;
+  hero_slide_cta_primary_url?: string;
+  hero_start_text?: string;
   // About Section
   about_title?: string;
   about_content?: string;

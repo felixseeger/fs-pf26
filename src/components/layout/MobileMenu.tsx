@@ -8,6 +8,7 @@ import ThemeLogo from './ThemeLogo';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { WPMenuItem } from '@/lib/wordpress';
 import { toFrontendHref } from '@/lib/site-config';
+import { playMenuOpen, playMenuClose, playMenuSelect } from '@/lib/menu-sounds';
 
 interface MobileMenuProps {
     menuItems: WPMenuItem[];
@@ -69,7 +70,7 @@ export default function MobileMenu({ menuItems }: MobileMenuProps) {
                     ? 'opacity-100 backdrop-blur-md'
                     : 'opacity-0 pointer-events-none backdrop-blur-none'
                     }`}
-                onClick={() => setIsOpen(false)}
+                onClick={() => { playMenuClose(); setIsOpen(false); }}
                 aria-hidden="true"
             >
                 {/* Animated gradient background */}
@@ -99,14 +100,14 @@ export default function MobileMenu({ menuItems }: MobileMenuProps) {
                     className={`flex items-center justify-between px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 transition-all duration-500 delay-100 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
                         }`}
                 >
-                    <Link href="/" onClick={() => setIsOpen(false)}>
+                    <Link href="/" onClick={() => { playMenuSelect(); setIsOpen(false); }}>
                         <ThemeLogo />
                     </Link>
 
                     <div className="flex items-center gap-2">
                         <ThemeToggle />
                         <button
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => { playMenuClose(); setIsOpen(false); }}
                             className="p-2 -mr-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
                             aria-label="Close menu"
                         >
@@ -140,7 +141,7 @@ export default function MobileMenu({ menuItems }: MobileMenuProps) {
                             <Link
                                 key={item.ID}
                                 href={href}
-                                onClick={() => setIsOpen(false)}
+                                onClick={() => { playMenuSelect(); setIsOpen(false); }}
                                 className={`group relative px-6 py-4 text-base font-medium transition-all duration-300 ${isActive
                                     ? 'text-black dark:text-white bg-zinc-100 dark:bg-zinc-800'
                                     : 'text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800/50'
@@ -196,7 +197,11 @@ export default function MobileMenu({ menuItems }: MobileMenuProps) {
         <>
             {/* Hamburger Button - Stays in Header */}
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => {
+                    if (isOpen) playMenuClose();
+                    else playMenuOpen();
+                    setIsOpen(!isOpen);
+                }}
                 className="md:hidden relative z-50 p-2 -mr-2 text-zinc-700 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600 rounded-md"
                 aria-label="Toggle menu"
                 aria-expanded={isOpen}

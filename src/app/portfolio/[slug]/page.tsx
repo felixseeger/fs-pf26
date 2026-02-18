@@ -10,6 +10,7 @@ import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
 import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigation';
 import ServicesUsed from '@/components/portfolio/ServicesUsed';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 
 export async function generateStaticParams() {
   const items = await getPortfolioItems(100, 1).catch(() => []);
@@ -99,12 +100,11 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
             <BreadcrumbJsonLd items={breadcrumbs} />
-            <article className="max-w-6xl mx-auto px-4 py-24">
-                {/* Back Link */}
-                <div className="mb-8">
+            <article className="max-w-6xl mx-auto px-4 pt-36 pb-24">
+                <div className="mb-8 flex flex-col gap-3">
                     <Link
                         href="/portfolio"
-                        className="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors gap-2 group"
+                        className="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors gap-2 group w-fit"
                     >
                         <svg
                             className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform"
@@ -116,6 +116,7 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
                         </svg>
                         Back to Portfolio
                     </Link>
+                    <Breadcrumb items={breadcrumbs} />
                 </div>
 
                 {/* Project Header */}

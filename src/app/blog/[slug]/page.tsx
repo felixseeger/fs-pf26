@@ -1,8 +1,12 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPostBySlug, getPosts } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
+import { getBreadcrumbItems } from '@/lib/breadcrumbs';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 
 export async function generateStaticParams() {
   const posts = await getPosts(100, 1).catch(() => []);
@@ -80,10 +84,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const featuredImage = post._embedded?.['wp:featuredmedia']?.[0];
   const author = post._embedded?.author?.[0];
   const categories = post._embedded?.['wp:term']?.[0] || [];
+  const postTitle = post.title.rendered.replace(/<[^>]*>/g, '').trim() || 'Post';
+  const breadcrumbs = getBreadcrumbItems(`/blog/${slug}`, postTitle);
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans dark:bg-background" suppressHydrationWarning>
-      <article className="max-w-4xl mx-auto px-4 py-16">
+      <BreadcrumbJsonLd items={breadcrumbs} />
+      <article className="max-w-4xl mx-auto px-4 pt-36 pb-16">
+        <div className="mb-8 flex flex-col gap-3">
+          <Link
+            href="/blog"
+            className="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors gap-2 group w-fit"
+          >
+            <svg className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Blog
+          </Link>
+          <Breadcrumb items={breadcrumbs} />
+        </div>
         {/* Header */}
         <header className="mb-8">
           {/* Categories */}

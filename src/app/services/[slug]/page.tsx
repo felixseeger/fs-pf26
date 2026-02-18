@@ -1,10 +1,14 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllServiceItems, getServiceItemBySlug, getServiceNeighbors } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
 import { getServiceIconUrl } from '@/lib/service-icons';
 import { ACFImage } from '@/types/wordpress';
+import { getBreadcrumbItems } from '@/lib/breadcrumbs';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import ServicePostNavigation from '@/components/services/ServicePostNavigation';
 
 /** Ensure ACF repeater is always an array (WP can return object with numeric keys). */
@@ -131,10 +135,24 @@ export default async function ServicePage({ params }: ServicePageProps) {
     const ctaText = acf?.cta_button_text?.trim() || 'Get a Quote';
 
     const proseClass = 'prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-p:text-zinc-600 dark:prose-p:text-zinc-400';
+    const breadcrumbs = getBreadcrumbItems(`/services/${slug}`, serviceTitle);
 
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
-            <article className="max-w-4xl mx-auto px-6 py-20">
+            <BreadcrumbJsonLd items={breadcrumbs} />
+            <article className="max-w-4xl mx-auto px-6 pt-36 pb-20">
+                <div className="mb-8 flex flex-col gap-3">
+                    <Link
+                        href="/services"
+                        className="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors gap-2 group w-fit"
+                    >
+                        <svg className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Back to Services
+                    </Link>
+                    <Breadcrumb items={breadcrumbs} />
+                </div>
                 {/* Featured / service icon image */}
                 {iconImageUrl ? (
                     <div className="featured-image-write-in relative w-full max-w-2xl mx-auto min-h-[200px] aspect-2/1 mb-12 rounded-2xl flex items-center justify-center">
@@ -259,9 +277,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
                                     const description = item.features_description;
                                     return label ? (
                                         <li key={index} className="flex items-start gap-3">
-                                            <span className="shrink-0 mt-0.5 text-lime-500 dark:text-lime-400" aria-hidden>
+                                            <span className="shrink-0 mt-0.5 text-blue-500 dark:text-blue-400" aria-hidden>
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                                                 </svg>
                                             </span>
                                             <span>
@@ -289,9 +307,9 @@ export default async function ServicePage({ params }: ServicePageProps) {
                                 {useCasesItems.map((item, index) => (
                                     item.item_text ? (
                                         <li key={index} className="flex items-start gap-3">
-                                            <span className="shrink-0 mt-0.5 text-lime-500 dark:text-lime-400" aria-hidden>
+                                            <span className="shrink-0 mt-0.5 text-blue-500 dark:text-blue-400" aria-hidden>
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                                                 </svg>
                                             </span>
                                             <span>{item.item_text.replace(/<[^>]*>/g, '')}</span>
@@ -316,8 +334,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
                             {acf.deliverables.map((item, index) => (
                                 item.item_text ? (
                                     <li key={index} className="flex items-start gap-3">
-                                        <svg className="w-5 h-5 text-lime-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        <svg className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                         </svg>
                                         <span>{item.item_text.replace(/<[^>]*>/g, '')}</span>
                                     </li>

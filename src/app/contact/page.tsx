@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPageBySlug } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
+import { getBreadcrumbItems } from '@/lib/breadcrumbs';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 import ContactPageClient from './ContactPageClient';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -161,5 +163,12 @@ export default async function ContactPage() {
         },
     };
 
-    return <ContactPageClient contactData={contactData} />;
+    return (
+        <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
+            <div className="max-w-6xl mx-auto px-6 pt-8 pb-4">
+                <Breadcrumb items={getBreadcrumbItems('/contact')} />
+            </div>
+            <ContactPageClient contactData={contactData} />
+        </div>
+    );
 }

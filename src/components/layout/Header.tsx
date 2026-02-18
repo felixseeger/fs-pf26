@@ -6,14 +6,38 @@ import AnimatedLink from '@/components/ui/AnimatedLink';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { X, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import LiquidGradientBackground from '@/components/ui/LiquidGradientBackground';
+import LiquidGradientBackground, { type GradientColor } from '@/components/ui/LiquidGradientBackground';
+import { DEFAULT_SOCIAL_URLS } from '@/lib/site-config';
+import { playMenuOpen, playMenuClose, playMenuSelect } from '@/lib/menu-sounds';
 
 gsap.registerPlugin(ScrollTrigger);
+
+/** Gradient colors [r,g,b] 0–1 by pathname. Accent first, dark base second. */
+const GRADIENT_BY_PATH: Record<string, { color1: GradientColor; color2: GradientColor }> = {
+  '/': { color1: [0.945, 0.353, 0.133], color2: [0.039, 0.055, 0.153] },
+  '/services': { color1: [0.2, 0.48, 0.95], color2: [0.02, 0.06, 0.18] },
+  '/courses': { color1: [0.38, 0.85, 0.98], color2: [0.02, 0.1, 0.2] },
+  '/portfolio': { color1: [0.6, 0.35, 0.9], color2: [0.08, 0.04, 0.15] },
+  '/resume': { color1: [0.95, 0.55, 0.2], color2: [0.08, 0.05, 0.12] },
+  '/about': { color1: [0.15, 0.7, 0.6], color2: [0.02, 0.08, 0.1] },
+  '/contact': { color1: [0.9, 0.4, 0.5], color2: [0.12, 0.03, 0.08] },
+  '/impressum': { color1: [0.5, 0.5, 0.6], color2: [0.06, 0.06, 0.1] },
+  '/privacy-policy': { color1: [0.5, 0.5, 0.6], color2: [0.06, 0.06, 0.1] },
+};
+
+function getGradientColors(pathname: string) {
+  const exact = GRADIENT_BY_PATH[pathname];
+  if (exact) return exact;
+  if (pathname.startsWith('/services')) return GRADIENT_BY_PATH['/services'];
+  if (pathname.startsWith('/courses')) return GRADIENT_BY_PATH['/courses'];
+  if (pathname.startsWith('/portfolio')) return GRADIENT_BY_PATH['/portfolio'];
+  return GRADIENT_BY_PATH['/'];
+}
 
 const navLinks = [
     { name: 'About', href: '/#about' },
@@ -21,6 +45,49 @@ const navLinks = [
     { name: 'Portfolio', href: '/portfolio' },
     { name: 'Courses', href: '/courses' },
 ];
+
+const mobileNavLinks = [
+    ...navLinks,
+    { name: 'Resume', href: '/resume' },
+];
+
+const legalLinks = [
+    { name: 'Impressum', href: '/impressum' },
+    { name: 'Privacy Policy', href: '/privacy-policy' },
+];
+
+const socialLinkLabels: Record<string, string> = {
+    twitter: 'Twitter',
+    linkedin: 'LinkedIn',
+    github: 'GitHub',
+    instagram: 'Instagram',
+    facebook: 'Facebook',
+};
+
+const mobileSocialLinks = (Object.entries(DEFAULT_SOCIAL_URLS) as [string, string][])
+    .filter(([, url]) => url?.trim())
+    .map(([key, href]) => ({ name: socialLinkLabels[key] ?? key, href }));
+
+const allMobileNavLinks = [
+    ...mobileNavLinks,
+    ...mobileSocialLinks,
+    ...legalLinks,
+];
+
+const mobileMenuContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: (i = 1) => ({
+        opacity: 1,
+        transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    }),
+    exit: { opacity: 0, transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+};
+
+const mobileMenuItemVariants = {
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -12 },
+};
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -189,6 +256,8 @@ export default function Header() {
             left: '2.5rem',
             x: 0,
             xPercent: 0,
+            top: '50%',
+            yPercent: -50,
             duration: 0.8,
             ease: "power2.inOut"
         }, 0);
@@ -198,6 +267,8 @@ export default function Header() {
             left: '100%',
             xPercent: -100,
             x: -350,
+            top: '50%',
+            yPercent: -50,
             duration: 0.8,
             ease: "power2.inOut"
         }, 0);
@@ -207,6 +278,8 @@ export default function Header() {
             left: '100%',
             xPercent: -100,
             x: -40,
+            top: '50%',
+            yPercent: -50,
             duration: 0.8,
             ease: "power2.inOut"
         }, 0);
@@ -226,13 +299,15 @@ export default function Header() {
 
     if (!mounted) return null;
 
-    // Helper to render links
+    if (pathname?.startsWith('/courses')) return null;
+
+    // Helper to render links (play select sound on nav click)
     const renderNavLinks = (sliceStart: number, sliceEnd: number) => {
         return (
             <ul className="flex space-x-10 items-center">
                 {navLinks.slice(sliceStart, sliceEnd).map((link) => (
                     <li key={link.name}>
-                        <AnimatedLink href={link.href} className="font-unbounded text-xs font-bold tracking-widest uppercase text-black dark:text-primary hover:text-blue-600 dark:hover:text-primary transition-colors">
+                        <AnimatedLink href={link.href} onClick={() => playMenuSelect()} className="font-unbounded text-xs font-bold tracking-widest uppercase text-black dark:text-primary hover:text-blue-600 dark:hover:text-primary transition-colors">
                             {link.name}
                         </AnimatedLink>
                     </li>
@@ -245,54 +320,89 @@ export default function Header() {
         <div ref={containerRef} className="relative w-full z-[100]">
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100000] md:hidden bg-background/95 backdrop-blur-3xl">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100000] md:hidden bg-background/95 backdrop-blur-3xl flex flex-col"
+                    >
                         {/* Close button */}
-                        <button onClick={() => setIsOpen(false)} className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border border-white/20 rounded-full text-white" aria-label="Close menu">
+                        <button onClick={() => { playMenuClose(); setIsOpen(false); }} className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center border border-border rounded-full text-foreground z-10" aria-label="Close menu">
                             <X size={24} aria-hidden />
                         </button>
 
                         {/* Logo */}
-                        <div className="absolute top-6 left-6">
-                            <Link href="/" onClick={() => setIsOpen(false)}>
-                                <Image src="/logo-light.svg" alt="Logo" width={48} height={48} />
+                        <div className="absolute top-6 left-6 z-10">
+                            <Link href="/" onClick={() => { playMenuSelect(); setIsOpen(false); }}>
+                                <Image src={resolvedTheme === 'dark' ? '/logo-light.svg' : '/logo-dark.svg'} alt="Logo" width={48} height={48} />
                             </Link>
                         </div>
 
-                        {/* Navigation Links */}
-                        <div className="flex flex-col h-full p-12 pt-32 gap-8 text-white">
-                            {navLinks.map(l => (
-                                <AnimatedLink
-                                    key={l.name}
-                                    href={l.href}
-                                    className="text-4xl font-unbounded font-black uppercase hover:text-blue-600 dark:hover:text-primary transition-colors"
-                                    onClick={() => setIsOpen(false)}
+                        {/* Navigation + dotted lines + stagger animation */}
+                        <motion.ul
+                            className="flex flex-col flex-1 p-12 pt-32 pb-8 list-none"
+                            variants={mobileMenuContainerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            aria-label="Mobile navigation"
+                        >
+                            {allMobileNavLinks.map((l) => (
+                                <motion.li
+                                    key={`${l.href}-${l.name}`}
+                                    variants={mobileMenuItemVariants}
+                                    className="border-b border-dashed border-border/60 py-4 first:pt-0"
                                 >
-                                    {l.name}
-                                </AnimatedLink>
+                                    {l.href.startsWith('http') ? (
+                                        <a
+                                            href={l.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-3xl md:text-4xl font-unbounded font-black uppercase text-foreground hover:text-primary transition-colors block"
+                                            onClick={() => { playMenuSelect(); setIsOpen(false); }}
+                                        >
+                                            {l.name}
+                                        </a>
+                                    ) : (
+                                        <AnimatedLink
+                                            href={l.href}
+                                            className="text-3xl md:text-4xl font-unbounded font-black uppercase text-foreground hover:text-primary transition-colors block"
+                                            onClick={() => { playMenuSelect(); setIsOpen(false); }}
+                                        >
+                                            {l.name}
+                                        </AnimatedLink>
+                                    )}
+                                </motion.li>
                             ))}
-                        </div>
+                        </motion.ul>
                     </motion.div>
                 )}
             </AnimatePresence>
 
             {/* Standard Header for non-home pages */}
-            {pathname !== '/' && (
+            {pathname !== '/' && (() => {
+                const { color1, color2 } = getGradientColors(pathname);
+                return (
                 <header className="fixed top-0 left-0 right-0 z-[100] h-20 border-b border-border overflow-hidden">
-                    <LiquidGradientBackground className="absolute inset-0 -z-20 w-full h-full pointer-events-none" />
-                    <div className="absolute inset-0 bg-background/80 backdrop-blur-lg pointer-events-none" aria-hidden />
-                    <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center relative z-10">
+                    <LiquidGradientBackground
+                        className="absolute inset-0 -z-20 w-full h-full pointer-events-none"
+                        color1={color1}
+                        color2={color2}
+                    />
+                    <div className="absolute inset-0 bg-background/55 backdrop-blur-md pointer-events-none" aria-hidden />
+                    <div className="max-w-6xl mx-auto px-4 h-full flex justify-between items-center relative z-10">
                         <nav className="hidden md:flex flex-1 justify-start" aria-label="Main navigation">
                             {renderNavLinks(0, 2)}
                         </nav>
                         <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-16">
-                            <Link href="/" className="block">
+                            <Link href="/" onClick={() => playMenuSelect()} className="block">
                                 <Image src={resolvedTheme === 'dark' ? "/logo-light.svg" : "/logo-dark.svg"} alt="Logo" width={64} height={64} className="w-full h-auto" priority />
                             </Link>
                         </div>
                         <nav className="hidden md:flex flex-1 justify-end items-center gap-10" aria-label="Secondary navigation">
                             {renderNavLinks(2, 4)}
                             <div className="hidden lg:flex items-center gap-6">
-                                <Link href="/resume" className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
+                                <Link href="/resume" onClick={() => playMenuSelect()} className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
                                     Resume
                                 </Link>
                                 <button onClick={toggleTheme} className="p-2 bg-muted rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
@@ -304,26 +414,36 @@ export default function Header() {
                             <button onClick={toggleTheme} className="p-2 bg-muted rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
                                 {resolvedTheme === 'dark' ? <Sun size={16} className="text-foreground" aria-hidden /> : <Moon size={16} className="text-foreground" aria-hidden />}
                             </button>
-                            <button onClick={() => setIsOpen(true)} className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20" aria-label="Open menu" aria-expanded={isOpen}>
-                                <Menu size={20} className="text-foreground" aria-hidden />
+                            <button onClick={() => { playMenuOpen(); setIsOpen(true); }} className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center" aria-label="Open menu" aria-expanded={isOpen}>
+                                <span className="flex flex-col justify-center gap-1 w-5" aria-hidden>
+                                    <span className="block w-5 h-0.5 bg-foreground rounded-full" />
+                                    <span className="block w-5 h-0.5 bg-foreground rounded-full" />
+                                </span>
                             </button>
                         </div>
                     </div>
                 </header>
-            )}
+                );
+            })()}
 
             {/* Home Page Animated Header Elements */}
-            {pathname === '/' && (
+            {pathname === '/' && (() => {
+                const { color1, color2 } = getGradientColors(pathname);
+                return (
                 <>
                     <header
                         ref={headerRef}
                         className="fixed top-0 left-0 right-0 w-full z-[100] transition-colors duration-500 pointer-events-none overflow-hidden"
                     >
-                        <LiquidGradientBackground className="absolute inset-0 -z-20 w-full h-full pointer-events-none" />
+                        <LiquidGradientBackground
+                            className="absolute inset-0 -z-20 w-full h-full pointer-events-none"
+                            color1={color1}
+                            color2={color2}
+                        />
                         {/* Separate background layer for color transition */}
                         <div
                             ref={backgroundRef}
-                            className="absolute inset-0 bg-background/80 w-full h-full -z-10"
+                            className="absolute inset-0 bg-background/55 w-full h-full -z-10"
                         />
 
                         <div ref={headerInnerRef} className="w-full h-full relative pointer-events-auto">
@@ -341,7 +461,7 @@ export default function Header() {
                                 ref={logoWrapperRef}
                                 className="hidden md:block pointer-events-auto w-[250px]"
                             >
-                                <Link href="/" className="block w-full text-[#1D4ED8] dark:text-white" aria-label="Home">
+                                <Link href="/" onClick={() => playMenuSelect()} className="block w-full text-[#1D4ED8] dark:text-white" aria-label="Home">
                                     <svg
                                         width="250"
                                         height="250"
@@ -370,7 +490,7 @@ export default function Header() {
                                 ref={secondaryActionsRef}
                                 className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 items-center gap-6"
                             >
-                                <Link href="/resume" className="bg-primary text-primary-foreground px-6 py-3 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-xl pointer-events-auto inline-flex items-center gap-2">
+                                <Link href="/resume" onClick={() => playMenuSelect()} className="bg-primary text-primary-foreground px-6 py-3 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-xl pointer-events-auto inline-flex items-center gap-2">
                                     Resume
                                 </Link>
                                 <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-muted transition-colors pointer-events-auto bg-white/10 backdrop-blur-md" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
@@ -382,18 +502,22 @@ export default function Header() {
 
                     {/* Mobile/Tablet View */}
                     <header className="md:hidden fixed top-0 left-0 w-full h-20 px-6 flex justify-between items-center z-[101]">
-                        <Link href="/"><Image src={resolvedTheme === 'dark' ? "/logo-light.svg" : "/logo-dark.svg"} alt="Logo" width={48} height={48} /></Link>
+                        <Link href="/" onClick={() => playMenuSelect()}><Image src={resolvedTheme === 'dark' ? "/logo-light.svg" : "/logo-dark.svg"} alt="Logo" width={48} height={48} /></Link>
                         <div className="flex items-center gap-3">
                             <button onClick={toggleTheme} className="p-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
                                 {resolvedTheme === 'dark' ? <Sun size={18} className="text-foreground" aria-hidden /> : <Moon size={18} className="text-foreground" aria-hidden />}
                             </button>
-                            <button onClick={() => setIsOpen(true)} className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20" aria-label="Open menu" aria-expanded={isOpen}>
-                                <Menu size={20} className="text-foreground" aria-hidden />
+                            <button onClick={() => { playMenuOpen(); setIsOpen(true); }} className="p-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center" aria-label="Open menu" aria-expanded={isOpen}>
+                                <span className="flex flex-col justify-center gap-1 w-5" aria-hidden>
+                                    <span className="block w-5 h-0.5 bg-foreground rounded-full" />
+                                    <span className="block w-5 h-0.5 bg-foreground rounded-full" />
+                                </span>
                             </button>
                         </div>
                     </header>
                 </>
-            )}
+                );
+            })()}
         </div>
     );
 }

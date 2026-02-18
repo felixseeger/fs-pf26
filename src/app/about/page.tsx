@@ -3,8 +3,19 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getPageBySlug } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
+import { getBreadcrumbItems } from '@/lib/breadcrumbs';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 import TrustSection from '@/components/sections/TrustSection';
 import type { TrustClientItem } from '@/types/wordpress';
+
+/** ACF image field can be a URL string or an object with url */
+function getImageUrl(value: unknown): string | undefined {
+  if (typeof value === 'string' && value.trim()) return value.trim();
+  if (typeof value === 'object' && value !== null && 'url' in value && typeof (value as { url: string }).url === 'string') {
+    return (value as { url: string }).url;
+  }
+  return undefined;
+}
 
 export async function generateMetadata(): Promise<Metadata> {
     const page = await getPageBySlug('about');
@@ -46,7 +57,7 @@ export default async function AboutPage() {
     const acf = (page as any).acf as Record<string, unknown> | undefined;
     const aboutTitle = (acf?.about_title as string) || page.title.rendered;
     const aboutText = acf?.about_text as string | undefined;
-    const aboutImage = acf?.about_image as string | undefined;
+    const aboutImage = getImageUrl(acf?.about_image);
     const socialMedia = acf?.social_media as string | undefined;
     const trustTitle = (acf?.trust_section_title as string) || undefined;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,7 +68,10 @@ export default async function AboutPage() {
 
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
-            <article className="max-w-6xl mx-auto py-24 px-6 lg:px-10" suppressHydrationWarning>
+            <article className="max-w-6xl mx-auto pt-36 pb-24 px-6 lg:px-10" suppressHydrationWarning>
+                <div className="mb-8">
+                    <Breadcrumb items={getBreadcrumbItems('/about')} />
+                </div>
                 <header className="mb-16">
                     <h1
                         className="text-5xl md:text-7xl font-unbounded font-black text-zinc-900 dark:text-white mb-8"

@@ -14,8 +14,7 @@ import AboutSectionContent from "@/components/sections/AboutSectionContent";
 import ServicesSection, { Service } from "@/components/sections/ServicesSection";
 import FAQSection from "@/components/sections/FAQSection";
 import NewsletterCollect from "@/components/ui/NewsletterCollect";
-import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
-
+import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 import { getServiceIconUrl } from '@/lib/service-icons';
 
 function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
@@ -71,12 +70,21 @@ export default async function Home() {
     <HomePreloaderWrapper>
       <div className="min-h-screen bg-white font-sans dark:bg-background" suppressHydrationWarning>
       {/* Hero Section with Portfolio Items */}
-      <HomepageHero items={portfolioItems} />
+      <HomepageHero
+        items={portfolioItems}
+        slideTitle={acf?.hero_slide_title}
+        slideBadge={acf?.hero_slide_badge}
+        slideSubtitle={acf?.hero_slide_subtitle}
+        slideCtaLabel={acf?.hero_slide_cta_primary_label}
+        slideCtaUrl={acf?.hero_slide_cta_primary_url}
+        scrollHintText={acf?.hero_start_text}
+      />
 
       <div className="py-24 overflow-hidden" role="region" aria-label="Homepage content" suppressHydrationWarning>
         {/* About Section - from WordPress ACF */}
         {acf?.about_content && (
-          <section id="about" className="mb-24" suppressHydrationWarning>
+          <section id="about" className="mb-24 py-16 relative overflow-hidden" style={{ isolation: 'isolate' }} suppressHydrationWarning>
+            <DotMatrixStatic color="#a3e635" dotSize={2} spacing={20} opacity={0.25} className="-z-10" />
             <div className="max-w-6xl mx-auto px-4 relative" suppressHydrationWarning>
               {/* Layout: image + sticky content */}
               <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[500px] lg:min-h-[600px] lg:pt-[8vh] lg:items-start" suppressHydrationWarning>
@@ -139,7 +147,7 @@ export default async function Home() {
         )}
 
         {/* Newsletter Signup */}
-        <section className="max-w-3xl mx-auto px-4 mt-24">
+        <section className="max-w-6xl mx-auto px-4 mt-24">
           <NewsletterCollect
             variant="card"
             group="blog"

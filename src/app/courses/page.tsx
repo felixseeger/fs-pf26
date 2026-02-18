@@ -2,7 +2,10 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getCourses } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
+import { getBreadcrumbItems } from '@/lib/breadcrumbs';
 import CourseCard from '@/components/course/CourseCard';
+import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 
 export const metadata: Metadata = {
   title: 'Courses',
@@ -15,7 +18,12 @@ export default async function CoursesPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
-      <main className="max-w-6xl mx-auto px-6 py-20">
+      <section className="relative min-h-screen overflow-hidden">
+        <DotMatrixStatic color="#61dafb" dotSize={2} spacing={20} opacity={0.35} className="-z-10" />
+        <main className="relative max-w-6xl mx-auto px-6 pt-36 pb-20 z-0">
+        <div className="mb-8">
+          <Breadcrumb items={getBreadcrumbItems('/courses')} />
+        </div>
         <header className="max-w-3xl mb-16">
           <h1 className="text-5xl md:text-7xl font-black text-zinc-900 dark:text-white mb-6 leading-tight">
             Courses
@@ -40,7 +48,8 @@ export default async function CoursesPage() {
             ))}
           </ul>
         )}
-      </main>
+        </main>
+      </section>
     </div>
   );
 }

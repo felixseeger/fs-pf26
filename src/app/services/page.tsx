@@ -2,7 +2,10 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllServiceItems, getPageBySlug } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
+import { getBreadcrumbItems } from '@/lib/breadcrumbs';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 import ServiceGrid from '@/components/services/ServiceGrid';
+import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 
 export const metadata: Metadata = {
     title: 'Services',
@@ -27,8 +30,12 @@ export default async function ServicesPage() {
     const ctaLink = acf?.cta_button_link?.trim() || '/contact';
 
     return (
-        <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
-            <main className="max-w-6xl mx-auto px-6 py-20">
+        <div className="min-h-screen bg-white dark:bg-background relative overflow-hidden" suppressHydrationWarning>
+            <DotMatrixStatic color="#3b82f6" dotSize={2} spacing={20} opacity={0.18} className="absolute inset-0 -z-10" />
+            <main className="max-w-6xl mx-auto px-6 pt-36 pb-20 relative">
+                <div className="mb-8">
+                    <Breadcrumb items={getBreadcrumbItems('/services')} />
+                </div>
                 <header className="max-w-3xl mb-16">
                     <h1 className="text-5xl md:text-7xl font-black text-zinc-900 dark:text-white mb-6 leading-tight">
                         {heroHeadline === FALLBACK_HEADLINE ? (

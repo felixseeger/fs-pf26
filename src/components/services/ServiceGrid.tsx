@@ -40,7 +40,7 @@ export default function ServiceGrid({ services }: ServiceGridProps) {
                     return (
                         <TiltCard key={service.id} className="h-full">
                         <article 
-                            className="bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group h-full"
+                            className="bg-white dark:bg-background rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group h-full border border-zinc-200 dark:border-zinc-800"
                         >
                             {/* Image - Use services_gallery icon or fallback to featured image */}
                             {iconImageUrl ? (

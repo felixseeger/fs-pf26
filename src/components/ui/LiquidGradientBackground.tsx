@@ -305,12 +305,49 @@ interface SceneManager {
   getViewSize: () => { width: number; height: number };
 }
 
+/** RGB values 0–1 for shader uniforms */
+export type GradientColor = [number, number, number];
+
 export interface LiquidGradientBackgroundProps {
   className?: string;
   style?: React.CSSProperties;
+  /** Accent color (warm) – used for uColor1, uColor3, uColor5 */
+  color1?: GradientColor;
+  /** Dark base color – used for uColor2, uColor4, uColor6, uDarkNavy */
+  color2?: GradientColor;
 }
 
-export default function LiquidGradientBackground({ className = '', style }: LiquidGradientBackgroundProps) {
+const DEFAULT_COLOR1: GradientColor = [0.945, 0.353, 0.133];
+const DEFAULT_COLOR2: GradientColor = [0.039, 0.055, 0.153];
+
+function lerpColor(a: GradientColor, b: GradientColor, t: number): GradientColor {
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+}
+
+function applyColors(
+  uniforms: Record<string, THREE.IUniform>,
+  color1: GradientColor,
+  color2: GradientColor
+) {
+  const v1 = new THREE.Vector3(...color1);
+  const v2 = new THREE.Vector3(...color2);
+  const color3 = lerpColor(color1, color2, 0.45);
+  const v3 = new THREE.Vector3(...color3);
+  (uniforms.uColor1 as THREE.IUniform).value = v1.clone();
+  (uniforms.uColor2 as THREE.IUniform).value = v2.clone();
+  (uniforms.uColor3 as THREE.IUniform).value = v3.clone();
+  (uniforms.uColor4 as THREE.IUniform).value = v2.clone();
+  (uniforms.uColor5 as THREE.IUniform).value = v3.clone();
+  (uniforms.uColor6 as THREE.IUniform).value = v2.clone();
+  (uniforms.uDarkNavy as THREE.IUniform).value = v2.clone();
+}
+
+export default function LiquidGradientBackground({
+  className = '',
+  style,
+  color1 = DEFAULT_COLOR1,
+  color2 = DEFAULT_COLOR2,
+}: LiquidGradientBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -354,13 +391,14 @@ export default function LiquidGradientBackground({ className = '', style }: Liqu
 
     const touchTexture = new TouchTexture();
     const gradientBackground = new GradientBackground(sceneManager);
+    applyColors(gradientBackground.uniforms, color1, color2);
     gradientBackground.uniforms.uTouchTexture.value = touchTexture.texture;
     gradientBackground.uniforms.uResolution.value.set(width, height);
-    gradientBackground.uniforms.uGradientSize.value = 0.45;
+    gradientBackground.uniforms.uGradientSize.value = 0.5;
     gradientBackground.uniforms.uGradientCount.value = 12.0;
     gradientBackground.uniforms.uSpeed.value = 1.5;
-    gradientBackground.uniforms.uColor1Weight.value = 0.5;
-    gradientBackground.uniforms.uColor2Weight.value = 1.8;
+    gradientBackground.uniforms.uColor1Weight.value = 0.7;
+    gradientBackground.uniforms.uColor2Weight.value = 2.0;
     gradientBackground.init();
 
     let rafId: number;
@@ -425,7 +463,7 @@ export default function LiquidGradientBackground({ className = '', style }: Liqu
         container.removeChild(renderer.domElement);
       }
     };
-  }, []);
+  }, [color1[0], color1[1], color1[2], color2[0], color2[1], color2[2]]);
 
   return <div ref={containerRef} className={className} style={style} aria-hidden />;
 }

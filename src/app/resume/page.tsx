@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getPageBySlug } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
+import { getBreadcrumbItems } from '@/lib/breadcrumbs';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 import { Download } from 'lucide-react';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -149,8 +151,11 @@ export default async function ResumePage() {
     };
 
     return (
-        <div className="min-h-screen bg-white dark:bg-background py-24 px-6 lg:px-10" suppressHydrationWarning>
+        <div className="min-h-screen bg-white dark:bg-background pt-36 pb-24 px-6 lg:px-10" suppressHydrationWarning>
             <article className="max-w-6xl mx-auto">
+                <div className="mb-8">
+                    <Breadcrumb items={getBreadcrumbItems('/resume')} />
+                </div>
                 {/* Header */}
                 <header className="mb-12">
                     <h1

@@ -15,7 +15,7 @@ export default function CourseCard({ item }: CourseCardProps) {
   const ctaText = item.acf?.primary_cta_text?.trim() || 'View Course';
 
   return (
-    <article className="bg-white dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col border border-zinc-200 dark:border-zinc-800">
+    <article className="bg-white/15 dark:bg-zinc-900/80 backdrop-blur-md rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col border border-zinc-200/60 dark:border-zinc-800">
       {featuredImage?.source_url && (
         <Link href={`/courses/${item.slug}`}>
           <div className="relative w-full aspect-video overflow-hidden">

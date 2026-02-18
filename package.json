@@ -4,7 +4,7 @@
     "private": true,
     "packageManager": "pnpm@10.28.2",
     "scripts": {
-        "dev": "node --require ./dns-fix.js ./node_modules/next/dist/bin/next dev",
+        "dev": "node --require ./dns-fix.js ./node_modules/next/dist/bin/next dev -p 3003",
         "build": "next build",
         "start": "next start",
         "lint": "eslint",

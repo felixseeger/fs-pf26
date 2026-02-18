@@ -3,8 +3,9 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Code2, Palette, Smartphone, TrendingUp, Rocket, Headphones, LucideIcon } from 'lucide-react';
+import { Code2, Palette, Smartphone, TrendingUp, Rocket, Headphones, ChevronRight, LucideIcon } from 'lucide-react';
 import TiltCard from '@/components/ui/TiltCard';
+import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 
 /** Service item: supports WP (iconUrl from services_gallery) or legacy (Lucide icon) */
 export interface Service {
@@ -40,7 +41,8 @@ export default function ServicesSection({
   className = ''
 }: ServicesSectionProps) {
   return (
-    <section className={`py-24 md:py-40 bg-white dark:bg-background ${className}`} id="services">
+    <section className={`py-24 md:py-40 bg-white dark:bg-background relative overflow-hidden ${className}`} id="services" style={{ isolation: 'isolate' }}>
+      <DotMatrixStatic color="#3b82f6" dotSize={2} spacing={20} opacity={0.18} className="-z-10" />
       <div className="container mx-auto px-6 md:px-12">
         <div className="mb-16 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -97,6 +99,19 @@ export default function ServicesSection({
                             leading-relaxed">
                   {service.description}
                 </p>
+
+                {service.slug && (
+                  <div className="mt-6 flex items-center gap-1.5 text-sm font-semibold
+                                  text-blue-500 dark:text-lime-400
+                                  group-hover:text-black dark:group-hover:text-black
+                                  transition-colors duration-300">
+                    Read more
+                    <ChevronRight
+                      size={16}
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    />
+                  </div>
+                )}
               </TiltCard>
             );
 

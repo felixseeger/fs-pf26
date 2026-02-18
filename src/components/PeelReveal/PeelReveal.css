@@ -1,0 +1,101 @@
+.peel-reveal {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  background-color: hsl(var(--background));
+  overflow: hidden;
+}
+
+.peel-reveal .section-header,
+.peel-reveal .section-footer {
+  position: absolute;
+  left: 1.5rem;
+  z-index: 10;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.peel-reveal .section-header {
+  top: 1.5rem;
+}
+
+.peel-reveal .section-footer {
+  bottom: 1.5rem;
+  top: auto;
+}
+
+.peel-reveal .section-header p,
+.peel-reveal .section-footer p {
+  margin: 0.25rem 0;
+}
+
+.peel-reveal .peel-reveal-img-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 3rem;
+  overflow: hidden;
+  will-change: transform, border-radius;
+  z-index: -1;
+}
+
+.peel-reveal .peel-reveal-img-container .pr-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  z-index: 0;
+}
+
+.peel-reveal .peel-reveal-img-container .pr-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.peel-reveal .peel-reveal-img-container .pr-img.mask {
+  -webkit-mask-image: var(--peel-mask-image, url("/peel-reveal/peel-reveal-img-mask.png"));
+  mask-image: var(--peel-mask-image, url("/peel-reveal/peel-reveal-img-mask.png"));
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  -webkit-mask-position: center;
+  mask-position: center;
+  z-index: 2;
+  transform-origin: center center;
+}
+
+.peel-reveal .peel-reveal-header {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  text-align: center;
+  color: hsl(var(--foreground));
+  z-index: 1;
+}
+
+.peel-reveal .peel-reveal-intro-text-container {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.peel-reveal .peel-reveal-intro-text {
+  flex: 1;
+  position: relative;
+  will-change: transform;
+}
+
+.peel-reveal .peel-reveal-intro-text:nth-child(1) {
+  display: flex;
+  justify-content: flex-end;
+}

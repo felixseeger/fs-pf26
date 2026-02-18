@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { Phone, Mail, ArrowRight } from 'lucide-react';
 import TiltCard from '@/components/ui/TiltCard';
 import gsap from 'gsap';
@@ -25,6 +25,20 @@ interface FAQSectionProps {
   faqEmailCardDescription?: string;
 }
 
+function useSound(src: string) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  return useCallback(() => {
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio(src);
+        audioRef.current.volume = 0.35;
+      }
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {});
+    } catch {}
+  }, [src]);
+}
+
 export default function FAQSection({
   faqTitle,
   faqItems,
@@ -38,6 +52,19 @@ export default function FAQSection({
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const faqListRef = useRef<HTMLDivElement>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const playOpen = useSound('/sfx/menu-open.mp3');
+  const playClose = useSound('/sfx/menu-close.mp3');
+
+  function toggleFAQ(i: number) {
+    if (openIndex === i) {
+      setOpenIndex(null);
+      playClose();
+    } else {
+      setOpenIndex(i);
+      playOpen();
+    }
+  }
 
   useGSAP(() => {
     const section = sectionRef.current;
@@ -102,7 +129,7 @@ export default function FAQSection({
   }, [faqItems.length]);
 
   return (
-    <section ref={sectionRef} id="faq" className="mb-24 max-w-6xl mx-auto px-4">
+    <section ref={sectionRef} id="faq" className="mb-24 max-w-6xl mx-auto px-4 pt-[50px]">
       <header className="mb-8">
         <div className="flex items-center gap-4 mb-4">
           <span className="w-12 h-px bg-zinc-300 dark:bg-zinc-800" />
@@ -119,24 +146,59 @@ export default function FAQSection({
         </div>
       </header>
 
-      <div ref={faqListRef} className="space-y-4">
-        {faqItems.map((faq, index) => (
-          <div key={index} data-faq-card>
-            <TiltCard className="rounded-lg">
-            <details className="group p-6 bg-zinc-50 dark:bg-zinc-900 rounded-lg h-full">
-              <summary className="flex justify-between items-center cursor-pointer list-none text-lg font-bold text-black dark:text-white">
-                {faq.question}
-                <span className="ml-4 text-2xl group-open:rotate-45 transition-transform" aria-hidden>+</span>
-              </summary>
+      <div ref={faqListRef} className="space-y-3">
+        {faqItems.map((faq, index) => {
+          const isOpen = openIndex === index;
+          return (
+            <div key={index} data-faq-card>
+            <TiltCard
+              className={[
+                'rounded-xl border transition-all duration-300 dark:backdrop-blur-md',
+                isOpen
+                  ? 'bg-white dark:bg-white/10 border-blue-400/50 dark:border-blue-500/40 shadow-[0_8px_32px_0_rgba(96,165,250,0.18)]'
+                  : 'bg-white dark:bg-white/5 border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/8 hover:border-blue-200 dark:hover:border-white/20',
+              ].join(' ')}
+            >
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                onClick={() => toggleFAQ(index)}
+                className="w-full flex justify-between items-center gap-4 px-6 py-5 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-xl"
+              >
+                <span className="text-lg font-bold text-black dark:text-white leading-snug">
+                  {faq.question}
+                </span>
+                <span
+                  aria-hidden
+                  className={[
+                    'shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300',
+                    isOpen
+                      ? 'bg-blue-500/30 text-blue-500 dark:text-blue-300 rotate-45'
+                      : 'bg-blue-100 text-blue-500 dark:bg-[#e9ff13]/15 dark:text-[#e9ff13] rotate-0',
+                  ].join(' ')}
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <line x1="7" y1="1" x2="7" y2="13" />
+                    <line x1="1" y1="7" x2="13" y2="7" />
+                  </svg>
+                </span>
+              </button>
               <div
-                className="mt-4 text-zinc-600 dark:text-zinc-400 prose dark:prose-invert"
-                dangerouslySetInnerHTML={{ __html: faq.answer }}
-                suppressHydrationWarning
-              />
-            </details>
-          </TiltCard>
+                className={[
+                  'overflow-hidden transition-all duration-300 ease-in-out',
+                  isOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0',
+                ].join(' ')}
+              >
+                <div
+                  className="px-6 pb-5 text-zinc-600 dark:text-zinc-400 prose dark:prose-invert"
+                  dangerouslySetInnerHTML={{ __html: faq.answer }}
+                  suppressHydrationWarning
+                />
+              </div>
+            </TiltCard>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {(contactPhone || contactEmail) && (

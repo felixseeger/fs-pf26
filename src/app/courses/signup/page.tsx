@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { getCourseBySlug } from '@/lib/wordpress/course';
+import { getBreadcrumbItems } from '@/lib/breadcrumbs';
+import Breadcrumb from '@/components/ui/Breadcrumb';
 import { CourseSignupForm } from '@/components/course/CourseSignupForm';
 import { OrderSummary } from '@/components/course/OrderSummary';
 
@@ -28,8 +30,12 @@ export default async function CourseSignupPage({ searchParams }: SignupPageProps
 
   if (!slug) {
     return (
-      <div className="min-h-screen bg-white dark:bg-background py-24 flex items-center justify-center">
-        <div className="max-w-md mx-auto px-4 text-center">
+      <div className="min-h-screen bg-white dark:bg-background py-24 px-4">
+        <div className="max-w-md mx-auto">
+          <div className="mb-8">
+            <Breadcrumb items={getBreadcrumbItems('/courses/signup')} />
+          </div>
+          <div className="text-center">
           <h1 className="text-3xl font-bold text-foreground mb-4">No Course Selected</h1>
           <p className="text-muted-foreground">
             Please choose a course from our{' '}
@@ -38,6 +44,7 @@ export default async function CourseSignupPage({ searchParams }: SignupPageProps
             </a>
             .
           </p>
+          </div>
         </div>
       </div>
     );
@@ -47,8 +54,12 @@ export default async function CourseSignupPage({ searchParams }: SignupPageProps
 
   if (!item) {
     return (
-      <div className="min-h-screen bg-white dark:bg-background py-24 flex items-center justify-center">
-        <div className="max-w-md mx-auto px-4 text-center">
+      <div className="min-h-screen bg-white dark:bg-background py-24 px-4">
+        <div className="max-w-md mx-auto">
+          <div className="mb-8">
+            <Breadcrumb items={getBreadcrumbItems('/courses/signup')} />
+          </div>
+          <div className="text-center">
           <h1 className="text-3xl font-bold text-foreground mb-4">Course Not Found</h1>
           <p className="text-muted-foreground">
             We couldn&apos;t find that course. Browse our{' '}
@@ -57,6 +68,7 @@ export default async function CourseSignupPage({ searchParams }: SignupPageProps
             </a>
             .
           </p>
+          </div>
         </div>
       </div>
     );
@@ -69,8 +81,11 @@ export default async function CourseSignupPage({ searchParams }: SignupPageProps
     'Course';
 
   return (
-    <div className="min-h-screen bg-white dark:bg-background py-12 flex items-center justify-center">
-      <div className="max-w-6xl mx-auto px-4 w-full">
+    <div className="min-h-screen bg-white dark:bg-background pt-36 pb-12 px-4">
+      <div className="max-w-6xl mx-auto w-full">
+        <div className="mb-8">
+          <Breadcrumb items={getBreadcrumbItems('/courses/signup', `Enroll – ${courseName}`)} />
+        </div>
         {canceled && (
           <div className="mb-8 mx-auto max-w-lg rounded-xl border border-yellow-300 dark:border-yellow-700 bg-yellow-50 dark:bg-yellow-950 p-4 text-center text-yellow-800 dark:text-yellow-200">
             Payment was canceled. You can try again whenever you&apos;re ready.

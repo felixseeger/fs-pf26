@@ -61,6 +61,14 @@
   --color-muted-backdrop: var(--muted-backdrop);
 }
 
+@font-face {
+  font-family: 'DM Mono';
+  src: url('/fonts/dm-mono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -99,6 +107,7 @@
 
   --font-family-unbounded: var(--font-unbounded), sans-serif;
   --font-family-poppins: var(--font-poppins), sans-serif;
+  --font-family-dm-mono: 'DM Mono', ui-monospace, monospace;
 }
 
 @layer base {
@@ -171,9 +180,24 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-unbounded), sans-serif;
   }
+
+  hr {
+    border: none;
+    height: 5px;
+    min-height: 5px;
+    background-image: url('/img/5x5w_line.gif');
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    background-position: center;
+    background-color: transparent;
+  }
 }
 
 @layer utilities {
+  .font-footer-mono {
+    font-family: var(--font-family-dm-mono);
+  }
+
   /* Skip to main content - visible on focus for keyboard users */
   .skip-link {
     position: absolute;

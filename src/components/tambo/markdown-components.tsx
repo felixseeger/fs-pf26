@@ -300,7 +300,7 @@ export const createMarkdownComponents = (): Record<
    * Horizontal rule component
    * Creates a visual divider with proper spacing
    */
-  hr: () => <hr className="my-4 border-muted" />,
+  hr: () => <hr className="my-4" />,
 
   /**
    * Table container component

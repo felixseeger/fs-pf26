@@ -163,7 +163,7 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
             {/* Page Title - Top, Left Aligned */}
             {contactData.contactTitle && (
-                <header className="pt-28 pb-8 px-6 lg:px-10">
+                <header className="pt-36 pb-8 px-6 lg:px-10">
                     <div className="max-w-6xl mx-auto">
                         <div className="flex items-center gap-4 mb-4">
                             <span className="w-12 h-px bg-zinc-300 dark:bg-zinc-800" />
@@ -177,7 +177,7 @@ export default function ContactPageClient({ contactData }: ContactPageClientProp
             )}
 
             {/* Form Section with Image */}
-            <section className={`pb-16 ${!contactData.contactTitle ? 'pt-28' : ''}`}>
+            <section className={`pb-16 ${!contactData.contactTitle ? 'pt-36' : ''}`}>
                 <div className="max-w-6xl mx-auto px-6 lg:px-10">
                     <div className="grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-2xl">
                         {/* Left - Image */}

@@ -58,6 +58,58 @@ add_filter('rwmb_meta_boxes', function($meta_boxes) {
             ],
 
             // =====================
+            // HERO CAROUSEL — FIRST SLIDE
+            // =====================
+            [
+                'type' => 'heading',
+                'name' => '🎬 Hero Carousel — First Slide',
+                'desc' => 'Custom text displayed on the animated first (pixelated video) slide of the hero carousel.',
+            ],
+            [
+                'name' => 'First Slide Title',
+                'id'   => 'hero_slide_title',
+                'type' => 'text',
+                'size' => 60,
+                'placeholder' => 'e.g. Felix Seeger',
+                'desc' => 'Large headline rendered as the pixelated text animation on the first slide.',
+            ],
+            [
+                'name' => 'First Slide Tagline / Badge',
+                'id'   => 'hero_slide_badge',
+                'type' => 'text',
+                'size' => 60,
+                'placeholder' => 'e.g. Portfolio',
+                'desc' => 'Small pill/badge text that appears above the title (same as category pills on portfolio slides).',
+            ],
+            [
+                'name' => 'First Slide Subtitle',
+                'id'   => 'hero_slide_subtitle',
+                'type' => 'textarea',
+                'rows' => 3,
+                'placeholder' => 'e.g. Web design, development, and digital strategy.',
+                'desc' => 'Short description line below the title.',
+            ],
+            [
+                'name' => 'First Slide CTA — Primary Label',
+                'id'   => 'hero_slide_cta_primary_label',
+                'type' => 'text',
+                'placeholder' => 'e.g. View Portfolio',
+            ],
+            [
+                'name' => 'First Slide CTA — Primary URL',
+                'id'   => 'hero_slide_cta_primary_url',
+                'type' => 'url',
+                'placeholder' => '/portfolio',
+            ],
+            [
+                'name' => 'Scroll Hint Text',
+                'id'   => 'hero_start_text',
+                'type' => 'text',
+                'placeholder' => 'Scroll to explore',
+                'desc' => 'Small label on the scroll-down hint button at the bottom of the hero',
+            ],
+
+            // =====================
             // ABOUT SECTION
             // =====================
             [

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import PostList from "@/components/blog/PostList";
 import { getPostsByCategory, getCategories } from "@/lib/wordpress";
 import { notFound } from "next/navigation";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 
 export async function generateStaticParams() {
   const categories = await getCategories().catch(() => []);
@@ -68,10 +69,18 @@ export default async function CategoryPage({ params }: Props) {
 
   // Get posts in this category
   const posts = await getPostsByCategory(slug);
+  const breadcrumbs = [
+    { name: 'Home', path: '/' },
+    { name: 'Blog', path: '/blog' },
+    { name: category.name, path: `/category/${slug}` },
+  ];
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans dark:bg-background" suppressHydrationWarning>
       <main className="max-w-6xl mx-auto px-4 py-16">
+        <div className="mb-8">
+          <Breadcrumb items={breadcrumbs} />
+        </div>
         {/* Category Header */}
         <header className="mb-16 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-4 text-black dark:text-white">

@@ -6,6 +6,9 @@ import { getCourseBySlug, getCourses, getCourseNeighbors } from '@/lib/wordpress
 import { getCanonicalUrl } from '@/lib/site-config';
 import type { ACFImage } from '@/types/wordpress';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
+import Breadcrumb from '@/components/ui/Breadcrumb';
+import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
+import CourseFAQ from '@/components/courses/CourseFAQ';
 
 function getImageUrl(img: ACFImage | number | false | undefined): string | null {
   if (!img) return null;
@@ -73,17 +76,20 @@ export default async function CoursePage({ params }: CoursePageProps) {
   return (
     <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <article className="max-w-4xl mx-auto px-4 py-24">
-        <div className="mb-8">
+      <div className="relative overflow-hidden" style={{ isolation: 'isolate' }}>
+        <DotMatrixStatic color="#61dafb" dotSize={2} spacing={20} opacity={0.35} className="-z-10" />
+      <article className="relative max-w-6xl mx-auto px-4 pt-36 pb-24">
+        <div className="mb-8 flex flex-col gap-3">
           <Link
             href="/courses"
-            className="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors gap-2 group"
+            className="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-black dark:text-zinc-400 dark:hover:text-white transition-colors gap-2 group w-fit"
           >
             <svg className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Courses
           </Link>
+          <Breadcrumb items={breadcrumbs} />
         </div>
 
         {/* Hero */}
@@ -218,17 +224,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
         {/* FAQ */}
         {acf.faq_items && acf.faq_items.length > 0 && (
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8">FAQ</h2>
-            <dl className="space-y-6">
-              {acf.faq_items.map((faq, i) => (
-                <div key={i} className="border-b border-zinc-200 dark:border-zinc-800 pb-6">
-                  {faq.question && <dt className="font-semibold text-zinc-900 dark:text-white mb-2">{faq.question}</dt>}
-                  {faq.answer && <dd className="text-zinc-600 dark:text-zinc-400">{faq.answer}</dd>}
-                </div>
-              ))}
-            </dl>
-          </section>
+          <CourseFAQ items={acf.faq_items} />
         )}
 
         {/* Offer */}
@@ -286,6 +282,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
           </nav>
         )}
       </article>
+      </div>
     </div>
   );
 }

@@ -159,7 +159,7 @@ export default async function Footer() {
           </div>
 
           {/* Navigation links */}
-          <nav className="flex flex-wrap items-center gap-x-4 gap-y-1" aria-label="Footer navigation" suppressHydrationWarning>
+          <nav className="font-footer-mono flex flex-wrap items-center gap-x-4 gap-y-1" aria-label="Footer navigation" suppressHydrationWarning>
             {navLinks.map((item, index) => (
               <span key={item.href + index} className="inline-flex items-center gap-x-4">
                 {index > 0 && <span className="text-zinc-400 dark:text-zinc-500 select-none" aria-hidden>|</span>}
@@ -168,12 +168,12 @@ export default async function Footer() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                    className="text-sm uppercase text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
                   >
                     {item.title}
                   </a>
                 ) : (
-                  <Link href={item.href} className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
+                  <Link href={item.href} className="text-sm uppercase text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
                     {item.title}
                   </Link>
                 )}
@@ -182,7 +182,7 @@ export default async function Footer() {
           </nav>
 
           {/* Copyright */}
-          <div className="flex items-center shrink-0" suppressHydrationWarning>
+          <div className="font-footer-mono flex items-center shrink-0" suppressHydrationWarning>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-nowrap" suppressHydrationWarning>
               {copyrightDisplay}
             </p>
