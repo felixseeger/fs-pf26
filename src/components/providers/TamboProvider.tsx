@@ -22,18 +22,10 @@ interface TamboProviderProps {
 export function TamboProvider({ children }: TamboProviderProps) {
   const apiKey = process.env.NEXT_PUBLIC_TAMBO_API_KEY;
 
-  // If no API key, still register components (Tambo may use project ID from script tag)
-  if (!apiKey) {
-    return (
-      <TamboProviderBase components={components}>
-        {children}
-      </TamboProviderBase>
-    );
-  }
-
+  // Pass apiKey if available, otherwise pass empty string (Tambo will use project ID from script tag)
   return (
     <TamboProviderBase
-      apiKey={apiKey}
+      apiKey={apiKey || ""}
       components={components}
     >
       {children}
