@@ -222,7 +222,7 @@ export const Shader = forwardRef<ShaderRef, ShaderProps>(
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas!.width, canvas!.height);
         ctx.drawImage(offscreenCanvas, 0, 0);
 
         animationFrameIdRef.current = requestAnimationFrame(animate);
@@ -234,8 +234,8 @@ export const Shader = forwardRef<ShaderRef, ShaderProps>(
         updateCanvasSize();
         gl?.uniform2f(
           resolutionUniform,
-          canvas.width / pixelRatio,
-          canvas.height / pixelRatio
+          canvas!.width / pixelRatio,
+          canvas!.height / pixelRatio
         );
       }, 100);
 
