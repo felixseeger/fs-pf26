@@ -109,7 +109,7 @@ export default function PixelatedVideoSlide({
     };
 
     const updateDataTexture = (tex: THREE.DataTexture) => {
-      const data = tex.image.data;
+      const data = tex.image.data as Uint8ClampedArray;
       const size = GRID_SIZE;
       for (let i = 0; i < data.length; i += 4) {
         data[i] *= RELAXATION;
