@@ -2,7 +2,7 @@
 import "./DotMatrix.css";
 import React, { useMemo } from "react";
 
-import { DottedShader } from "./shaders.ts";
+import { DottedShader } from "./shaders";
 
 interface DotMatrixProps {
   color?: string;

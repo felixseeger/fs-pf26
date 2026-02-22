@@ -1,0 +1,5 @@
+# This directory is a Syncthing folder marker.
+# Do not delete.
+
+folderID: fs26homesyncro
+created: 2026-02-22T01:22:34+01:00
