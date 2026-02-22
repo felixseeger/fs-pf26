@@ -32,7 +32,7 @@ import {
 } from "./text-editor";
 
 // Import base compound components and constants
-// @ts-ignore - TypeScript can't resolve message-input subpath, but it works at runtime
+// @ts-ignore TypeScript can't resolve message-input subpath, but it works at runtime
 import {
   IS_PASTED_IMAGE,
   MAX_IMAGES,
