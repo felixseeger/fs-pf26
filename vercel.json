@@ -1,33 +1,4 @@
 {
-  "env": [
-    {
-      "key": "NEXT_PUBLIC_SITE_URL",
-      "description": "Public site URL for Next.js app",
-      "default": "https://fs-pf26.vercel.app"
-    },
-    {
-      "key": "NEXT_PUBLIC_WORDPRESS_API_URL",
-      "description": "WordPress API endpoint",
-      "default": "http://fs26-back.felixseeger.de"
-    },
-    {
-      "key": "WORDPRESS_API_URL",
-      "description": "Internal WordPress API URL (server-side)",
-      "default": "http://fs26-back.felixseeger.de"
-    },
-    {
-      "key": "STRIPE_SECRET_KEY",
-      "description": "Stripe secret key for payments"
-    },
-    {
-      "key": "CONTACT_FORM_7_ID",
-      "description": "WordPress Contact Form 7 form ID"
-    },
-    {
-      "key": "REVALIDATION_SECRET",
-      "description": "Secret token for ISR revalidation"
-    }
-  ],
   "buildCommand": "pnpm build",
   "installCommand": "pnpm install --frozen-lockfile",
   "outputDirectory": ".next",
