@@ -7,5 +7,11 @@
   },
   "terminal.integrated.env.linux": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "chat.tools.terminal.autoApprove": {
+    "/^netstat -ano \\| findstr :3003$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
   }
 }

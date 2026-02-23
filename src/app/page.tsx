@@ -14,7 +14,10 @@ import AboutSectionContent from "@/components/sections/AboutSectionContent";
 import ServicesSection, { Service } from "@/components/sections/ServicesSection";
 import FAQSection from "@/components/sections/FAQSection";
 import NewsletterCollect from "@/components/ui/NewsletterCollect";
-import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
+import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
+import ScrollSVGTransition from "@/components/sections/ScrollSVGTransition";
+import '@/components/sections/ScrollSVGTransition.css';
+import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 import { getServiceIconUrl } from '@/lib/service-icons';
 
 function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
@@ -80,7 +83,10 @@ export default async function Home() {
         scrollHintText={acf?.hero_start_text}
       />
 
-      <div className="py-24 overflow-hidden" role="region" aria-label="Homepage content" suppressHydrationWarning>
+      {/* SVG Scroll Transition - Triggered when scrolling off hero */}
+      <ScrollSVGTransition />
+
+      <div className="pt-0 pb-24 -mt-48 overflow-hidden" role="region" aria-label="Homepage content" suppressHydrationWarning>
         {/* About Section - from WordPress ACF */}
         {acf?.about_content && (
           <section id="about" className="mb-24 py-16 relative overflow-hidden" style={{ isolation: 'isolate' }} suppressHydrationWarning>
