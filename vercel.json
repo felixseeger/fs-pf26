@@ -1,0 +1,77 @@
+{
+  "env": [
+    {
+      "key": "NEXT_PUBLIC_SITE_URL",
+      "description": "Public site URL for Next.js app",
+      "default": "https://fs-pf26.vercel.app"
+    },
+    {
+      "key": "NEXT_PUBLIC_WORDPRESS_API_URL",
+      "description": "WordPress API endpoint",
+      "default": "http://fs26-back.felixseeger.de"
+    },
+    {
+      "key": "WORDPRESS_API_URL",
+      "description": "Internal WordPress API URL (server-side)",
+      "default": "http://fs26-back.felixseeger.de"
+    },
+    {
+      "key": "STRIPE_SECRET_KEY",
+      "description": "Stripe secret key for payments"
+    },
+    {
+      "key": "CONTACT_FORM_7_ID",
+      "description": "WordPress Contact Form 7 form ID"
+    },
+    {
+      "key": "REVALIDATION_SECRET",
+      "description": "Secret token for ISR revalidation"
+    }
+  ],
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "nodeVersion": "20.x",
+  "regions": [
+    "fra1"
+  ],
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=10, stale-while-revalidate=3600"
+        }
+      ]
+    },
+    {
+      "source": "/static/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/wordpress/:path*",
+      "destination": "http://fs26-back.felixseeger.de/wp-json/:path*"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/impress",
+      "destination": "/impress",
+      "permanent": false
+    }
+  ]
+}
