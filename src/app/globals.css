@@ -145,15 +145,15 @@
     --sidebar-width: 3rem;
   }
 
-  /* Dark: background #000033, primary/lime #99ff33 */
+  /* Dark: background #011627, primary/lime #AAE87B */
   html.dark, [data-theme='dark'] {
-    --background: 240 100% 10% !important; /* #000033 */
+    --background: 205 96% 8% !important; /* #011627 */
     --foreground: 0 0% 98% !important;
-    --card: 240 100% 12% !important;
+    --card: 205 70% 10% !important;
     --card-foreground: 0 0% 98% !important;
-    --popover: 240 100% 11% !important;
+    --popover: 205 80% 9% !important;
     --popover-foreground: 0 0% 98% !important;
-    --primary: 90 100% 60% !important; /* #99ff33 */
+    --primary: 92 68% 69% !important; /* #AAE87B */
     --primary-foreground: 0 0% 0% !important;
     --secondary: 217 91% 50% !important;
     --secondary-foreground: 0 0% 100% !important;
@@ -161,9 +161,9 @@
     --muted-foreground: 215 20.2% 70% !important;
     --accent: 200 100% 50% !important;
     --accent-foreground: 0 0% 100% !important;
-    --border: 240 30% 18% !important;
-    --input: 240 30% 15% !important;
-    --ring: 90 100% 60% !important; /* #99ff33 */
+    --border: 205 40% 18% !important;
+    --input: 205 40% 15% !important;
+    --ring: 92 68% 69% !important; /* #AAE87B */
   }
 
   * {
@@ -294,7 +294,7 @@
 
 html.dark .tilt-card::before,
 [data-theme='dark'] .tilt-card::before {
-  background: #000033;
+  background: #011627;
 }
 
 /* Service Icons - Theme aware SVG styling */

@@ -3,7 +3,7 @@ import { getPortfolioItems } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
 import { getBreadcrumbItems } from '@/lib/breadcrumbs';
 import Breadcrumb from '@/components/ui/Breadcrumb';
-import PortfolioGridWithFilter from '@/components/portfolio/PortfolioGridWithFilter';
+import PortfolioGridFightForSpace from '@/components/portfolio/PortfolioGridFightForSpace';
 
 export const metadata: Metadata = {
     title: 'Portfolio',
@@ -30,7 +30,7 @@ export default async function PortfolioPage() {
                     </p>
                 </header>
 
-                <PortfolioGridWithFilter items={items} />
+                <PortfolioGridFightForSpace items={items} />
             </main>
         </div>
     );
