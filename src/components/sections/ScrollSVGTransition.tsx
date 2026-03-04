@@ -195,39 +195,39 @@ export default function ScrollSVGTransition() {
           {/* Top row */}
           <div className="svg-row">
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-top-1">
-              <path d="M180 180H3180" stroke="#CCFF00" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#AAE87B" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-top-2">
-              <path d="M180 180H3180" stroke="#3B82F6" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#5F7D97" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-top-3">
-              <path d="M180 180H3180" stroke="#1D4ED8" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#011627" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
           </div>
 
           {/* Middle row */}
           <div className="svg-row">
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-middle-1">
-              <path d="M180 180H3180" stroke="#1D4ED8" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#C0C7D1" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-middle-2">
-              <path d="M180 180H3180" stroke="#60A5FA" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#5F7D97" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-middle-3">
-              <path d="M180 180H3180" stroke="#3B82F6" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#FEC97D" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
           </div>
 
           {/* Bottom row */}
           <div className="svg-row">
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-bottom-1">
-              <path d="M180 180H3180" stroke="#A3E635" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#AAE87B" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-bottom-2">
-              <path d="M180 180H3180" stroke="#CCFF00" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#FEC97D" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
             <svg width="3360" height="360" viewBox="0 0 3360 360" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-bottom-3">
-              <path d="M180 180H3180" stroke="#60A5FA" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180H3180" stroke="#C0C7D1" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
           </div>
         </div>
@@ -238,10 +238,10 @@ export default function ScrollSVGTransition() {
 
           <div className="svg-row">
             <svg width="2248" height="1112" viewBox="0 0 2248 1112" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-curve-1">
-              <path d="M180 180.538C1512.01 180.54 1718.64 133.099 2067.5 931.594" stroke="#A3E635" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180.538C1512.01 180.54 1718.64 133.099 2067.5 931.594" stroke="#AAE87B" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
             <svg width="2248" height="1112" viewBox="0 0 2248 1112" fill="none" xmlns="http://www.w3.org/2000/svg" id="svg-curve-2">
-              <path d="M180 180.538C1512.01 180.54 1718.64 133.099 2067.5 931.594" stroke="#CCFF00" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
+              <path d="M180 180.538C1512.01 180.54 1718.64 133.099 2067.5 931.594" stroke="#FEC97D" strokeWidth="360" strokeMiterlimit="3.8637" strokeLinecap="round" />
             </svg>
           </div>
 

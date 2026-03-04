@@ -30,7 +30,7 @@
     --panel-left-width: 500px;
     --panel-right-width: 500px;
     --sidebar-width: 3rem;
-}
+  }
 
 @theme inline{
   --color-background: var(--background);
