@@ -425,3 +425,89 @@ html.dark .service-icon-blue,
   filter: brightness(0) invert(1);
 }
 
+/* ===== ScrollSVGTransition Styles ===== */
+
+/* Spacer div in document flow — determines scroll distance */
+.scroll-svg-spacer {
+  height: 300vh;
+  width: 100%;
+}
+
+/* Fixed overlay container for SVG animation */
+.scroll-svg-transition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Main intro section container */
+.scroll-svg-transition .intro-section {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SVG rows container */
+.svg-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Individual SVG row */
+.svg-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+}
+
+/* SVG elements styling */
+.svg-row svg {
+  width: 100%;
+  height: auto;
+  max-width: 100vw;
+  display: block;
+}
+
+/* Curve container */
+.svg-container-2 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.svg-container-2 .svg-row {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.svg-container-2 svg {
+  width: 100%;
+  height: auto;
+  max-width: 100vw;
+  display: block;
+}
+
