@@ -390,13 +390,14 @@ export default function HomepageHero({
             transition={{ duration: 0.4, ease: "easeOut" }}
             onClick={() => {
               setShowScrollHint(false);
-              window.scrollTo({
-                top: window.innerHeight,
-                behavior: 'smooth'
-              });
+              // Scroll to the about section, triggering the SVG transition
+              const aboutSection = document.getElementById('about');
+              if (aboutSection) {
+                aboutSection.scrollIntoView({ behavior: 'smooth' });
+              }
             }}
             className="fixed left-1/2 -translate-x-1/2 bottom-12 hidden lg:flex flex-col items-center gap-3 z-[9999] cursor-pointer group"
-            aria-label="Scroll to next section"
+            aria-label="Scroll to about section"
           >
             <span className="text-white/50 group-hover:text-white/80 text-[10px] font-black tracking-[0.6em] uppercase transition-colors duration-300">
               {scrollHintText || 'Scroll to explore'}
