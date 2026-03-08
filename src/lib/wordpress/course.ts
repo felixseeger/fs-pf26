@@ -4,11 +4,102 @@
  * Tries both /courses and /course so it works regardless of WordPress rest_base.
  */
 
-import { WPCourseItem } from '@/types/wordpress';
+import { WPCourseItem, ACFImage, FeaturedMedia } from '@/types/wordpress';
 import { fetchWordPress } from './api';
 
 const COURSE_ENDPOINTS = ['/courses', '/course'] as const;
 const opts404 = { suppressErrorLogging: true, returnUndefinedOn404: true };
+
+/**
+ * Extract full ACFImage objects from gallery IDs using _embedded media.
+ * WordPress ACF Gallery field may return IDs instead of objects even when configured as "Image Array".
+ * This function resolves IDs to full media objects from the _embedded response.
+ */
+export function resolveGalleryImages(
+  galleryField: (ACFImage | number)[] | undefined,
+  embeddedMedia?: FeaturedMedia[]
+): ACFImage[] {
+  if (!galleryField || !Array.isArray(galleryField) || galleryField.length === 0) {
+    return [];
+  }
+
+  // Filter out any objects that are already ACFImage
+  const alreadyObjects = galleryField.filter(
+    (item): item is ACFImage => typeof item === 'object' && item !== null && 'url' in item
+  );
+  if (alreadyObjects.length > 0) {
+    return alreadyObjects; // Already have objects, use them
+  }
+
+  // All items are IDs, need to resolve from _embedded
+  const ids = galleryField.filter((item): item is number => typeof item === 'number');
+  if (ids.length === 0 || !embeddedMedia || embeddedMedia.length === 0) {
+    return [];
+  }
+
+  // Map IDs to ACFImage objects from _embedded media
+  return ids
+    .map((id) => {
+      const media = embeddedMedia.find((m) => m.id === id);
+      if (!media) return null;
+
+      // Convert FeaturedMedia to ACFImage format
+      const acfImage: ACFImage = {
+        ID: media.id,
+        id: media.id,
+        url: media.source_url,
+        alt: media.alt_text || '',
+        title: '', // FeaturedMedia doesn't have title
+        width: media.media_details?.width || 0,
+        height: media.media_details?.height || 0,
+        sizes: {
+          thumbnail: media.media_details?.sizes?.thumbnail?.source_url || media.source_url,
+          medium: media.media_details?.sizes?.medium?.source_url || media.source_url,
+          large: media.media_details?.sizes?.large?.source_url || media.source_url,
+          full: media.source_url,
+        },
+      };
+      return acfImage;
+    })
+    .filter((img): img is ACFImage => img !== null);
+}
+
+/**
+ * Fetch media objects for gallery IDs from WordPress REST API.
+ * Use this when ACF returns IDs instead of objects and _embedded doesn't contain the attachments.
+ */
+export async function fetchGalleryMediaByIds(ids: number[]): Promise<ACFImage[]> {
+  if (ids.length === 0) return [];
+
+  try {
+    // Fetch all media items in parallel
+    const mediaPromises = ids.map((id) =>
+      fetchWordPress<FeaturedMedia>(`/media/${id}`, {}, { suppressErrorLogging: true })
+    );
+    const mediaResults = await Promise.all(mediaPromises);
+
+    return mediaResults
+      .filter((media): media is FeaturedMedia => media !== null && media !== undefined)
+      .map((media) => ({
+        ID: media.id,
+        id: media.id,
+        url: media.source_url,
+        alt: media.alt_text || '',
+        title: '', // FeaturedMedia doesn't typically have title in this context
+        width: media.media_details?.width || 0,
+        height: media.media_details?.height || 0,
+        sizes: {
+          thumbnail: media.media_details?.sizes?.thumbnail?.source_url || media.source_url,
+          medium: media.media_details?.sizes?.medium?.source_url || media.source_url,
+          large: media.media_details?.sizes?.large?.source_url || media.source_url,
+          full: media.source_url,
+        },
+      }));
+  } catch (error) {
+    console.error('[fetchGalleryMediaByIds] Error fetching media:', error);
+    return [];
+  }
+}
 
 async function fetchCourseEndpoint<T>(
   endpoint: string,

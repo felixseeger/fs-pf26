@@ -178,7 +178,7 @@ export default function PortfolioGridFightForSpace({
           </h2>
         )}
         {categories.length > 0 && (
-          <div className="mb-8">
+          <div className="mb-8 flex justify-center">
             <PortfolioCategoryFilter
               categories={categories}
               selectedId={selectedCategoryId}
@@ -217,7 +217,7 @@ export default function PortfolioGridFightForSpace({
       )}
 
       {categories.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-8 flex justify-center">
           <PortfolioCategoryFilter
             categories={categories}
             selectedId={selectedCategoryId}

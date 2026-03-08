@@ -25,7 +25,7 @@ export default function AnimatedLink({
   const ctx = usePageTransition();
   const isExternal =
     typeof href === 'string' && (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:'));
-  const isHash = typeof href === 'string' && href.startsWith('#');
+  const isHash = typeof href === 'string' && (href.startsWith('#') || href.match(/^\/#/));
   const useTransition = !disableTransition && !isExternal && !isHash && ctx;
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {

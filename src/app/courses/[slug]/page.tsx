@@ -2,23 +2,19 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getCourseBySlug, getCourses, getCourseNeighbors } from '@/lib/wordpress';
+import { getCourseBySlug, getCourses, getCourseNeighbors, resolveGalleryImages, fetchGalleryMediaByIds } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
 import type { ACFImage } from '@/types/wordpress';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 import CourseFAQ from '@/components/courses/CourseFAQ';
+import DisplayCarousel from '@/components/courses/DisplayCarousel';
 
 function getImageUrl(img: ACFImage | number | false | undefined): string | null {
   if (!img) return null;
   if (typeof img === 'object' && 'url' in img && typeof (img as ACFImage).url === 'string') return (img as ACFImage).url;
   return null;
-}
-
-function getGalleryImageUrl(item: ACFImage | number): string | null {
-  if (typeof item === 'number') return null;
-  return typeof item === 'object' && item && 'url' in item && typeof item.url === 'string' ? item.url : null;
 }
 
 /** Fallback slugs when API returns no courses (required for output: 'export') */
@@ -66,12 +62,58 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   const acf = item.acf || {};
   const heroImageUrl = getImageUrl(acf.hero_visual);
+  const featuredImageUrl = heroImageUrl || item._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
   const displayTitle = acf.hero_headline?.trim() || item.title?.rendered || 'Course';
   const breadcrumbs = [
     { name: 'Home', path: '/' },
     { name: 'Courses', path: '/courses' },
     { name: displayTitle.replace(/<[^>]*>/g, '').trim(), path: `/courses/${slug}` },
   ];
+
+  // Resolve gallery images - WordPress returns IDs that need to be fetched as media objects
+  let galleryImages: ACFImage[] = [];
+  
+  if (acf.courses_gallery && Array.isArray(acf.courses_gallery)) {
+    // Extract numeric IDs from the gallery field
+    const galleryIds = acf.courses_gallery.filter((img): img is number => typeof img === 'number');
+    
+    if (galleryIds.length > 0) {
+      // Fetch full media objects for these IDs via WordPress REST API
+      galleryImages = await fetchGalleryMediaByIds(galleryIds);
+      console.log('DEBUG [courses page]: Fetched gallery media by IDs', {
+        ids: galleryIds,
+        fetchedCount: galleryImages.length,
+      });
+    } else {
+      // Already objects (or mixed format), use resolveGalleryImages for safety
+      const embeddedMedia = item._embedded?.['wp:featuredmedia'] || [];
+      galleryImages = resolveGalleryImages(acf.courses_gallery, embeddedMedia);
+      console.log('DEBUG [courses page]: Resolved gallery from objects', {
+        resolvedCount: galleryImages.length,
+      });
+    }
+  }
+
+  const heroCarouselImages: Array<string | ACFImage> =
+    galleryImages.length > 0
+      ? galleryImages
+      : featuredImageUrl
+        ? [featuredImageUrl]
+        : [];
+
+  // Debug logging
+  console.log('DEBUG [courses page]:', {
+    courses_gallery: acf.courses_gallery,
+    courses_gallery_type: typeof acf.courses_gallery,
+    courses_gallery_isArray: Array.isArray(acf.courses_gallery),
+    galleryImages_length: galleryImages.length,
+    galleryImages: galleryImages.map((img, i) => ({
+      index: i,
+      type: typeof img,
+      url: img.url,
+      alt: img.alt,
+    })),
+  });
 
   return (
     <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
@@ -94,14 +136,12 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
         {/* Hero */}
         <header className="mb-16">
-          {(heroImageUrl || item._embedded?.['wp:featuredmedia']?.[0]?.source_url) && (
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-8 bg-zinc-100 dark:bg-zinc-900">
-              <Image
-                src={(heroImageUrl || item._embedded?.['wp:featuredmedia']?.[0]?.source_url) ?? ''}
-                alt=""
-                fill
-                className="object-cover"
-                priority
+          {heroCarouselImages.length > 0 && (
+            <div className="mb-8">
+              <DisplayCarousel
+                images={heroCarouselImages}
+                modelPath="/models/monitor.glb"
+                className="w-full"
               />
             </div>
           )}
@@ -117,34 +157,13 @@ export default async function CoursePage({ params }: CoursePageProps) {
             <div>
               <a
                 href={`/courses/signup?course=${slug}`}
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-lg transition-colors"
+                className="inline-block bg-lime-400 hover:bg-lime-300 text-black font-bold px-8 py-4 rounded-lg transition-colors"
               >
                 {acf.hero_cta_text}
               </a>
-              {acf.hero_cta_subtext && (
-                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">{acf.hero_cta_subtext}</p>
-              )}
             </div>
           )}
         </header>
-
-        {/* Courses Gallery */}
-        {acf.courses_gallery && acf.courses_gallery.length > 0 && (
-          <section className="mb-16">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {acf.courses_gallery.map((item, i) => {
-                const url = getGalleryImageUrl(item);
-                if (!url) return null;
-                const alt = typeof item === 'object' && item && 'alt' in item ? String((item as ACFImage).alt || '') : '';
-                return (
-                  <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-900">
-                    <Image src={url} alt={alt || `Course image ${i + 1}`} fill className="object-cover" sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw" />
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        )}
 
         {/* Trust bar */}
         {acf.trust_bar_text && (
@@ -222,11 +241,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
           </section>
         )}
 
-        {/* FAQ */}
-        {acf.faq_items && acf.faq_items.length > 0 && (
-          <CourseFAQ items={acf.faq_items} />
-        )}
-
         {/* Offer */}
         <section id="offer" className="rounded-2xl bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 p-8 md:p-12">
           {acf.offer_headline && <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-6">{acf.offer_headline}</h2>}
@@ -259,12 +273,17 @@ export default async function CoursePage({ params }: CoursePageProps) {
           {acf.offer_final_cta && (
             <a
               href={`/courses/signup?course=${slug}`}
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-lg transition-colors"
+              className="inline-block bg-lime-400 hover:bg-lime-300 text-black font-bold px-8 py-4 rounded-lg transition-colors"
             >
               {acf.offer_final_cta}
             </a>
           )}
         </section>
+
+        {/* FAQ */}
+        {acf.faq_items && acf.faq_items.length > 0 && (
+          <CourseFAQ items={acf.faq_items} />
+        )}
 
         {/* Neighbors */}
         {(neighbors.previous || neighbors.next) && (

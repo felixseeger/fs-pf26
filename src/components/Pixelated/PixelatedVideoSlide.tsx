@@ -66,6 +66,12 @@ export default function PixelatedVideoSlide({
     const width = container.offsetWidth;
     const height = container.offsetHeight;
 
+    // Guard against unmounted/uninitialized containers
+    if (width === 0 || height === 0) {
+      console.warn('PixelatedVideoSlide: Container has zero dimensions, deferring initialization');
+      return;
+    }
+
     const createDataTexture = () => {
       const size = GRID_SIZE;
       const totalSize = size * size * 4;
@@ -197,6 +203,12 @@ export default function PixelatedVideoSlide({
       const containerAspect = width / height;
       const videoAspect = videoWidth / videoHeight;
 
+      // Validate aspect ratios are valid numbers
+      if (!isFinite(containerAspect) || !isFinite(videoAspect)) {
+        console.warn('PixelatedVideoSlide: Invalid aspect ratios calculated', { containerAspect, videoAspect });
+        return;
+      }
+
       let scaleX = 1, scaleY = 1;
       if (containerAspect > videoAspect) {
         scaleY = containerAspect / videoAspect;
@@ -319,6 +331,13 @@ export default function PixelatedVideoSlide({
       if (!container) return;
       const w = container.offsetWidth;
       const h = container.offsetHeight;
+      
+      // Guard against invalid dimensions
+      if (w === 0 || h === 0) {
+        console.warn('PixelatedVideoSlide resize: Container has zero dimensions');
+        return;
+      }
+      
       if (renderer) {
         renderer.setSize(w, h);
         if (planeMesh) {
@@ -326,9 +345,23 @@ export default function PixelatedVideoSlide({
           const videoHeight = video.videoHeight || 1080;
           const containerAspect = w / h;
           const videoAspect = videoWidth / videoHeight;
+          
+          // Guard against invalid aspect ratios
+          if (!isFinite(containerAspect) || !isFinite(videoAspect)) {
+            console.warn('PixelatedVideoSlide resize: Invalid aspect ratios', { containerAspect, videoAspect });
+            return;
+          }
+          
           let scaleX = 1, scaleY = 1;
           if (containerAspect > videoAspect) scaleY = containerAspect / videoAspect;
           else scaleX = videoAspect / containerAspect;
+          
+          // Guard against invalid scale factors
+          if (!isFinite(scaleX) || !isFinite(scaleY)) {
+            console.warn('PixelatedVideoSlide resize: Invalid scale factors', { scaleX, scaleY });
+            return;
+          }
+          
           planeMesh.geometry.dispose();
           planeMesh.geometry = new THREE.PlaneGeometry(2 * scaleX, 2 * scaleY);
         }
