@@ -7,6 +7,7 @@ import { getServicesMatchingPortfolioCategories } from '@/lib/portfolio-utils';
 import { getPortfolioSliderMedia, getPortfolioFallbackImages, getPortfolioContentVideoUrl } from '@/lib/wordpress/portfolio-media';
 import Link from 'next/link';
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
+import DisplayCarousel from '@/components/courses/DisplayCarousel';
 import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigation';
 import ServicesUsed from '@/components/portfolio/ServicesUsed';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
@@ -89,6 +90,12 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
     const portfolioText = item.acf?.portfolio_text?.trim();
     const contentVideoUrl = getPortfolioContentVideoUrl(item);
 
+    // ACF project_gallery for 3D monitor display
+    const projectGallery = item.acf?.project_gallery;
+    const galleryUrls = Array.isArray(projectGallery) && projectGallery.length > 0
+      ? projectGallery.map(img => img.url)
+      : null;
+
     const matchingServices = getServicesMatchingPortfolioCategories(allServices, terms);
 
     const breadcrumbs = [
@@ -164,10 +171,16 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
 
                 {/* Portfolio Text (Intro) */}
                 {portfolioText && (
-                    <div className="mb-10 prose prose-zinc lg:prose-lg dark:prose-invert max-w-none">
-                        <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed whitespace-pre-line">
-                            {portfolioText}
-                        </p>
+                    <div
+                        className="mb-10 prose prose-zinc lg:prose-lg dark:prose-invert max-w-none [&_a]:text-blue-600 [&_a]:underline [&_a]:hover:text-blue-800 dark:[&_a]:text-blue-400 dark:[&_a]:hover:text-blue-300"
+                        dangerouslySetInnerHTML={{ __html: portfolioText }}
+                    />
+                )}
+
+                {/* ACF Gallery — 3D monitor display */}
+                {galleryUrls && (
+                    <div className="mb-16">
+                        <DisplayCarousel images={galleryUrls} />
                     </div>
                 )}
 

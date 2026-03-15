@@ -26,6 +26,7 @@ const GRADIENT_BY_PATH: Record<string, { color1: GradientColor; color2: Gradient
   '/resume': { color1: [0.95, 0.55, 0.2], color2: [0.08, 0.05, 0.12] },
   '/about': { color1: [0.15, 0.7, 0.6], color2: [0.02, 0.08, 0.1] },
   '/contact': { color1: [0.9, 0.4, 0.5], color2: [0.12, 0.03, 0.08] },
+  '/shop': { color1: [0.3, 0.8, 0.5], color2: [0.02, 0.1, 0.06] },
   '/impressum': { color1: [0.5, 0.5, 0.6], color2: [0.06, 0.06, 0.1] },
   '/privacy-policy': { color1: [0.5, 0.5, 0.6], color2: [0.06, 0.06, 0.1] },
 };
@@ -36,6 +37,7 @@ function getGradientColors(pathname: string) {
   if (pathname.startsWith('/services')) return GRADIENT_BY_PATH['/services'];
   if (pathname.startsWith('/courses')) return GRADIENT_BY_PATH['/courses'];
   if (pathname.startsWith('/portfolio')) return GRADIENT_BY_PATH['/portfolio'];
+  if (pathname.startsWith('/shop')) return GRADIENT_BY_PATH['/shop'];
   return GRADIENT_BY_PATH['/'];
 }
 
@@ -44,6 +46,7 @@ const navLinks = [
     { name: 'Services', href: '/#services' },
     { name: 'Portfolio', href: '/portfolio' },
     { name: 'Courses', href: '/courses' },
+    { name: 'Shop', href: '/shop' },
 ];
 
 const mobileNavLinks = [
@@ -400,7 +403,7 @@ export default function Header() {
                             </Link>
                         </div>
                         <nav className="hidden md:flex flex-1 justify-end items-center gap-10" aria-label="Secondary navigation">
-                            {renderNavLinks(2, 4)}
+                            {renderNavLinks(2, 5)}
                             <div className="hidden lg:flex items-center gap-6">
                                 <Link href="/resume" onClick={() => playMenuSelect()} className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
                                     Resume
@@ -482,7 +485,7 @@ export default function Header() {
                                 ref={rightLinksRef}
                                 className="hidden md:flex pointer-events-auto items-center gap-12"
                             >
-                                {renderNavLinks(2, 4)}
+                                {renderNavLinks(2, 5)}
                             </div>
 
                             {/* Theme and Resume (Secondary Actions) - Hidden on mobile/tablet, shown on desktop */}

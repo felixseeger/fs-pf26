@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { createPayPalOrder } from '@/lib/paypal';
 import { getCourseBySlug } from '@/lib/wordpress/course';
 
 export async function POST(request: NextRequest) {
@@ -7,10 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json(
-      { error: 'Invalid request body.' },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 });
   }
 
   const { courseSlug, email } = body;
@@ -24,11 +21,8 @@ export async function POST(request: NextRequest) {
 
   // Fetch canonical price from WordPress to prevent tampering
   const course = await getCourseBySlug(courseSlug);
-  if (!course || !course.acf) {
-    return NextResponse.json(
-      { error: 'Course not found.' },
-      { status: 404 }
-    );
+  if (!course?.acf) {
+    return NextResponse.json({ error: 'Course not found.' }, { status: 404 });
   }
 
   const acf = course.acf;
@@ -40,44 +34,35 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // ACF stores symbol (€) or code (EUR) — normalize to Stripe ISO code
+  // Normalize currency to ISO 4217 (PayPal requires uppercase code, e.g. "EUR")
   const rawCurrency = acf.price_currency || 'EUR';
-  const currencyMap: Record<string, string> = { '€': 'eur', '$': 'usd', '£': 'gbp' };
-  const currency = currencyMap[rawCurrency] || rawCurrency.toLowerCase();
+  const currencyMap: Record<string, string> = { '€': 'EUR', '$': 'USD', '£': 'GBP' };
+  const currency = (currencyMap[rawCurrency] ?? rawCurrency).toUpperCase();
+
   const courseName =
     acf.hero_headline?.replace(/<[^>]*>/g, '').trim() ||
     course.title?.rendered?.replace(/<[^>]*>/g, '').trim() ||
     'Course';
-  const isSubscription = acf.price_type === 'subscription';
+
+  // PayPal requires amount as a decimal string, e.g. "99.00"
+  const amountValue = priceAmount.toFixed(2);
 
   const origin = request.nextUrl.origin;
+  const returnUrl = `${origin}/api/checkout/capture?courseSlug=${encodeURIComponent(courseSlug)}&email=${encodeURIComponent(email)}&courseName=${encodeURIComponent(courseName)}`;
+  const cancelUrl = `${origin}/courses/signup?course=${encodeURIComponent(courseSlug)}&canceled=true`;
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      mode: isSubscription ? 'subscription' : 'payment',
-      customer_email: email,
-      line_items: [
-        {
-          price_data: {
-            currency,
-            product_data: { name: courseName },
-            unit_amount: Math.round(priceAmount * 100),
-            ...(isSubscription && { recurring: { interval: 'month' } }),
-          },
-          quantity: 1,
-        },
-      ],
-      metadata: {
-        courseSlug,
-        wpCourseId: String(course.id),
-      },
-      success_url: `${origin}/courses/signup/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/courses/signup?course=${courseSlug}&canceled=true`,
+    const { approveUrl } = await createPayPalOrder({
+      amountValue,
+      currency,
+      description: courseName,
+      returnUrl,
+      cancelUrl,
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: approveUrl });
   } catch (err) {
-    console.error('[checkout] Stripe error:', err);
+    console.error('[checkout] PayPal error:', err);
     return NextResponse.json(
       { error: 'Failed to create checkout session.' },
       { status: 500 }

@@ -165,27 +165,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
           )}
         </header>
 
-        {/* Trust bar */}
-        {acf.trust_bar_text && (
-          <section className="py-8 border-y border-zinc-200 dark:border-zinc-800 mb-16">
-            <p className="text-center text-zinc-600 dark:text-zinc-400 font-medium">{acf.trust_bar_text}</p>
-            {acf.trust_bar_logos && acf.trust_bar_logos.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-8 mt-6">
-                {acf.trust_bar_logos.map((row, i) => {
-                  const logoUrl = row.logo_image && typeof row.logo_image === 'object' && 'url' in row.logo_image ? (row.logo_image as ACFImage).url : null;
-                  if (!logoUrl) return null;
-                  const content = <Image src={logoUrl} alt="" width={120} height={48} className="object-contain max-h-12 w-auto opacity-80" />;
-                  return (
-                    <span key={i}>
-                      {row.logo_url ? <a href={row.logo_url} target="_blank" rel="noopener noreferrer" className="hover:opacity-100 opacity-80">{content}</a> : content}
-                    </span>
-                  );
-                })}
-              </div>
-            )}
-          </section>
-        )}
-
         {/* Problem */}
         {(acf.problem_headline || acf.problem_body) && (
           <section className="mb-16">
@@ -241,6 +220,11 @@ export default async function CoursePage({ params }: CoursePageProps) {
           </section>
         )}
 
+        {/* FAQ */}
+        {acf.faq_items && acf.faq_items.length > 0 && (
+          <CourseFAQ items={acf.faq_items} />
+        )}
+
         {/* Offer */}
         <section id="offer" className="rounded-2xl bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 p-8 md:p-12">
           {acf.offer_headline && <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-6">{acf.offer_headline}</h2>}
@@ -279,11 +263,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
             </a>
           )}
         </section>
-
-        {/* FAQ */}
-        {acf.faq_items && acf.faq_items.length > 0 && (
-          <CourseFAQ items={acf.faq_items} />
-        )}
 
         {/* Neighbors */}
         {(neighbors.previous || neighbors.next) && (

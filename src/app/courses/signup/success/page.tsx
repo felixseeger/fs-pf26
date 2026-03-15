@@ -10,12 +10,13 @@ export const metadata: Metadata = {
 };
 
 interface SuccessPageProps {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{ ref?: string; session_id?: string }>;
 }
 
 export default async function CheckoutSuccessPage({ searchParams }: SuccessPageProps) {
-  const { session_id } = await searchParams;
-  const refId = session_id ? session_id.slice(-8) : null;
+  const params = await searchParams;
+  const rawRef = params.ref ?? params.session_id ?? null;
+  const refId = rawRef ? rawRef.slice(-8) : null;
 
   return (
     <div className="min-h-screen bg-white dark:bg-background pt-36 pb-24 px-4">

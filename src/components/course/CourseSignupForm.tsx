@@ -89,14 +89,14 @@ export function CourseSignupForm({ courseSlug }: CourseSignupFormProps) {
           {loading ? (
             <>
               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              Redirecting to Checkout…
+              Redirecting to PayPal…
             </>
           ) : (
-            "Continue to Payment"
+            "Continue to PayPal"
           )}
         </button>
         <p className="text-sm text-center text-muted-foreground mt-2">
-          You&apos;ll be redirected to Stripe&apos;s secure checkout.
+          You&apos;ll be redirected to PayPal&apos;s secure checkout.
         </p>
       </form>
     </div>

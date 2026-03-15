@@ -4,11 +4,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import gsap from 'gsap';
-import type { ACFImage } from '@/types/wordpress';
+import type { SliderMediaItem } from '@/lib/wordpress/portfolio-media';
 
 /**
  * Vertex shader for the display screen
- * Passes UV coordinates to the fragment shader
  */
 const vertexShader = `
   varying vec2 vUv;
@@ -20,7 +19,7 @@ const vertexShader = `
 `;
 
 /**
- * Fragment shader for CRT display effect
+ * Fragment shader for CCTV display effect
  * Includes glitch effect, scanlines, chromatic aberration, and vignette
  */
 const fragmentShader = `
@@ -89,28 +88,23 @@ const fragmentShader = `
   }
 `;
 
-interface DisplayCarouselProps {
-  /** Array of image URLs or ACFImage objects from WordPress */
-  images: Array<string | ACFImage>;
-  /** Optional default/fallback image URL */
-  defaultImage?: string;
-  /** Optional 3D monitor model GLB path (defaults to /models/monitor.glb) */
-  modelPath?: string;
+interface CctvCarouselProps {
+  /** Slider media items from portfolio ACF fields */
+  slides: SliderMediaItem[];
   /** Optional container class name */
   className?: string;
 }
 
 /**
- * DisplayCarousel Component
- * Renders a 3D CRT monitor displaying course gallery images with glitch effects
- * Fetches images from WordPress course ACF gallery field
+ * CctvCarousel Component
+ * Renders a 3D CCTV monitor displaying portfolio slider images with glitch effects.
+ * Uses tv_cctv_monitor.glb model.
  */
-export default function DisplayCarousel({
-  images,
-  defaultImage = '/default.jpg',
-  modelPath = '/models/monitor.glb',
+export default function CctvCarousel({
+  slides,
   className = '',
-}: DisplayCarouselProps) {
+}: CctvCarouselProps) {
+  const images = slides.filter((s) => s.type === 'image').map((s) => s.url);
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -128,44 +122,27 @@ export default function DisplayCarousel({
   const animationIdRef = useRef<number | null>(null);
   const navSfxRef = useRef<HTMLAudioElement | null>(null);
 
-  const isWideMonitorModel = /monitor_wide\.glb$/i.test(modelPath);
-  const screenConfig = isWideMonitorModel
-    ? {
-        width: 0.44,
-        height: 0.295,
-        cornerRadius: 0.02,
-        position: new THREE.Vector3(0, -0.072, 0.045),
-        rotation: new THREE.Euler(-0.045, 0, 0),
-      }
-    : {
-        width: 0.28,
-        height: 0.235,
-        cornerRadius: 0.03,
-        position: new THREE.Vector3(-0.008, 0.005, 0.041),
-        rotation: new THREE.Euler(-0.18, 0, 0),
-      };
+  const modelPath = '/models/tv_cctv_monitor.glb';
 
-  const mappingConfig = isWideMonitorModel
-    ? {
-        uvZoom: 0.9,
-        uvOffset: new THREE.Vector2(0.0, -0.02),
-      }
-    : {
-        uvZoom: 1.0,
-        uvOffset: new THREE.Vector2(0.0, 0.0),
-      };
+  // Screen config tuned for tv_cctv_monitor.glb — adjust after visual inspection
+  const screenConfig = {
+    width: 0.42,
+    height: 0.34,
+    cornerRadius: 0.02,
+    position: new THREE.Vector3(0, 0.01, 0.06),
+    rotation: new THREE.Euler(-0.05, 0, 0),
+  };
 
-  /**
-   * Navigation functions
-   */
+  const mappingConfig = {
+    uvZoom: 1.0,
+    uvOffset: new THREE.Vector2(0.0, 0.0),
+  };
+
   const playNavigationSfx = () => {
     const audio = navSfxRef.current;
     if (!audio) return;
-
     audio.currentTime = 0;
-    void audio.play().catch(() => {
-      // Ignore playback errors (e.g. browser autoplay restrictions)
-    });
+    void audio.play().catch(() => {});
   };
 
   const handleNext = () => {
@@ -180,62 +157,40 @@ export default function DisplayCarousel({
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  /**
-   * Initialize texture loader with CORS settings
-   */
   React.useEffect(() => {
     textureLoaderRef.current.setCrossOrigin('anonymous');
   }, []);
 
-  /**
-   * Prepare navigation sound effect
-   */
   useEffect(() => {
     const audio = new Audio('/sfx/monitor_smooth_glitch_01.mp3');
     audio.preload = 'auto';
     audio.volume = 0.5;
     navSfxRef.current = audio;
-
     return () => {
       audio.pause();
       navSfxRef.current = null;
     };
   }, []);
 
-  /**
-   * Keyboard navigation
-   */
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'ArrowLeft') {
-        handlePrev();
-      } else if (event.key === 'ArrowRight') {
-        handleNext();
-      }
+      if (event.key === 'ArrowLeft') handlePrev();
+      else if (event.key === 'ArrowRight') handleNext();
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [images.length]);
 
-  /**
-   * Update display image when currentIndex changes
-   */
   useEffect(() => {
     if (images.length > 0) {
-      const imageUrl = getImageUrl(images[currentIndex]);
-      setDisplayImage(imageUrl || defaultImage);
+      setDisplayImage(getImageUrl(images[currentIndex]));
     }
   }, [currentIndex, images]);
 
-  /**
-   * Create rounded rectangle geometry for the display screen
-   */
   const createScreenGeometry = (w: number, h: number, r: number) => {
     const shape = new THREE.Shape();
     const x = -w / 2;
     const y = -h / 2;
-
     shape.moveTo(x + r, y);
     shape.lineTo(x + w - r, y);
     shape.quadraticCurveTo(x + w, y, x + w, y + r);
@@ -245,34 +200,22 @@ export default function DisplayCarousel({
     shape.quadraticCurveTo(x, y + h, x, y + h - r);
     shape.lineTo(x, y + r);
     shape.quadraticCurveTo(x, y, x + r, y);
-
     const geometry = new THREE.ShapeGeometry(shape);
     const positions = geometry.attributes.position;
     const uvs = new Float32Array(positions.count * 2);
-
     for (let i = 0; i < positions.count; i++) {
       uvs[i * 2] = (positions.getX(i) - x) / w;
       uvs[i * 2 + 1] = (positions.getY(i) - y) / h;
     }
-
     geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
     return geometry;
   };
 
-  /**
-   * Load texture with caching
-   */
   const loadTexture = (src: string) => {
-    if (textureCacheRef.current[src]) {
-      return textureCacheRef.current[src];
-    }
-
-    console.log('DEBUG [DisplayCarousel loadTexture]:', { src, attemptingToLoad: true });
-
+    if (textureCacheRef.current[src]) return textureCacheRef.current[src];
     const texture = textureLoaderRef.current.load(
       src,
       () => {
-        console.log('DEBUG [DisplayCarousel texture loaded]:', { src, loaded: true });
         if (displayMaterialRef.current) {
           displayMaterialRef.current.uniforms.imageAspect.value =
             texture.image.width / texture.image.height;
@@ -280,48 +223,29 @@ export default function DisplayCarousel({
       },
       undefined,
       (error) => {
-        console.error('DEBUG [DisplayCarousel texture load ERROR]:', { src, error });
+        console.error('[CctvCarousel] texture load error:', { src, error });
       }
     );
-
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
     textureCacheRef.current[src] = texture;
-
     return texture;
   };
 
-  /**
-   * Convert ACFImage or string to URL
-   * Routes WordPress images through our CORS proxy endpoint
-   */
-  const getImageUrl = (image: string | ACFImage): string => {
-    const url = typeof image === 'string' ? image : image.url || '';
-    
-    // Route WordPress images through proxy to bypass CORS restrictions
+  const getImageUrl = (url: string): string => {
     if (url && url.includes('fs26-back.felixseeger.de')) {
       return `/api/proxy-image?url=${encodeURIComponent(url)}`;
     }
-    
     return url;
   };
 
-  /**
-   * Set the displayed image with glitch transition
-   */
   const setDisplayImage = (src: string) => {
     if (!displayMaterialRef.current) return;
-
     const texture = loadTexture(src);
     displayMaterialRef.current.uniforms.map.value = texture;
-
-    if (glitchAnimationRef.current) {
-      glitchAnimationRef.current.kill();
-    }
-
+    if (glitchAnimationRef.current) glitchAnimationRef.current.kill();
     glitchStateRef.current.intensity = 1.0;
-
     glitchAnimationRef.current = gsap.to(glitchStateRef.current, {
       intensity: 0,
       duration: 0.75,
@@ -335,51 +259,40 @@ export default function DisplayCarousel({
     });
   };
 
-  /**
-   * Initialize Three.js scene and 3D monitor
-   */
   const initializeScene = () => {
     if (!containerRef.current) return;
 
-    // Scene setup
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // Camera setup
     const camera = new THREE.PerspectiveCamera(
       28,
       containerRef.current.clientWidth / containerRef.current.clientHeight,
       0.1,
       1000
     );
-    camera.position.set(0, 0, 0.772);
+    camera.position.set(0, 0, 0.8);
     camera.lookAt(0, 0, 0);
 
-    // Renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0); // Fully transparent background
+    renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
-    
-    // Style canvas for proper alpha transparency rendering
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0';
     renderer.domElement.style.left = '0';
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
-    
     rendererRef.current = renderer;
     containerRef.current.appendChild(renderer.domElement);
 
     // Lighting
     scene.add(new THREE.AmbientLight(0xffffff, 5));
-
     const dirLight = new THREE.DirectionalLight(0xffffff, 2.5);
     dirLight.position.set(15, 10, -5);
     scene.add(dirLight);
-
     const topLight = new THREE.PointLight(0xffffff, 5, 10);
     topLight.position.set(-5, -2.5, 0);
     topLight.decay = 0.3;
@@ -391,16 +304,18 @@ export default function DisplayCarousel({
     monitorGroupRef.current = monitorGroup;
     scene.add(monitorGroup);
 
-    // Load 3D monitor model
+    // Load CCTV monitor model
     new GLTFLoader().load(modelPath, (gltf) => {
       const model = gltf.scene;
       const center = new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3());
       model.position.sub(center);
+      model.rotation.x = -Math.PI / 2; // rotate -90° on X
       monitorGroup.add(model);
     });
 
-    // Create display material
-    const defaultTexture = loadTexture(getImageUrl(images[0]) || defaultImage);
+    // Display material
+    const defaultUrl = images.length > 0 ? getImageUrl(images[0]) : '/default.jpg';
+    const defaultTexture = loadTexture(defaultUrl);
 
     const displayMaterial = new THREE.ShaderMaterial({
       uniforms: {
@@ -418,8 +333,11 @@ export default function DisplayCarousel({
     });
     displayMaterialRef.current = displayMaterial;
 
-    // Create display plane
-    const displayPlane = new THREE.Mesh(createScreenGeometry(1, 1, screenConfig.cornerRadius), displayMaterial);
+    // Display plane
+    const displayPlane = new THREE.Mesh(
+      createScreenGeometry(1, 1, screenConfig.cornerRadius),
+      displayMaterial
+    );
     displayPlane.scale.set(screenConfig.width, screenConfig.height, 1);
     displayPlane.position.copy(screenConfig.position);
     displayPlane.rotation.copy(screenConfig.rotation);
@@ -429,55 +347,32 @@ export default function DisplayCarousel({
     // Animation loop
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
-
       timerRef.current.update();
       if (displayMaterialRef.current) {
         displayMaterialRef.current.uniforms.time.value = timerRef.current.getElapsed();
       }
-
-      // Smooth mouse following
-      lerpedMouseRef.current.x = gsap.utils.interpolate(
-        lerpedMouseRef.current.x,
-        mouseRef.current.x,
-        0.05
-      );
-      lerpedMouseRef.current.y = gsap.utils.interpolate(
-        lerpedMouseRef.current.y,
-        mouseRef.current.y,
-        0.05
-      );
-
+      lerpedMouseRef.current.x = gsap.utils.interpolate(lerpedMouseRef.current.x, mouseRef.current.x, 0.05);
+      lerpedMouseRef.current.y = gsap.utils.interpolate(lerpedMouseRef.current.y, mouseRef.current.y, 0.05);
       if (monitorGroup) {
-        // Clamp Y rotation to +/- 90deg (180deg total range)
         const targetX = lerpedMouseRef.current.y * 0.11;
         const targetY = lerpedMouseRef.current.x * 0.22;
         monitorGroup.rotation.x = THREE.MathUtils.clamp(targetX, -Math.PI / 8, Math.PI / 8);
         monitorGroup.rotation.y = THREE.MathUtils.clamp(targetY, -Math.PI / 3, Math.PI / 3);
       }
-
       renderer.render(scene, camera);
     };
-
     animate();
 
-    // Slightly closer framing while keeping enough headroom for rotation.
-    camera.position.z = Math.max(0.728, 551.25 / containerRef.current.clientWidth);
+    camera.position.z = Math.max(0.75, 560 / containerRef.current.clientWidth);
     camera.position.y = 0;
 
-    // Event listeners
     const handleMouseMove = (e: MouseEvent) => {
       if (!containerRef.current) return;
-
       const rect = containerRef.current.getBoundingClientRect();
       const nx = (e.clientX - rect.left) / rect.width;
       const ny = (e.clientY - rect.top) / rect.height;
-
-      // Normalize to [-1, 1] and clamp to avoid overshooting outside container bounds
-      const clampedX = THREE.MathUtils.clamp((nx - 0.5) * 2, -1, 1);
-      const clampedY = THREE.MathUtils.clamp((ny - 0.5) * 2, -1, 1);
-
-      mouseRef.current.x = clampedX;
-      mouseRef.current.y = clampedY;
+      mouseRef.current.x = THREE.MathUtils.clamp((nx - 0.5) * 2, -1, 1);
+      mouseRef.current.y = THREE.MathUtils.clamp((ny - 0.5) * 2, -1, 1);
     };
 
     const handleResize = () => {
@@ -495,35 +390,18 @@ export default function DisplayCarousel({
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
-      if (animationIdRef.current) {
-        cancelAnimationFrame(animationIdRef.current);
-      }
+      if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
       renderer.dispose();
       containerRef.current?.removeChild(renderer.domElement);
     };
   };
 
-  /**
-   * Initialize scene on component mount
-   */
   useEffect(() => {
     const cleanup = initializeScene();
     return cleanup;
   }, []);
 
-  /**
-   * Update displayed image when images prop changes
-   */
   useEffect(() => {
-    console.log('DEBUG [DisplayCarousel useEffect - images changed]:', {
-      images_length: images.length,
-      images: images.map((img, i) => ({
-        index: i,
-        type: typeof img,
-        url: typeof img === 'string' ? img : (img as any).url || 'N/A',
-      })),
-    });
-    
     if (images.length > 0 && currentIndex >= images.length) {
       setCurrentIndex(0);
     }
@@ -535,7 +413,6 @@ export default function DisplayCarousel({
       className={`relative w-full overflow-hidden ${className}`}
       style={{ height: 'clamp(320px, 58vw, 460px)' }}
     >
-      {/* Navigation Arrows */}
       {images.length > 1 && (
         <>
           <button
@@ -559,9 +436,6 @@ export default function DisplayCarousel({
         </>
       )}
 
-      {/* Bottom image list removed intentionally per design update */}
-
-      {/* Fallback for when no images provided */}
       {images.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center">
           <p className="text-gray-600">No images available</p>

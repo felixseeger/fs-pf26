@@ -11,6 +11,7 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 import CookieConsentBanner from "@/components/ui/CookieConsentBanner";
 import CookieSettingsButton from "@/components/ui/CookieSettingsButton";
 import { PageTransitionProvider } from "@/components/providers/PageTransitionProvider";
+import { ShopCartProvider } from "@/components/providers/ShopCartProvider";
 import { getSiteUrl, SITE_NAME } from "@/lib/site-config";
 import JsonLd from "@/components/seo/JsonLd";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
@@ -90,30 +91,32 @@ export default async function RootLayout({
         <JsonLd />
         <TamboProvider>
           <ThemeProvider>
-            <CookieConsentProvider>
-              <PageTransitionProvider defaultTransition="slideRight">
-              <SmoothScroll>
-                <a href="#main-content" className="skip-link bg-primary text-primary-foreground">
-                  Skip to main content
-                </a>
-                <Header />
-                <main className="grow" id="main-content">{children}</main>
-                <Footer />
-                <ScrollToTop threshold={400} />
-              </SmoothScroll>
-              </PageTransitionProvider>
-              <CookieConsentBanner />
-              <CookieSettingsButton />
-              {waPhone && (
-                <WhatsAppButton
-                  phone={waPhone}
-                  message={acf?.whatsapp_message?.trim() || undefined}
-                  contactName={acf?.whatsapp_contact_name?.trim() || undefined}
-                  contactRole={acf?.whatsapp_contact_role?.trim() || undefined}
-                  headerText={acf?.whatsapp_header_text?.trim() || undefined}
-                />
-              )}
-            </CookieConsentProvider>
+            <ShopCartProvider>
+              <CookieConsentProvider>
+                <PageTransitionProvider defaultTransition="slideRight">
+                <SmoothScroll>
+                  <a href="#main-content" className="skip-link bg-primary text-primary-foreground">
+                    Skip to main content
+                  </a>
+                  <Header />
+                  <main className="grow" id="main-content">{children}</main>
+                  <Footer />
+                  <ScrollToTop threshold={400} />
+                </SmoothScroll>
+                </PageTransitionProvider>
+                <CookieConsentBanner />
+                <CookieSettingsButton />
+                {waPhone && (
+                  <WhatsAppButton
+                    phone={waPhone}
+                    message={acf?.whatsapp_message?.trim() || undefined}
+                    contactName={acf?.whatsapp_contact_name?.trim() || undefined}
+                    contactRole={acf?.whatsapp_contact_role?.trim() || undefined}
+                    headerText={acf?.whatsapp_header_text?.trim() || undefined}
+                  />
+                )}
+              </CookieConsentProvider>
+            </ShopCartProvider>
           </ThemeProvider>
         </TamboProvider>
         <SpeedInsights />

@@ -215,7 +215,7 @@ export default function SelectedWorksSection({ items, maxItems = 6 }: SelectedWo
           >
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-unbounded font-black text-black dark:text-white">
               <span>{SECTION_TITLE.split(' ')[0]}</span>{' '}
-              <span className="text-[#1d4ed8]">{SECTION_TITLE.split(' ')[1]}</span>
+              <span className="[-webkit-text-stroke:2px_#1d4ed8] text-transparent">{SECTION_TITLE.split(' ')[1]}</span>
             </h2>
           </div>
           <div
