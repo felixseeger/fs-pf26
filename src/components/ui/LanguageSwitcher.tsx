@@ -3,6 +3,15 @@
 import { useRouter, usePathname } from '@/i18n/navigation';
 import { useTransition } from 'react';
 
+// Map locale codes to flag-icons country codes (fi-xx)
+// Change fi-gb → fi-us if you prefer the US flag for English
+const FLAG: Record<string, string> = {
+  de: 'de',
+  en: 'gb',
+};
+
+const LOCALES = ['de', 'en'] as const;
+
 interface Props {
   locale: string;
   className?: string;
@@ -13,22 +22,45 @@ export default function LanguageSwitcher({ locale, className = '' }: Props) {
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  const otherLocale = locale === 'de' ? 'en' : 'de';
-
-  function handleSwitch() {
+  function switchTo(target: string) {
+    if (target === locale) return;
     startTransition(() => {
-      router.replace(pathname, { locale: otherLocale });
+      router.replace(pathname, { locale: target });
     });
   }
 
   return (
-    <button
-      onClick={handleSwitch}
-      disabled={isPending}
-      aria-label={`Switch language to ${otherLocale.toUpperCase()}`}
-      className={`text-xs font-unbounded font-black tracking-widest uppercase px-2.5 py-1 rounded border border-foreground/20 hover:border-foreground/60 transition-colors disabled:opacity-50 ${className}`}
+    <div
+      className={`inline-flex items-center gap-1 ${className}`}
+      role="group"
+      aria-label="Language switcher"
     >
-      {otherLocale.toUpperCase()}
-    </button>
+      {LOCALES.map((loc) => {
+        const isActive = loc === locale;
+        return (
+          <button
+            key={loc}
+            onClick={() => switchTo(loc)}
+            disabled={isPending || isActive}
+            aria-label={`Switch to ${loc.toUpperCase()}`}
+            aria-pressed={isActive}
+            className={[
+              'inline-flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-unbounded font-black tracking-widest uppercase transition-all',
+              isActive
+                ? 'opacity-100 border border-foreground/30 bg-foreground/5'
+                : 'opacity-40 hover:opacity-80 border border-transparent hover:border-foreground/20',
+              isPending ? 'cursor-wait' : '',
+            ].join(' ')}
+          >
+            <span
+              className={`fi fi-${FLAG[loc]} fis rounded-[2px]`}
+              aria-hidden="true"
+              style={{ fontSize: '1rem' }}
+            />
+            <span>{loc.toUpperCase()}</span>
+          </button>
+        );
+      })}
+    </div>
   );
 }
