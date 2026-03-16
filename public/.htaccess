@@ -2,6 +2,9 @@
 RewriteEngine On
 RewriteBase /
 
+# Redirect /shop to /de/shop (locale-prefixed shop)
+RewriteRule ^shop/?$ /de/shop [R=302,L]
+
 # Services list: /services and /services/ must serve services.html (list), not the services/ directory (detail pages)
 RewriteRule ^services/?$ services.html [L]
 
