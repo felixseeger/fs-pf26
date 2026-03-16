@@ -4,41 +4,34 @@
  */
 
 import { WPPost, WPCategory } from '@/types/wordpress';
-import { fetchWordPress, QueryParams } from './api';
+import { fetchWordPress } from './api';
 
-/**
- * Get all posts with pagination
- * @param perPage - Number of posts per page (default: 10)
- * @param page - Page number (default: 1)
- */
 export async function getPosts(
   perPage: number = 10,
-  page: number = 1
+  page: number = 1,
+  lang?: string
 ): Promise<WPPost[]> {
   try {
-    const posts = await fetchWordPress<WPPost[]>('/posts', {
+    return await fetchWordPress<WPPost[]>('/posts', {
       _embed: true,
       per_page: perPage,
       page,
       orderby: 'date',
       order: 'desc',
+      ...(lang ? { lang } : {}),
     });
-    return posts;
   } catch (error) {
     console.error('Error fetching posts:', error);
     return [];
   }
 }
 
-/**
- * Get a single post by slug
- * @param slug - Post slug
- */
-export async function getPostBySlug(slug: string): Promise<WPPost | null> {
+export async function getPostBySlug(slug: string, lang?: string): Promise<WPPost | null> {
   try {
     const posts = await fetchWordPress<WPPost[]>('/posts', {
       slug,
       _embed: true,
+      ...(lang ? { lang } : {}),
     });
     return posts.length > 0 ? posts[0] : null;
   } catch (error) {
@@ -47,21 +40,16 @@ export async function getPostBySlug(slug: string): Promise<WPPost | null> {
   }
 }
 
-/**
- * Get posts by category
- * @param categorySlug - The slug of the category
- * @param perPage - Number of posts per page (default: 10)
- * @param page - Page number (default: 1)
- */
 export async function getPostsByCategory(
   categorySlug: string,
   perPage: number = 10,
-  page: number = 1
+  page: number = 1,
+  lang?: string
 ): Promise<WPPost[]> {
   try {
-    // First, get the category ID from slug
     const categories = await fetchWordPress<WPCategory[]>('/categories', {
       slug: categorySlug,
+      ...(lang ? { lang } : {}),
     });
 
     if (categories.length === 0) {
@@ -71,7 +59,6 @@ export async function getPostsByCategory(
 
     const categoryId = categories[0].id;
 
-    // Fetch posts for this category
     const posts = await fetchWordPress<WPPost[]>('/posts', {
       categories: categoryId,
       _embed: true,
@@ -79,9 +66,9 @@ export async function getPostsByCategory(
       page,
       orderby: 'date',
       order: 'desc',
+      ...(lang ? { lang } : {}),
     });
 
-    console.log(`Fetched ${posts.length} posts for category '${categorySlug}'`);
     return posts;
   } catch (error) {
     console.error(`Error fetching posts for category '${categorySlug}':`, error);

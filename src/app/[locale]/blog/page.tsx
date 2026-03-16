@@ -11,11 +11,11 @@ export const metadata: Metadata = {
     alternates: { canonical: getCanonicalUrl('/blog') },
 };
 
-export default async function BlogPage() {
-    const perPage = 100; // Show all posts for static export
+export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const perPage = 100;
 
-    // Fetch posts from WordPress
-    const posts = await getPosts(perPage, 1);
+    const posts = await getPosts(perPage, 1, locale);
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-background font-sans" suppressHydrationWarning>

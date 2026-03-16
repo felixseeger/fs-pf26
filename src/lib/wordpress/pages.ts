@@ -6,39 +6,32 @@
 import { WPPage } from '@/types/wordpress';
 import { fetchWordPress } from './api';
 
-/**
- * Get all pages with pagination
- * @param perPage - Number of pages per page (default: 10)
- * @param page - Page number (default: 1)
- */
 export async function getPages(
   perPage: number = 10,
-  page: number = 1
+  page: number = 1,
+  lang?: string
 ): Promise<WPPage[]> {
   try {
-    const pages = await fetchWordPress<WPPage[]>('/pages', {
+    return await fetchWordPress<WPPage[]>('/pages', {
       _embed: true,
       per_page: perPage,
       page,
       orderby: 'menu_order',
       order: 'asc',
+      ...(lang ? { lang } : {}),
     });
-    return pages;
   } catch (error) {
     console.error('Error fetching pages:', error);
     return [];
   }
 }
 
-/**
- * Get a single page by slug
- * @param slug - Page slug
- */
-export async function getPageBySlug(slug: string): Promise<WPPage | null> {
+export async function getPageBySlug(slug: string, lang?: string): Promise<WPPage | null> {
   try {
     const pages = await fetchWordPress<WPPage[]>('/pages', {
       slug,
       _embed: true,
+      ...(lang ? { lang } : {}),
     });
     return pages.length > 0 ? pages[0] : null;
   } catch (error) {
@@ -48,37 +41,33 @@ export async function getPageBySlug(slug: string): Promise<WPPage | null> {
 }
 
 /**
- * Get the homepage content for sections (About, Services, FAQ, Contact).
- * Tries, in order: (1) WP static front page via /wp/v2/front-page, (2) slug "homepage", (3) slug "home".
- * Requires WordPress to expose front page ID (see wordpress-front-page-api.php) for (1).
+ * Get the homepage content.
+ * Tries, in order: (1) WP static front page endpoint, (2) slug "homepage", (3) slug "home".
  */
-export async function getHomePage(): Promise<WPPage | null> {
+export async function getHomePage(opts?: { lang?: string }): Promise<WPPage | null> {
+  const lang = opts?.lang;
   try {
     const res = await fetchWordPress<{ id: number }>('/front-page', undefined, {
       suppressErrorLogging: true,
     });
     if (res?.id) {
-      const page = await getPageById(res.id);
-      if (page) return page;
+      const p = await getPageById(res.id, lang);
+      if (p) return p;
     }
   } catch {
-    // No front-page endpoint or no static front page set; fall back to slugs
+    // No front-page endpoint; fall through to slug look-ups
   }
-  const byHomepage = await getPageBySlug('homepage');
+  const byHomepage = await getPageBySlug('homepage', lang);
   if (byHomepage) return byHomepage;
-  return getPageBySlug('home');
+  return getPageBySlug('home', lang);
 }
 
-/**
- * Get a page by ID
- * @param id - Page ID
- */
-export async function getPageById(id: number): Promise<WPPage | null> {
+export async function getPageById(id: number, lang?: string): Promise<WPPage | null> {
   try {
-    const page = await fetchWordPress<WPPage>(`/pages/${id}`, {
+    return await fetchWordPress<WPPage>(`/pages/${id}`, {
       _embed: true,
+      ...(lang ? { lang } : {}),
     });
-    return page;
   } catch (error) {
     console.error(`Error fetching page by ID '${id}':`, error);
     return null;
@@ -92,10 +81,6 @@ export interface LegalPageItem {
   link: string;
 }
 
-/**
- * Default legal page slugs to try when no footer-legal menu is configured.
- * Order is preserved; only existing WordPress pages are returned.
- */
 const DEFAULT_LEGAL_SLUGS = [
   'impressum',
   'imprint',
@@ -114,21 +99,16 @@ const DEFAULT_LEGAL_SLUGS = [
   'terms-of-service',
 ];
 
-/**
- * Fetch legal pages from WordPress by slug (Impressum, Privacy, Cookies, Terms, etc.).
- * Used when no footer-legal menu is configured. Order follows the slugs array.
- * Each slug is fetched at most once; duplicates (e.g. privacy and privacy-policy) are skipped if already added.
- * @param slugs - Page slugs to try (default: common legal slugs including policies and cookies)
- */
 export async function getLegalPages(
-  slugs: string[] = DEFAULT_LEGAL_SLUGS
+  slugs: string[] = DEFAULT_LEGAL_SLUGS,
+  lang?: string
 ): Promise<LegalPageItem[]> {
   const seen = new Set<string>();
   const results: LegalPageItem[] = [];
   for (const slug of slugs) {
     if (seen.has(slug)) continue;
     try {
-      const page = await getPageBySlug(slug);
+      const page = await getPageBySlug(slug, lang);
       if (page?.slug && page?.title?.rendered) {
         if (seen.has(page.slug)) continue;
         seen.add(page.slug);

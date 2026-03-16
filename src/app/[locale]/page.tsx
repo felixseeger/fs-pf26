@@ -44,7 +44,8 @@ function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
   });
 }
 
-export default async function Home() {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   let portfolioItems: WPPortfolioItem[] = [];
   let homePage: WPPage | null = null;
 
@@ -52,9 +53,9 @@ export default async function Home() {
 
   try {
     const [portfolioData, homePageData, servicesData] = await Promise.all([
-      getPortfolioItems(12),
-      getHomePage(),
-      getServiceItems(24),
+      getPortfolioItems(12, 1, locale),
+      getHomePage({ lang: locale }),
+      getServiceItems(24, 1, locale),
     ]);
     portfolioItems = portfolioData || [];
     homePage = homePageData;

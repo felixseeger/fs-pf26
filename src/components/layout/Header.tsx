@@ -14,6 +14,7 @@ import { useGSAP } from '@gsap/react';
 import LiquidGradientBackground, { type GradientColor } from '@/components/ui/LiquidGradientBackground';
 import { DEFAULT_SOCIAL_URLS } from '@/lib/site-config';
 import { playMenuOpen, playMenuClose, playMenuSelect } from '@/lib/menu-sounds';
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -92,7 +93,7 @@ const mobileMenuItemVariants = {
     exit: { opacity: 0, y: -12 },
 };
 
-export default function Header() {
+export default function Header({ locale = 'de' }: { locale?: string }) {
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
 
@@ -408,6 +409,7 @@ export default function Header() {
                                 <Link href="/resume" onClick={() => playMenuSelect()} className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
                                     Resume
                                 </Link>
+                                <LanguageSwitcher locale={locale} />
                                 <button onClick={toggleTheme} className="p-2 bg-muted rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
                                     {resolvedTheme === 'dark' ? <Sun size={16} className="text-foreground" aria-hidden /> : <Moon size={16} className="text-foreground" aria-hidden />}
                                 </button>

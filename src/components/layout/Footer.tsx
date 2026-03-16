@@ -46,8 +46,9 @@ function SocialIcon({ platform, className }: { platform: SocialLink['platform'];
   }
 }
 
-export default async function Footer() {
+export default async function Footer({ locale }: { locale?: string }) {
   const currentYear = new Date().getFullYear();
+  const lang = locale || 'de';
 
   let quickLinksItems: WPMenuItem[] = [];
   let legalLinks: { title: string; href: string; external?: boolean }[] = [];
@@ -56,16 +57,16 @@ export default async function Footer() {
   let footerImage: ACFImage | null = null;
 
   try {
-    const homePage = await getHomePage();
+    const homePage = await getHomePage({ lang });
     const acf = homePage?.meta_box ?? homePage?.acf;
     const quickLinksMenuSlug = acf?.footer_quick_links_menu?.trim() || 'quick-links';
     const legalMenuSlug = acf?.footer_legal_menu?.trim() || 'footer-legal';
 
     const [quickLinksMenu, secondaryMenu, legalMenu, legalPages] = await Promise.all([
-      getMenuItems(quickLinksMenuSlug),
-      getMenuItems('secondary-navigation'),
-      getMenuItems(legalMenuSlug),
-      getLegalPages(),
+      getMenuItems(quickLinksMenuSlug, lang),
+      getMenuItems('secondary-navigation', lang),
+      getMenuItems(legalMenuSlug, lang),
+      getLegalPages(undefined, lang),
     ]);
 
     quickLinksItems = Array.isArray(quickLinksMenu) && quickLinksMenu.length > 0

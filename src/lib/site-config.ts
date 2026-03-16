@@ -46,13 +46,18 @@ function getInternalHostnames(): string[] {
   return hostnames;
 }
 
-/** WordPress language prefixes to strip from paths (e.g. /en/impressum → /impressum) */
-const WP_LANG_PREFIXES = /^\/(?:en|de|fr|es|it|nl|pt|ru|ja|zh|ko|ar|tr|pl)\//i;
+/**
+ * Polylang language prefix pattern.
+ * With next-intl's `as-needed` strategy the DEFAULT locale (de) has no prefix,
+ * so we strip /de/ from WordPress URLs but KEEP /en/ so the English path stays.
+ */
+const WP_DEFAULT_LANG_PREFIX = /^\/de\//i;
 
 /**
  * Convert a WordPress/site URL to a frontend href.
  * Strips origin for internal links so Next.js routing works.
- * Also strips WordPress language prefixes (e.g. /en/).
+ * - /de/about  → /about  (default locale, no prefix needed)
+ * - /en/about  → /en/about (non-default locale, keep prefix for next-intl)
  */
 export function toFrontendHref(url: string): { href: string; external: boolean } {
   if (typeof url !== 'string' || !url.trim()) {
@@ -60,7 +65,7 @@ export function toFrontendHref(url: string): { href: string; external: boolean }
   }
   const trimmed = url.trim();
   if (trimmed.startsWith('/') && !trimmed.startsWith('//')) {
-    const cleaned = trimmed.replace(WP_LANG_PREFIXES, '/');
+    const cleaned = trimmed.replace(WP_DEFAULT_LANG_PREFIX, '/');
     return { href: cleaned, external: false };
   }
   try {
@@ -68,7 +73,7 @@ export function toFrontendHref(url: string): { href: string; external: boolean }
     const internalHostnames = getInternalHostnames();
     const hostname = u.hostname.toLowerCase();
     if (internalHostnames.includes(hostname)) {
-      const path = (u.pathname || '/').replace(WP_LANG_PREFIXES, '/');
+      const path = (u.pathname || '/').replace(WP_DEFAULT_LANG_PREFIX, '/');
       return { href: path, external: false };
     }
     return { href: trimmed, external: true };

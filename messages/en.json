@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "contact": "Contact",
+    "courses": "Courses",
+    "shop": "Shop",
+    "resume": "Resume"
+  },
+  "common": {
+    "readMore": "Read more",
+    "backToTop": "Back to top",
+    "loading": "Loading…",
+    "error": "Error",
+    "notFound": "Not found",
+    "learnMore": "Learn more",
+    "getInTouch": "Get in touch",
+    "viewAll": "View all",
+    "close": "Close",
+    "open": "Open",
+    "send": "Send",
+    "sending": "Sending…",
+    "success": "Success",
+    "failed": "Failed"
+  },
+  "contact": {
+    "title": "Contact",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "subjectLabel": "Subject",
+    "messageLabel": "Message",
+    "sendButton": "Send message",
+    "successMessage": "Thank you! Your message was sent successfully.",
+    "errorMessage": "There was an error sending your message. Please try again."
+  },
+  "shop": {
+    "title": "Shop",
+    "addToCart": "Add to cart",
+    "checkout": "Checkout",
+    "emptyCart": "Your cart is empty.",
+    "total": "Total",
+    "quantity": "Quantity",
+    "remove": "Remove"
+  },
+  "courses": {
+    "title": "Courses",
+    "enroll": "Enroll now",
+    "price": "Price",
+    "free": "Free"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "imprint": "Imprint",
+    "privacy": "Privacy",
+    "contact": "Contact"
+  },
+  "meta": {
+    "language": "en",
+    "locale": "en_US"
+  }
+}

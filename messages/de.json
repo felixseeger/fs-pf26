@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über mich",
+    "services": "Leistungen",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "courses": "Kurse",
+    "shop": "Shop",
+    "resume": "Lebenslauf"
+  },
+  "common": {
+    "readMore": "Mehr lesen",
+    "backToTop": "Nach oben",
+    "loading": "Wird geladen…",
+    "error": "Fehler",
+    "notFound": "Nicht gefunden",
+    "learnMore": "Mehr erfahren",
+    "getInTouch": "Kontakt aufnehmen",
+    "viewAll": "Alle ansehen",
+    "close": "Schließen",
+    "open": "Öffnen",
+    "send": "Absenden",
+    "sending": "Wird gesendet…",
+    "success": "Erfolgreich",
+    "failed": "Fehlgeschlagen"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "nameLabel": "Name",
+    "emailLabel": "E-Mail",
+    "subjectLabel": "Betreff",
+    "messageLabel": "Nachricht",
+    "sendButton": "Nachricht senden",
+    "successMessage": "Danke! Deine Nachricht wurde erfolgreich gesendet.",
+    "errorMessage": "Beim Senden ist ein Fehler aufgetreten. Bitte versuche es erneut."
+  },
+  "shop": {
+    "title": "Shop",
+    "addToCart": "In den Warenkorb",
+    "checkout": "Zur Kasse",
+    "emptyCart": "Dein Warenkorb ist leer.",
+    "total": "Gesamt",
+    "quantity": "Menge",
+    "remove": "Entfernen"
+  },
+  "courses": {
+    "title": "Kurse",
+    "enroll": "Jetzt einschreiben",
+    "price": "Preis",
+    "free": "Kostenlos"
+  },
+  "footer": {
+    "rights": "Alle Rechte vorbehalten",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "contact": "Kontakt"
+  },
+  "meta": {
+    "language": "de",
+    "locale": "de_DE"
+  }
+}

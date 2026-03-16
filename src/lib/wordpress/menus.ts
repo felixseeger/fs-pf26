@@ -1,6 +1,10 @@
 /**
  * Functions for fetching menu data from WordPress.
- * Uses WordPress v2 navigation endpoints (Block-based navigation).
+ * Supports Polylang language-aware menus via the `lang` parameter.
+ *
+ * With Polylang installed, WordPress creates separate navigation blocks per
+ * language. We pass `?lang=de` / `?lang=en` to filter navigations, then fall
+ * back to the generic slug search if no language-specific match is found.
  */
 import { fetchWordPress } from './api';
 
@@ -38,13 +42,8 @@ interface WPNavigation {
 // Helper Functions
 // =============================================================================
 
-/**
- * Parse HTML navigation content to extract menu items
- */
 function parseNavigationHTML(html: string): WPMenuItem[] {
   const items: WPMenuItem[] = [];
-
-  // Match all navigation links in the HTML
   const linkRegex = /<a[^>]*href="([^"]*)"[^>]*>(?:<span[^>]*>)?([^<]+)(?:<\/span>)?<\/a>/g;
   let match;
   let order = 0;
@@ -78,33 +77,36 @@ function parseNavigationHTML(html: string): WPMenuItem[] {
 // =============================================================================
 
 /**
- * Fetches the items for a specific menu location.
- * Uses WordPress v2 navigation endpoint.
+ * Fetches menu items for a given location slug, optionally filtered by Polylang language.
  *
- * @param {string} locationSlug - The slug of the menu location (e.g., 'primary-navigation', 'secondary-navigation')
- * @returns {Promise<WPMenuItem[]>} A promise that resolves to an array of menu item objects
+ * With Polylang, WordPress registers language-specific navigation slugs, e.g.:
+ *   primary-navigation (default / de)
+ *   primary-navigation-en
+ *
+ * @param locationSlug - Navigation slug (e.g. 'primary-navigation')
+ * @param lang         - Optional Polylang language code ('de' | 'en')
  */
-export async function getMenuItems(locationSlug: string): Promise<WPMenuItem[]> {
-  if (!locationSlug) {
-    return [];
-  }
+export async function getMenuItems(locationSlug: string, lang?: string): Promise<WPMenuItem[]> {
+  if (!locationSlug) return [];
 
   try {
-    // Fetch all navigation menus
     const navigations = await fetchWordPress<WPNavigation[]>(
       '/navigation',
-      { per_page: 100 },
+      {
+        per_page: 100,
+        ...(lang ? { lang } : {}),
+      },
       { suppressErrorLogging: true }
     );
 
-    if (!navigations || navigations.length === 0) {
-      return [];
-    }
+    if (!navigations || navigations.length === 0) return [];
 
-    // Try to find navigation by matching slug or title
-    // Common patterns: 'primary-navigation', 'quick-links', 'footer_legal'
+    // With Polylang, a language suffix might be appended to the slug:
+    //   primary-navigation-en  /  primary-navigation-de  /  primary-navigation
+    const langSuffix = lang && lang !== 'de' ? `-${lang}` : '';
     const searchTerms = [
-      locationSlug,
+      `${locationSlug}${langSuffix}`,       // primary-navigation-en (exact lang match)
+      locationSlug,                          // primary-navigation    (fallback / default)
       locationSlug.replace(/-/g, '_'),
       locationSlug.replace(/-/g, ' '),
       locationSlug.replace(/_/g, '-'),
@@ -117,48 +119,42 @@ export async function getMenuItems(locationSlug: string): Promise<WPMenuItem[]> 
       const title = (nav.title?.rendered ?? '').toLowerCase();
       return searchTerms.some(term => {
         const t = term.toLowerCase();
-        return slug.includes(t) || title.includes(t);
+        return slug === t || title === t || slug.includes(t) || title.includes(t);
       });
     });
 
     if (!navigation) {
-      // If no match found, use first navigation for primary, last for secondary
       const fallbackNav = locationSlug.includes('primary')
         ? navigations[0]
         : navigations[navigations.length - 1];
 
-      if (fallbackNav && fallbackNav.content?.rendered) {
+      if (fallbackNav?.content?.rendered) {
         return parseNavigationHTML(fallbackNav.content.rendered);
       }
-
       return [];
     }
 
-    // Parse the HTML content to extract menu items
     if (navigation.content?.rendered) {
       return parseNavigationHTML(navigation.content.rendered);
     }
 
     return [];
-  } catch (error) {
-    // Silently fail - menus are optional, components will use fallback
+  } catch {
     return [];
   }
 }
 
-/**
- * Fetches all available navigation menus.
- *
- * @returns {Promise<WPNavigation[]>} A promise that resolves to navigation menus
- */
-export async function getNavigations(): Promise<WPNavigation[]> {
+export async function getNavigations(lang?: string): Promise<WPNavigation[]> {
   try {
     return await fetchWordPress<WPNavigation[]>(
       '/navigation',
-      { per_page: 100 },
+      {
+        per_page: 100,
+        ...(lang ? { lang } : {}),
+      },
       { suppressErrorLogging: true }
     );
-  } catch (error) {
+  } catch {
     return [];
   }
 }
