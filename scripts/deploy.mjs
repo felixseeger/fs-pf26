@@ -34,8 +34,8 @@ if (existsSync(nextDir)) {
   console.log('Cleared .next cache');
 }
 
-// 3. Build
-run('pnpm', ['build']);
+// 3. Build (use node directly to avoid PATH issues with next binary)
+run('node', [join(rootDir, 'node_modules/next/dist/bin/next'), 'build']);
 
 // 4. FTP upload
 run('node', ['scripts/deploy-ftp.mjs']);
