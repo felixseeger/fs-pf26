@@ -71,7 +71,16 @@ const mobileMenuItemVariants = {
     exit: { opacity: 0, y: -12 },
 };
 
-export default function Header({ locale = 'de' }: { locale?: string }) {
+interface NavItem { name: string; href: string; }
+
+export default function Header({
+    locale = 'de',
+    navItems,
+}: {
+    locale?: string;
+    /** Optional nav items from WordPress (Polylang). Falls back to translation strings. */
+    navItems?: NavItem[];
+}) {
     const t = useTranslations('nav');
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -79,15 +88,18 @@ export default function Header({ locale = 'de' }: { locale?: string }) {
     // usePathname from next-intl strips the locale prefix → always returns /about, /portfolio, etc.
     const pathname = usePathname();
 
-    const navLinks = [
-        { name: t('about'),     href: '/#about'    },
-        { name: t('services'),  href: '/#services'  },
-        { name: t('portfolio'), href: '/portfolio'  },
-        { name: t('courses'),   href: '/courses'    },
-        { name: t('shop'),      href: '/shop'       },
-    ];
+    // Use WordPress nav items when available, otherwise fall back to hardcoded translations
+    const navLinks: NavItem[] = navItems && navItems.length > 0
+        ? navItems
+        : [
+            { name: t('about'),     href: '/#about'    },
+            { name: t('services'),  href: '/#services'  },
+            { name: t('portfolio'), href: '/portfolio'  },
+            { name: t('courses'),   href: '/courses'    },
+            { name: t('shop'),      href: '/shop'       },
+        ];
 
-    const mobileNavLinks = [
+    const mobileNavLinks: NavItem[] = [
         ...navLinks,
         { name: t('resume'), href: '/resume' },
     ];

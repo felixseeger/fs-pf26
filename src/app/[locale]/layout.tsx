@@ -18,6 +18,8 @@ import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import { getHomePage } from "@/lib/wordpress";
+import { getMenuItems } from "@/lib/wordpress/menus";
+import { toFrontendHref } from "@/lib/site-config";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { routing } from "@/i18n/routing";
@@ -84,6 +86,13 @@ export default async function LocaleLayout({
   // Fetch messages for NextIntlClientProvider
   const messages = await getMessages();
 
+  // Fetch primary navigation from WordPress (Polylang: primary-navigation / primary-navigation-en)
+  const wpNavItems = await getMenuItems('primary-navigation', locale).catch(() => []);
+  const primaryNavItems = wpNavItems.map(item => ({
+    name: item.title,
+    href: toFrontendHref(item.url).href,
+  }));
+
   // Fetch homepage ACF fields for WhatsApp config (build-time)
   const homepage = await getHomePage({ lang: locale }).catch(() => null);
   const acf = homepage?.acf ?? homepage?.meta_box;
@@ -120,7 +129,7 @@ export default async function LocaleLayout({
                       >
                         Skip to main content
                       </a>
-                      <Header locale={locale} />
+                      <Header locale={locale} navItems={primaryNavItems.length > 0 ? primaryNavItems : undefined} />
                       <main className="grow" id="main-content">
                         {children}
                       </main>
