@@ -26,6 +26,7 @@ const GRADIENT_BY_PATH: Record<string, { color1: GradientColor; color2: Gradient
   '/portfolio': { color1: [0.6, 0.35, 0.9], color2: [0.08, 0.04, 0.15] },
   '/resume': { color1: [0.95, 0.55, 0.2], color2: [0.08, 0.05, 0.12] },
   '/about': { color1: [0.15, 0.7, 0.6], color2: [0.02, 0.08, 0.1] },
+  '/ueber-mich': { color1: [0.15, 0.7, 0.6], color2: [0.02, 0.08, 0.1] },
   '/contact': { color1: [0.9, 0.4, 0.5], color2: [0.12, 0.03, 0.08] },
   '/shop': { color1: [0.3, 0.8, 0.5], color2: [0.02, 0.1, 0.06] },
   '/impressum': { color1: [0.5, 0.5, 0.6], color2: [0.06, 0.06, 0.1] },
@@ -35,6 +36,7 @@ const GRADIENT_BY_PATH: Record<string, { color1: GradientColor; color2: Gradient
 function getGradientColors(pathname: string) {
   const exact = GRADIENT_BY_PATH[pathname];
   if (exact) return exact;
+  if (pathname.startsWith('/ueber-mich')) return GRADIENT_BY_PATH['/about'];
   if (pathname.startsWith('/services')) return GRADIENT_BY_PATH['/services'];
   if (pathname.startsWith('/courses')) return GRADIENT_BY_PATH['/courses'];
   if (pathname.startsWith('/portfolio')) return GRADIENT_BY_PATH['/portfolio'];
@@ -82,6 +84,7 @@ export default function Header({
     navItems?: NavItem[];
 }) {
     const t = useTranslations('nav');
+    const tFooter = useTranslations('footer');
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
 
@@ -105,8 +108,8 @@ export default function Header({
     ];
 
     const legalLinks = [
-        { name: 'Impressum',     href: '/impressum'      },
-        { name: 'Privacy Policy', href: '/privacy-policy' },
+        { name: tFooter('imprint'), href: '/impressum' },
+        { name: tFooter('privacy'), href: '/privacy-policy' },
     ];
 
     const allMobileNavLinks = [

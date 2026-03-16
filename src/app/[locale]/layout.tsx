@@ -86,12 +86,30 @@ export default async function LocaleLayout({
   // Fetch messages for NextIntlClientProvider
   const messages = await getMessages();
 
-  // Fetch primary navigation from WordPress (Polylang: primary-navigation / primary-navigation-en)
-  const wpNavItems = await getMenuItems('primary-navigation', locale).catch(() => []);
-  const primaryNavItems = wpNavItems.map(item => ({
+  // Fetch primary navigation from WordPress (Polylang: primary-navigation / primary-navigation-en).
+  // Try "primary-navigation" first; if it returns fewer than 3 items (incomplete menu),
+  // also try "quick-links" (a common alternative slug) and take whichever is richer.
+  const toNavItem = (item: { title: string; url: string }) => ({
     name: item.title,
     href: toFrontendHref(item.url).href,
-  }));
+  });
+
+  const [wpPrimary, wpQuick] = await Promise.all([
+    getMenuItems('primary-navigation', locale).catch(() => []),
+    getMenuItems('quick-links', locale).catch(() => []),
+  ]);
+
+  const primaryRaw  = wpPrimary.map(toNavItem).filter(i => i.name && i.href);
+  const quickRaw    = wpQuick.map(toNavItem).filter(i => i.name && i.href);
+
+  // Use whichever source has more items; require at least 3 to override the
+  // hardcoded translation fallback defined in Header.tsx.
+  const primaryNavItems =
+    primaryRaw.length >= quickRaw.length && primaryRaw.length >= 3
+      ? primaryRaw
+      : quickRaw.length >= 3
+        ? quickRaw
+        : [];
 
   // Fetch homepage ACF fields for WhatsApp config (build-time)
   const homepage = await getHomePage({ lang: locale }).catch(() => null);

@@ -4,10 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@swc/helpers': ^0.5.15
+
 importers:
 
   .:
     dependencies:
+      '@formatjs/intl-localematcher':
+        specifier: ^0.8.2
+        version: 0.8.2
       '@gsap/react':
         specifier: ^2.1.2
         version: 2.1.2(gsap@3.14.2)(react@19.0.0)
@@ -37,10 +43,10 @@ importers:
         version: 1.3.0
       '@tambo-ai/react':
         specifier: 1.0.0-rc.5
-        version: 1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18)(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
+        version: 1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18(@swc/helpers@0.5.15))(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
       '@tambo-ai/react-ui-base':
         specifier: 0.1.0-alpha.2
-        version: 0.1.0-alpha.2(@tambo-ai/react@1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18)(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@types/react@19.2.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 0.1.0-alpha.2(@tambo-ai/react@1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18(@swc/helpers@0.5.15))(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@types/react@19.2.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@tambo-ai/typescript-sdk':
         specifier: ^0.93.0
         version: 0.93.0
@@ -101,6 +107,9 @@ importers:
       embla-carousel-wheel-gestures:
         specifier: ^8.1.0
         version: 8.1.0(embla-carousel@8.6.0)
+      flag-icons:
+        specifier: ^7.5.0
+        version: 7.5.0
       framer-motion:
         specifier: ^12.33.0
         version: 12.33.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -122,18 +131,24 @@ importers:
       lucide-react:
         specifier: ^0.563.0
         version: 0.563.0(react@19.0.0)
+      matter-js:
+        specifier: ^0.20.0
+        version: 0.20.0
       next:
         specifier: 15.1.11
         version: 15.1.11(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       next-intl:
         specifier: ^4.8.3
-        version: 4.8.3(next@15.1.11(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(typescript@5.9.3)
+        version: 4.8.3(@swc/helpers@0.5.15)(next@15.1.11(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(typescript@5.9.3)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       nodemailer:
         specifier: ^8.0.2
         version: 8.0.2
+      quansync:
+        specifier: ^0.2.11
+        version: 0.2.11
       radix-ui:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -174,6 +189,9 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
+      '@swc/helpers':
+        specifier: ^0.5.15
+        version: 0.5.15
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.18
@@ -201,6 +219,9 @@ importers:
       eslint-config-next:
         specifier: 15.1.11
         version: 15.1.11(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+      playwright:
+        specifier: ^1.58.2
+        version: 1.58.2
       postcss:
         specifier: ^8
         version: 8.5.6
@@ -302,6 +323,9 @@ packages:
   '@formatjs/fast-memoize@3.1.0':
     resolution: {integrity: sha512-b5mvSWCI+XVKiz5WhnBCY3RJ4ZwfjAidU0yVlKa3d3MSgKmH1hC3tBGEAtYyN5mqL7N0G5x0BOUYyO8CEupWgg==}
 
+  '@formatjs/fast-memoize@3.1.1':
+    resolution: {integrity: sha512-CbNbf+tlJn1baRnPkNePnBqTLxGliG6DDgNa/UtV66abwIjwsliPMOt0172tzxABYzSuxZBZfcp//qI8AvBWPg==}
+
   '@formatjs/icu-messageformat-parser@3.5.1':
     resolution: {integrity: sha512-sSDmSvmmoVQ92XqWb499KrIhv/vLisJU8ITFrx7T7NZHUmMY7EL9xgRowAosaljhqnj/5iufG24QrdzB6X3ItA==}
 
@@ -310,6 +334,9 @@ packages:
 
   '@formatjs/intl-localematcher@0.8.1':
     resolution: {integrity: sha512-xwEuwQFdtSq1UKtQnyTZWC+eHdv7Uygoa+H2k/9uzBVQjDyp9r20LNDNKedWXll7FssT3GRHvqsdJGYSUWqYFA==}
+
+  '@formatjs/intl-localematcher@0.8.2':
+    resolution: {integrity: sha512-q05KMYGJLyqFNFtIb8NhWLF5X3aK/k0wYt7dnRFuy6aLQL+vUwQ1cg5cO4qawEiINybeCPXAWlprY2mSBjSXAQ==}
 
   '@gsap/react@2.1.2':
     resolution: {integrity: sha512-JqliybO1837UcgH2hVOM4VO+38APk3ECNrsuSM4MuXp+rbf+/2IG2K1YJiqfTcXQHH7XlA0m3ykniFYstfq0Iw==}
@@ -1713,7 +1740,7 @@ packages:
     resolution: {integrity: sha512-z87aF9GphWp//fnkRsqvtY+inMVPgYW3zSlXH1kJFvRT5H/wiAn+G32qW5l3oEk63KSF1x3Ov0BfHCObAmT8RA==}
     engines: {node: '>=10'}
     peerDependencies:
-      '@swc/helpers': '>=0.5.17'
+      '@swc/helpers': ^0.5.15
     peerDependenciesMeta:
       '@swc/helpers':
         optional: true
@@ -3105,6 +3132,9 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
+  flag-icons@7.5.0:
+    resolution: {integrity: sha512-kd+MNXviFIg5hijH766tt+3x76ele1AXlo4zDdCxIvqWZhKt4T83bOtxUOOMlTx/EcFdUMH5yvQgYlFh1EqqFg==}
+
   flat-cache@4.0.1:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==}
     engines: {node: '>=16'}
@@ -3149,6 +3179,11 @@ packages:
   fresh@2.0.0:
     resolution: {integrity: sha512-Rx/WycZ60HOaqLKAi6cHRKKI7zxWbJ31MhntmtwMoaTeF7XFH9hhBp8vITaMidfljRQ6eYWCKkaTK+ykVJHP2A==}
     engines: {node: '>= 0.8'}
+
+  fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
 
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
@@ -3718,6 +3753,9 @@ packages:
     resolution: {integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g==}
     engines: {node: '>= 0.4'}
 
+  matter-js@0.20.0:
+    resolution: {integrity: sha512-iC9fYR7zVT3HppNnsFsp9XOoQdQN2tUyfaKg4CHLH8bN+j6GT4Gw7IH2rP0tflAebrHFw730RR3DkVSZRX8hwA==}
+
   mdast-util-find-and-replace@3.0.2:
     resolution: {integrity: sha512-Tmd1Vg/m3Xz43afeNxDIhWRtFZgM2VLyaf4vSTYwudTyeuTneoL3qtWMA5jeLyz/O1vDJmmV4QuScFCA2tBPwg==}
 
@@ -4131,6 +4169,16 @@ packages:
   pkce-challenge@5.0.1:
     resolution: {integrity: sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ==}
     engines: {node: '>=16.20.0'}
+
+  playwright-core@1.58.2:
+    resolution: {integrity: sha512-yZkEtftgwS8CsfYo7nm0KE8jsvm6i/PTgVtB8DL726wNf6H2IMsDuxCpJj59KDaxCtSnrWan2AeDqM7JBaultg==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.58.2:
+    resolution: {integrity: sha512-vA30H8Nvkq/cPBnNw4Q8TWz1EJyqgpuinBcHET0YVJVFldr8JDNiU9LaWAE1KqSkRYazuaBhTpB5ZzShOezQ6A==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   pngjs@3.4.0:
     resolution: {integrity: sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==}
@@ -5160,6 +5208,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@formatjs/fast-memoize@3.1.1': {}
+
   '@formatjs/icu-messageformat-parser@3.5.1':
     dependencies:
       '@formatjs/ecma402-abstract': 3.1.1
@@ -5175,6 +5225,10 @@ snapshots:
     dependencies:
       '@formatjs/fast-memoize': 3.1.0
       tslib: 2.8.1
+
+  '@formatjs/intl-localematcher@0.8.2':
+    dependencies:
+      '@formatjs/fast-memoize': 3.1.1
 
   '@gsap/react@2.1.2(gsap@3.14.2)(react@19.0.0)':
     dependencies:
@@ -6600,7 +6654,7 @@ snapshots:
   '@swc/core-win32-x64-msvc@1.15.18':
     optional: true
 
-  '@swc/core@1.15.18':
+  '@swc/core@1.15.18(@swc/helpers@0.5.15)':
     dependencies:
       '@swc/counter': 0.1.3
       '@swc/types': 0.1.25
@@ -6615,6 +6669,7 @@ snapshots:
       '@swc/core-win32-arm64-msvc': 1.15.18
       '@swc/core-win32-ia32-msvc': 1.15.18
       '@swc/core-win32-x64-msvc': 1.15.18
+      '@swc/helpers': 0.5.15
 
   '@swc/counter@0.1.3': {}
 
@@ -6700,16 +6755,16 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 4.1.18
 
-  '@tambo-ai/react-ui-base@0.1.0-alpha.2(@tambo-ai/react@1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18)(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@types/react@19.2.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@tambo-ai/react-ui-base@0.1.0-alpha.2(@tambo-ai/react@1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18(@swc/helpers@0.5.15))(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6))(@types/react@19.2.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@radix-ui/react-slot': 1.2.4(@types/react@19.2.10)(react@19.0.0)
-      '@tambo-ai/react': 1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18)(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
+      '@tambo-ai/react': 1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18(@swc/helpers@0.5.15))(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
     transitivePeerDependencies:
       - '@types/react'
 
-  '@tambo-ai/react@1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18)(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)':
+  '@tambo-ai/react@1.0.0-rc.5(@modelcontextprotocol/sdk@1.26.0(zod@4.3.6))(@swc/core@1.15.18(@swc/helpers@0.5.15))(@types/json-schema@7.0.15)(@types/node@22.19.9)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sury@10.0.4)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)':
     dependencies:
       '@ag-ui/core': 0.0.43
       '@standard-community/standard-json': 0.3.5(@standard-schema/spec@1.1.0)(@types/json-schema@7.0.15)(@valibot/to-json-schema@1.5.0(valibot@1.2.0(typescript@5.9.3)))(effect@3.19.19)(quansync@0.2.11)(sury@10.0.4)(valibot@1.2.0(typescript@5.9.3))(zod-to-json-schema@3.25.1(zod@4.3.6))(zod@4.3.6)
@@ -6725,7 +6780,7 @@ snapshots:
       react-dom: 19.0.0(react@19.0.0)
       react-fast-compare: 3.2.2
       react-media-recorder: 1.7.2
-      ts-node: 10.9.2(@swc/core@1.15.18)(@types/node@22.19.9)(typescript@5.9.3)
+      ts-node: 10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.15))(@types/node@22.19.9)(typescript@5.9.3)
       type-fest: 5.4.4
       use-debounce: 10.1.0(react@19.0.0)
       zod: 4.3.6
@@ -8271,6 +8326,8 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
+  flag-icons@7.5.0: {}
+
   flat-cache@4.0.1:
     dependencies:
       flatted: 3.3.3
@@ -8298,6 +8355,9 @@ snapshots:
       react-dom: 19.0.0(react@19.0.0)
 
   fresh@2.0.0: {}
+
+  fsevents@2.3.2:
+    optional: true
 
   function-bind@1.1.2: {}
 
@@ -8906,6 +8966,8 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
+  matter-js@0.20.0: {}
+
   mdast-util-find-and-replace@3.0.2:
     dependencies:
       '@types/mdast': 4.0.4
@@ -9342,11 +9404,11 @@ snapshots:
 
   next-intl-swc-plugin-extractor@4.8.3: {}
 
-  next-intl@4.8.3(next@15.1.11(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(typescript@5.9.3):
+  next-intl@4.8.3(@swc/helpers@0.5.15)(next@15.1.11(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(typescript@5.9.3):
     dependencies:
-      '@formatjs/intl-localematcher': 0.8.1
+      '@formatjs/intl-localematcher': 0.8.2
       '@parcel/watcher': 2.5.6
-      '@swc/core': 1.15.18
+      '@swc/core': 1.15.18(@swc/helpers@0.5.15)
       icu-minify: 4.8.3
       negotiator: 1.0.0
       next: 15.1.11(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -9534,6 +9596,14 @@ snapshots:
       pngjs: 3.4.0
 
   pkce-challenge@5.0.1: {}
+
+  playwright-core@1.58.2: {}
+
+  playwright@1.58.2:
+    dependencies:
+      playwright-core: 1.58.2
+    optionalDependencies:
+      fsevents: 2.3.2
 
   pngjs@3.4.0: {}
 
@@ -10338,7 +10408,7 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  ts-node@10.9.2(@swc/core@1.15.18)(@types/node@22.19.9)(typescript@5.9.3):
+  ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.15))(@types/node@22.19.9)(typescript@5.9.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.12
@@ -10356,7 +10426,7 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
-      '@swc/core': 1.15.18
+      '@swc/core': 1.15.18(@swc/helpers@0.5.15)
 
   tsconfig-paths@3.15.0:
     dependencies:

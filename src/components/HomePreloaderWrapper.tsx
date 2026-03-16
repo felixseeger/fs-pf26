@@ -1,7 +1,11 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Lazy-loaded chunk — GSAP + SVG code is never fetched for returning visitors
 const PreloaderAnimation = dynamic(
@@ -61,10 +65,34 @@ export default function HomePreloaderWrapper({
     // Returning visitors: stays false → preloader never mounts → chunk never loads
   }, [showOncePerSession]);
 
-  const handleComplete = () => {
+  // Stable reference — must not change identity between renders so GSAP's
+  // onComplete dependency never triggers a mid-animation effect restart.
+  const handleComplete = useCallback(() => {
     if (showOncePerSession) sessionStorage.setItem(SESSION_KEY, '1');
     setShowPreloader(false);
-  };
+    // Notify SmoothScroll to resize Lenis and refresh ScrollTrigger after preloader unmounts
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new CustomEvent('preloader-complete'));
+    });
+  }, [showOncePerSession]);
+
+  // Safety timeout: if GSAP fails to fire onComplete (tab backgrounded, reduced
+  // motion, slow device) the preloader is force-dismissed after 15 s.
+  useEffect(() => {
+    if (!showPreloader) return;
+    const id = setTimeout(handleComplete, 15_000);
+    return () => clearTimeout(id);
+  }, [showPreloader, handleComplete]);
+
+  // When preloader is skipped (returning visitor or nav from subpage), fire
+  // preloader-complete so ScrollTrigger refreshes and scroll works.
+  useEffect(() => {
+    if (showPreloader) return;
+    const id = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('preloader-complete'));
+    }, 150);
+    return () => clearTimeout(id);
+  }, [showPreloader]);
 
   // Scroll to hash anchor once the preloader is out of the way.
   // Uses double-rAF so the layout is fully settled before we measure element positions.

@@ -14,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${base}/courses`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${base}/resume`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${base}/shop`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
   ];
 
   const portfolioItems = await getPortfolioItems(500, 1).catch(() => []);

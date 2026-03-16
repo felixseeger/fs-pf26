@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import gsap from 'gsap';
 import LiquidGradientBackground from './LiquidGradientBackground';
 
@@ -49,6 +49,11 @@ export default function PreloaderAnimation({
   const loaderRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [counter, setCounter] = useState(0);
+
+  // Keep a stable ref so GSAP callbacks always call the latest onComplete
+  // without it needing to be in the useEffect dependency array.
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
   const labels = useMemo(() => {
     const list = orbitLabels.slice(0, 8);
@@ -146,7 +151,7 @@ export default function PreloaderAnimation({
           opacity: 0,
           duration: 1,
           onComplete: () => {
-            onComplete?.();
+            onCompleteRef.current?.();
           },
         });
       },
@@ -155,7 +160,8 @@ export default function PreloaderAnimation({
     return () => {
       gsap.killTweensOf([svg, count, orbitTextElements, loader]);
     };
-  }, [counterDuration, onComplete]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [counterDuration]); // onComplete intentionally excluded — accessed via ref
 
   return (
     <div

@@ -73,8 +73,11 @@ export default function HomepageHero({
   useEffect(() => {
     setMounted(true);
 
-    // Wait for header intro (centered cluster + entrance) before showing hero content
-    const timer = setTimeout(() => setShowContent(true), 2200);
+    // Hero intro only on initial page load. When coming from subpage or returning
+    // visitor, show content immediately so scroll works.
+    const skipIntro = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('homePreloaderShown');
+    const delay = skipIntro ? 0 : 2200;
+    const timer = setTimeout(() => setShowContent(true), delay);
 
     // Hide scroll hint when user scrolls past hero
     const handleScroll = () => {

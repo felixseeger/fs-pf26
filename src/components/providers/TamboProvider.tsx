@@ -2,27 +2,33 @@
 
 import { TamboProvider as TamboProviderBase } from "@tambo-ai/react";
 import { components } from "@/lib/tambo";
+import { useEffect, useState } from "react";
 
 interface TamboProviderProps {
   children: React.ReactNode;
 }
 
 /**
- * TamboProvider wrapper for registering components with Tambo AI
- * 
- * This provider registers React components that Tambo can generate on-demand.
- * Components are defined in @/lib/tambo and registered here.
- * 
- * The Tambo script is loaded via the script tag in layout.tsx using the project ID.
- * This provider handles component registration for generative UI.
- * 
- * If NEXT_PUBLIC_TAMBO_API_KEY is set, it will be used. Otherwise, Tambo
- * will use the project ID from the script tag for initialization.
+ * TamboProvider wrapper for registering components with Tambo AI.
+ *
+ * Tambo's ThreadSyncManager injects `data-cursor-ref` attributes into DOM
+ * elements client-side. Rendering it during SSR produces a server/client
+ * mismatch that triggers React's hydration warning. We gate the real provider
+ * behind a `useEffect` (client-only) so the server and first client paint both
+ * see a plain React.Fragment, and Tambo only activates after hydration.
  */
 export function TamboProvider({ children }: TamboProviderProps) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const apiKey = process.env.NEXT_PUBLIC_TAMBO_API_KEY;
 
-  // Pass apiKey if available, otherwise pass empty string (Tambo will use project ID from script tag)
+  if (!mounted) {
+    // During SSR and the initial client render: pass children straight through
+    // so React can hydrate without any Tambo-injected attribute mismatches.
+    return <>{children}</>;
+  }
+
   return (
     <TamboProviderBase
       apiKey={apiKey || ""}

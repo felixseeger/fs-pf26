@@ -6,6 +6,14 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@swc/helpers/_/_interop_require_default': require.resolve('@swc/helpers/cjs/_interop_require_default.cjs'),
+      '@swc/helpers/_/_interop_require_wildcard': require.resolve('@swc/helpers/cjs/_interop_require_wildcard.cjs'),
+    };
+    return config;
+  },
   images: {
     remotePatterns: [
       {

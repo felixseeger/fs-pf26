@@ -33,6 +33,8 @@ function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
       : featuredImage?.alt_text;
     const description = service.acf?.service_short_description
       || (service.excerpt?.rendered?.replace(/<[^>]*>/g, '').trim() || '');
+    const deliverables = service.acf?.deliverables
+      ?.map((d) => d.item_text?.trim()).filter(Boolean) as string[] | undefined;
     return {
       id: service.slug,
       iconUrl: iconUrl || undefined,
@@ -40,6 +42,7 @@ function mapWPServicesToSection(services: WPServiceItem[]): Service[] {
       title: service.title.rendered,
       description,
       slug: service.slug,
+      deliverables: deliverables && deliverables.length > 0 ? deliverables : undefined,
     };
   });
 }

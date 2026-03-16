@@ -14,10 +14,17 @@ export const metadata: Metadata = {
 };
 
 export default async function ShopPage() {
-  const [products, categories] = await Promise.all([
-    getProducts(),
-    getProductCategories(),
-  ]);
+  let products: Awaited<ReturnType<typeof getProducts>> = [];
+  let categories: Awaited<ReturnType<typeof getProductCategories>> = [];
+
+  try {
+    [products, categories] = await Promise.all([
+      getProducts(),
+      getProductCategories(),
+    ]);
+  } catch (err) {
+    console.error('[shop] Failed to load products:', err);
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>

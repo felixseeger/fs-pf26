@@ -6,6 +6,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   blog: 'Blog',
   services: 'Services',
   about: 'About',
+  'ueber-mich': 'Über mich',
   contact: 'Contact',
   resume: 'Resume',
   signup: 'Sign up',

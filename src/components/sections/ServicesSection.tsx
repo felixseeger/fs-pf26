@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import { Code2, Palette, Smartphone, TrendingUp, Rocket, Headphones, ChevronRight, LucideIcon } from 'lucide-react';
 import TiltCard from '@/components/ui/TiltCard';
+import DestructServicesCard from '@/components/services/DestructServicesCard';
 import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 
 /** Service item: supports WP (iconUrl from services_gallery) or legacy (Lucide icon) */
@@ -20,6 +21,8 @@ export interface Service {
   description: string;
   /** Link to service detail page */
   slug?: string;
+  /** Deliverables for physics explosion effect (from acf.deliverables) */
+  deliverables?: string[];
 }
 
 interface ServicesSectionProps {
@@ -59,7 +62,8 @@ export default function ServicesSection({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => {
             const Icon = service.icon;
-            const cardContent = (
+            const hasDeliverables = service.deliverables && service.deliverables.length > 0;
+            const tiltCard = (
               <TiltCard
                 className="group p-8 rounded-2xl
                           bg-zinc-100 dark:bg-zinc-900
@@ -114,6 +118,11 @@ export default function ServicesSection({
                 )}
               </TiltCard>
             );
+            const cardContent = hasDeliverables ? (
+              <DestructServicesCard deliverables={service.deliverables!} className="h-full">
+                {tiltCard}
+              </DestructServicesCard>
+            ) : tiltCard;
 
             return (
               <motion.div

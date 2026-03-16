@@ -28,7 +28,7 @@ export default function ShopGrid({ products, categories }: ShopGridProps) {
     activeSlug === 'all'
       ? products
       : products.filter((p) =>
-          p.categories.some((c) => c.slug === activeSlug)
+          (p.categories ?? []).some((c) => c.slug === activeSlug)
         );
 
   return (

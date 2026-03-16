@@ -20,7 +20,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     !product.downloadable &&
     !product.virtual &&
     product.stock_status !== 'instock';
-  const categoryNames = product.categories.map((c) => c.name);
+  const categoryNames = (product.categories ?? []).map((c) => c.name);
   const href = `/shop/${product.slug}`;
 
   return (

@@ -54,6 +54,30 @@ function getInternalHostnames(): string[] {
 const WP_DEFAULT_LANG_PREFIX = /^\/de\//i;
 
 /**
+ * Map WordPress page slugs (often in German) to the corresponding Next.js frontend paths.
+ * Used when WordPress navigation links point at the WP backend instead of the frontend.
+ */
+const WP_SLUG_TO_FRONTEND: Record<string, string> = {
+  'ueber-mich':       '/about',
+  'about':            '/about',
+  'referenzen':       '/portfolio',
+  'portfolio':        '/portfolio',
+  'kontakt':          '/contact',
+  'contact':          '/contact',
+  'services':         '/services',
+  'dienstleistungen': '/services',
+  'kurse':            '/courses',
+  'courses':          '/courses',
+  'blog':             '/blog',
+  'shop':             '/shop',
+  'resume':           '/resume',
+  'lebenslauf':       '/resume',
+  'impressum':        '/impressum',
+  'datenschutz':      '/privacy-policy',
+  'privacy-policy':   '/privacy-policy',
+};
+
+/**
  * Convert a WordPress/site URL to a frontend href.
  * Strips origin for internal links so Next.js routing works.
  * - /de/about  → /about  (default locale, no prefix needed)
@@ -73,8 +97,11 @@ export function toFrontendHref(url: string): { href: string; external: boolean }
     const internalHostnames = getInternalHostnames();
     const hostname = u.hostname.toLowerCase();
     if (internalHostnames.includes(hostname)) {
-      const path = (u.pathname || '/').replace(WP_DEFAULT_LANG_PREFIX, '/');
-      return { href: path, external: false };
+      const rawPath = (u.pathname || '/').replace(WP_DEFAULT_LANG_PREFIX, '/');
+      // Normalise WP backend slugs (e.g. /ueber-mich/) to frontend routes (e.g. /about)
+      const slug = rawPath.replace(/^\/|\/$/g, '').toLowerCase(); // strip slashes
+      const mapped = WP_SLUG_TO_FRONTEND[slug];
+      return { href: mapped ?? rawPath, external: false };
     }
     return { href: trimmed, external: true };
   } catch {

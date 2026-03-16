@@ -105,13 +105,13 @@ export async function getMenuItems(locationSlug: string, lang?: string): Promise
     //   primary-navigation-en  /  primary-navigation-de  /  primary-navigation
     const langSuffix = lang && lang !== 'de' ? `-${lang}` : '';
     const searchTerms = [
-      `${locationSlug}${langSuffix}`,       // primary-navigation-en (exact lang match)
-      locationSlug,                          // primary-navigation    (fallback / default)
-      locationSlug.replace(/-/g, '_'),
-      locationSlug.replace(/-/g, ' '),
-      locationSlug.replace(/_/g, '-'),
-      locationSlug.replace('-navigation', ''),
-      locationSlug.replace('navigation-', ''),
+      `${locationSlug}${langSuffix}`,       // e.g. primary-navigation-en (exact lang match)
+      locationSlug,                          // e.g. primary-navigation    (default/fallback)
+      locationSlug.replace(/-/g, '_'),       // e.g. primary_navigation
+      locationSlug.replace(/-/g, ' '),       // e.g. primary navigation
+      locationSlug.replace(/_/g, '-'),       // e.g. quick-links
+      // Also match when the slug word-order or hyphens vary
+      ...locationSlug.split(/[-_]/).filter(Boolean), // individual words: "primary", "navigation", "quick", "links"
     ];
 
     const navigation = navigations.find(nav => {
@@ -124,10 +124,14 @@ export async function getMenuItems(locationSlug: string, lang?: string): Promise
     });
 
     if (!navigation) {
-      const fallbackNav = locationSlug.includes('primary')
-        ? navigations[0]
-        : navigations[navigations.length - 1];
+      // No slug/title match — fall back to the navigation with the most parsed links
+      // (avoids accidentally returning a sparse footer-legal menu as primary nav).
+      const withCounts = navigations
+        .filter(n => n.content?.rendered)
+        .map(n => ({ nav: n, count: parseNavigationHTML(n.content.rendered).length }))
+        .sort((a, b) => b.count - a.count);
 
+      const fallbackNav = withCounts[0]?.nav;
       if (fallbackNav?.content?.rendered) {
         return parseNavigationHTML(fallbackNav.content.rendered);
       }
