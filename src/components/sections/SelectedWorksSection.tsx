@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { WPPortfolioItem } from '@/types/wordpress';
 import { LayoutGrid, ArrowRight } from 'lucide-react';
 import { getCategoriesFromPortfolioItems, filterPortfolioItemsByCategory } from '@/lib/portfolio-utils';

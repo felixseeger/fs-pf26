@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useShopCart } from '@/components/providers/ShopCartProvider';
 
 function formatPrice(value: number): string {

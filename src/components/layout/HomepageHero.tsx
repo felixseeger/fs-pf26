@@ -6,7 +6,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
 import { WPPortfolioItem } from '@/types/wordpress';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import PixelatedVideoSlide from '@/components/Pixelated/PixelatedVideoSlide';
 import DotMatrix from '@/components/DotMatrix/DotMatrix';

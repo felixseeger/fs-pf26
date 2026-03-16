@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useRef, useState, createContext, useContext } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import gsap from 'gsap';
 import {
   type PageTransitionType,

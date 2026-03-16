@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import ShopCartSummary from '@/components/shop/ShopCartSummary';
 import { useShopCart } from '@/components/providers/ShopCartProvider';
 

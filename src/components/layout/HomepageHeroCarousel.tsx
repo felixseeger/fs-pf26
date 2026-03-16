@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { WPPortfolioItem } from '@/types/wordpress';
 
 interface HomepageHeroCarouselProps {

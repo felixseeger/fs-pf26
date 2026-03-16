@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import Image from "next/image";
 import { getMenuItems, getHomePage, getLegalPages } from '@/lib/wordpress';
 import { WPMenuItem, SocialLink, ACFImage } from '@/types/wordpress';

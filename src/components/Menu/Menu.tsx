@@ -1,7 +1,7 @@
 'use client';
 
 import './Menu.css';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import { Sun, Moon } from 'lucide-react';

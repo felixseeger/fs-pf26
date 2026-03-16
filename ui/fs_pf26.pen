@@ -1,0 +1,33 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "bi8Au",
+      "x": 441,
+      "y": -1882,
+      "name": "Frame",
+      "clip": true,
+      "width": 3354,
+      "height": 2540,
+      "fill": "#FFFFFF",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "UwzV8",
+          "x": -4.547473508864641e-13,
+          "y": 0,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "images\\liquidgradient_01.jpg",
+            "mode": "fill"
+          },
+          "width": 3358,
+          "height": 2556
+        }
+      ]
+    }
+  ]
+}

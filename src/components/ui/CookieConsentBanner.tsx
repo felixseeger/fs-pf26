@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Cookie, Shield, BarChart3, Megaphone, Settings2 } from 'lucide-react';
 import { useCookieConsent } from '@/components/providers/CookieConsentProvider';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 interface ConsentCategory {
   id: 'essential' | 'analytics' | 'marketing' | 'preferences';

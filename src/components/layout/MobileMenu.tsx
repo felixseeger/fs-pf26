@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { usePathname } from 'next/navigation';
 import ThemeLogo from './ThemeLogo';
 import ThemeToggle from '@/components/ui/ThemeToggle';

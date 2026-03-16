@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import { Code2, Palette, Smartphone, TrendingUp, Rocket, Headphones, ChevronRight, LucideIcon } from 'lucide-react';
 import TiltCard from '@/components/ui/TiltCard';

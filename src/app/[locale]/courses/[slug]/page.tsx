@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { getCourseBySlug, getCourses, getCourseNeighbors, resolveGalleryImages, fetchGalleryMediaByIds } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
 import type { ACFImage } from '@/types/wordpress';

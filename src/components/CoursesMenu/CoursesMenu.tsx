@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import Menu, { type MenuLink, type MenuSubColumn, type MenuSocialLink } from '@/components/Menu/Menu';

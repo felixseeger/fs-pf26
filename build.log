@@ -1,0 +1,318 @@
+
+> fs-pf26@0.1.0 dev
+> node --require ./dns-fix.js ./node_modules/next/dist/bin/next dev -p 3003 --port 3003
+
+   ▲ Next.js 15.1.11
+   - Local:        http://localhost:3003
+   - Network:      http://100.80.48.128:3003
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.2s
+ ○ Compiling / ...
+ ✓ Compiled / in 17.1s (5880 modules)
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/portfolio?_embed=true&per_page=12&page=1&orderby=date&order=desc
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/services?_embed=true&per_page=24&page=1&orderby=menu_order&order=asc
+WordPress API response status: 200
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API response status: 200
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API data received: 12 items
+WordPress API data received: 9 items
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=not-found&_embed=true
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+WordPress API response status: 200
+WordPress API response status: 200
+WordPress API data received: 1 items
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=impressum&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=imprint&_embed=true
+WordPress API response status: 200
+WordPress API data received: 3 items
+WordPress API response status: 200
+WordPress API response status: 200
+WordPress API data received: 3 items
+WordPress API data received: 3 items
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=impress&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy-policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy-policy-2&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=policies&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=datenschutz&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookies&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie-policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie-policy-2&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=terms&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=terms-of-service&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+ GET / 200 in 25808ms
+ ✓ Compiled in 1514ms (5818 modules)
+ ○ Compiling /shop ...
+ ✓ Compiled /shop in 1510ms (5778 modules)
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+ ✓ Compiled in 648ms (2858 modules)
+WooCommerce API error 401 for /products/categories
+WooCommerce API error 401 for /products
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=not-found&_embed=true
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+WordPress API response status: 200
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API data received: 0 items
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=impressum&_embed=true
+WordPress API response status: 200
+WordPress API response status: 200
+WordPress API response status: 200
+WordPress API response status: 200
+WordPress API data received: 3 items
+WordPress API data received: 3 items
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=imprint&_embed=true
+WordPress API data received: 3 items
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=impress&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy-policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy-policy-2&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=policies&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=datenschutz&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookies&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie-policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie-policy-2&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=terms&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=terms-of-service&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+ GET /shop 200 in 9728ms
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+WooCommerce API error 401 for /products
+WooCommerce API error 401 for /products/categories
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=not-found&_embed=true
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+WordPress API response status: 200
+WordPress API data received: 0 items
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=impressum&_embed=true
+WordPress API response status: 200
+WordPress API response status: 200
+WordPress API data received: 3 items
+WordPress API data received: 0 items
+WordPress API response status: 200
+WordPress API response status: 200
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=imprint&_embed=true
+WordPress API data received: 3 items
+WordPress API data received: 3 items
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=impress&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy-policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy-policy-2&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=policies&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=datenschutz&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookies&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie-policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie-policy-2&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=terms&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=terms-of-service&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+ GET /shop 200 in 1501ms
+ ○ Compiling / ...
+ ✓ Compiled / in 612ms (2965 modules)
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/portfolio?_embed=true&per_page=12&page=1&orderby=date&order=desc
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/services?_embed=true&per_page=24&page=1&orderby=menu_order&order=asc
+WordPress API response status: 200
+WordPress API response status: 200
+WordPress API data received: 12 items
+WordPress API data received: 9 items
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=not-found&_embed=true
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/front-page
+WordPress API response status: 200
+WordPress API data received: 0 items
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+WordPress API response status: 404
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=homepage&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/navigation?per_page=100
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=impressum&_embed=true
+WordPress API response status: 200
+WordPress API response status: 200
+WordPress API data received: 3 items
+WordPress API data received: 0 items
+WordPress API response status: 200
+WordPress API response status: 200
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=imprint&_embed=true
+WordPress API data received: 3 items
+WordPress API data received: 3 items
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=impress&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy-policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy-policy-2&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=privacy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=policies&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=datenschutz&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookies&_embed=true
+WordPress API response status: 200
+WordPress API data received: 1 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie-policy&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie-policy-2&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=cookie&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=terms&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+Fetching from WordPress API: https://fs26-back.felixseeger.de/wp-json/wp/v2/pages?slug=terms-of-service&_embed=true
+WordPress API response status: 200
+WordPress API data received: 0 items
+ GET / 200 in 2045ms
+[?25h

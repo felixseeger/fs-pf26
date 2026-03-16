@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { CheckCircle } from 'lucide-react';
 import { getBreadcrumbItems } from '@/lib/breadcrumbs';
 import Breadcrumb from '@/components/ui/Breadcrumb';

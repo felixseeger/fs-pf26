@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import { getCanonicalUrl } from '@/lib/site-config';

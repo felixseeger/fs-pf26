@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import Link from 'next/link';
 import AnimatedLink from '@/components/ui/AnimatedLink';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -15,6 +13,8 @@ import LiquidGradientBackground, { type GradientColor } from '@/components/ui/Li
 import { DEFAULT_SOCIAL_URLS } from '@/lib/site-config';
 import { playMenuOpen, playMenuClose, playMenuSelect } from '@/lib/menu-sounds';
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
+import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/navigation';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,23 +42,7 @@ function getGradientColors(pathname: string) {
   return GRADIENT_BY_PATH['/'];
 }
 
-const navLinks = [
-    { name: 'About', href: '/#about' },
-    { name: 'Services', href: '/#services' },
-    { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Courses', href: '/courses' },
-    { name: 'Shop', href: '/shop' },
-];
-
-const mobileNavLinks = [
-    ...navLinks,
-    { name: 'Resume', href: '/resume' },
-];
-
-const legalLinks = [
-    { name: 'Impressum', href: '/impressum' },
-    { name: 'Privacy Policy', href: '/privacy-policy' },
-];
+// Nav links are built inside the component so labels can be translated
 
 const socialLinkLabels: Record<string, string> = {
     twitter: 'Twitter',
@@ -71,12 +55,6 @@ const socialLinkLabels: Record<string, string> = {
 const mobileSocialLinks = (Object.entries(DEFAULT_SOCIAL_URLS) as [string, string][])
     .filter(([, url]) => url?.trim())
     .map(([key, href]) => ({ name: socialLinkLabels[key] ?? key, href }));
-
-const allMobileNavLinks = [
-    ...mobileNavLinks,
-    ...mobileSocialLinks,
-    ...legalLinks,
-];
 
 const mobileMenuContainerVariants = {
     hidden: { opacity: 0 },
@@ -94,10 +72,36 @@ const mobileMenuItemVariants = {
 };
 
 export default function Header({ locale = 'de' }: { locale?: string }) {
+    const t = useTranslations('nav');
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
 
+    // usePathname from next-intl strips the locale prefix → always returns /about, /portfolio, etc.
     const pathname = usePathname();
+
+    const navLinks = [
+        { name: t('about'),     href: '/#about'    },
+        { name: t('services'),  href: '/#services'  },
+        { name: t('portfolio'), href: '/portfolio'  },
+        { name: t('courses'),   href: '/courses'    },
+        { name: t('shop'),      href: '/shop'       },
+    ];
+
+    const mobileNavLinks = [
+        ...navLinks,
+        { name: t('resume'), href: '/resume' },
+    ];
+
+    const legalLinks = [
+        { name: 'Impressum',     href: '/impressum'      },
+        { name: 'Privacy Policy', href: '/privacy-policy' },
+    ];
+
+    const allMobileNavLinks = [
+        ...mobileNavLinks,
+        ...mobileSocialLinks,
+        ...legalLinks,
+    ];
     const { setTheme, resolvedTheme } = useTheme();
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -407,7 +411,7 @@ export default function Header({ locale = 'de' }: { locale?: string }) {
                             {renderNavLinks(2, 5)}
                             <div className="hidden lg:flex items-center gap-6">
                                 <Link href="/resume" onClick={() => playMenuSelect()} className="bg-primary text-primary-foreground px-5 py-2.5 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-lg inline-flex items-center gap-2">
-                                    Resume
+                                    {t('resume')}
                                 </Link>
                                 <LanguageSwitcher locale={locale} />
                                 <button onClick={toggleTheme} className="p-2 bg-muted rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
@@ -496,7 +500,7 @@ export default function Header({ locale = 'de' }: { locale?: string }) {
                                 className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 items-center gap-6"
                             >
                                 <Link href="/resume" onClick={() => playMenuSelect()} className="bg-primary text-primary-foreground px-6 py-3 font-unbounded font-black text-[10px] tracking-widest uppercase rounded-md shadow-xl pointer-events-auto inline-flex items-center gap-2">
-                                    Resume
+                                    {t('resume')}
                                 </Link>
                                 <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-muted transition-colors pointer-events-auto bg-white/10 backdrop-blur-md" aria-label={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
                                     {resolvedTheme === 'dark' ? <Sun size={20} className="text-foreground" aria-hidden /> : <Moon size={20} className="text-foreground" aria-hidden />}

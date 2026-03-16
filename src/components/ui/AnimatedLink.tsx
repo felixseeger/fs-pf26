@@ -1,10 +1,11 @@
 'use client';
 
-import NextLink from 'next/link';
+import { Link as LocaleLink } from '@/i18n/navigation';
 import { usePageTransition } from '@/components/providers/PageTransitionProvider';
 import type { PageTransitionType } from '@/lib/page-transitions';
+import type { ComponentProps } from 'react';
 
-export interface AnimatedLinkProps extends React.ComponentProps<typeof NextLink> {
+export interface AnimatedLinkProps extends ComponentProps<typeof LocaleLink> {
   /** Transition to use for this link. Omit to use the default. */
   transition?: PageTransitionType;
   /** If true, use normal navigation without transition (e.g. external or hash) */
@@ -37,5 +38,5 @@ export default function AnimatedLink({
     }
   };
 
-  return <NextLink href={href} onClick={handleClick} {...rest} />;
+  return <LocaleLink href={href} onClick={handleClick} {...rest} />;
 }

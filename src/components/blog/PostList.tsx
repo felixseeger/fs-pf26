@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { WPPost } from '@/types/wordpress';
 import PostCard from './PostCard';
 import EmptyState from './EmptyState';

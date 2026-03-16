@@ -3,7 +3,7 @@
 import { useState, FormEvent, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Check, AlertCircle, Loader2, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 export interface NewsletterCollectProps {
   /** Which MailerLite group to subscribe to */

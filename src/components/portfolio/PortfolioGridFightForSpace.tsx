@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import gsap from 'gsap';
 
 import type { WPPortfolioItem, WPCategory } from '@/types/wordpress';

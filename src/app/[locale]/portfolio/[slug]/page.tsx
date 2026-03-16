@@ -5,7 +5,7 @@ import { getServiceItems } from '@/lib/wordpress/services';
 import { getCanonicalUrl } from '@/lib/site-config';
 import { getServicesMatchingPortfolioCategories } from '@/lib/portfolio-utils';
 import { getPortfolioSliderMedia, getPortfolioFallbackImages, getPortfolioContentVideoUrl } from '@/lib/wordpress/portfolio-media';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import PortfolioCarousel from '@/components/portfolio/PortfolioCarousel';
 import DisplayCarousel from '@/components/courses/DisplayCarousel';
 import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigation';
