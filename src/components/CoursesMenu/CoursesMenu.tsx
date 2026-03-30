@@ -37,7 +37,6 @@ const defaultLegalLinks: MenuLink[] = [
 
 const defaultSocialLinks: MenuSocialLink[] = [
   { href: DEFAULT_SOCIAL_URLS.twitter || '#', label: 'Twitter' },
-  { href: DEFAULT_SOCIAL_URLS.instagram || '#', label: 'Instagram' },
   { href: DEFAULT_SOCIAL_URLS.linkedin || '#', label: 'LinkedIn' },
 ].filter((s) => s.href !== '#');
 

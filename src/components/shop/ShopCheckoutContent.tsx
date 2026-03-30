@@ -264,20 +264,6 @@ export default function ShopCheckoutContent() {
                     />
                   </label>
 
-                  {(accountMode === 'guest' || accountMode === 'register') && (
-                    <label className="space-y-2">
-                      <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                        Telefon
-                      </span>
-                      <input
-                        value={form.phone}
-                        onChange={(event) => updateField('phone', event.target.value)}
-                        className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition-colors focus:border-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:focus:border-white"
-                        placeholder="+49 123 456789"
-                      />
-                    </label>
-                  )}
-
                   {(accountMode === 'login' || accountMode === 'register') && (
                     <label className="space-y-2">
                       <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
@@ -381,11 +367,6 @@ export default function ShopCheckoutContent() {
                       <p>
                         <span className="font-semibold text-zinc-900 dark:text-white">E-Mail:</span> {form.email}
                       </p>
-                      {form.phone && (
-                        <p>
-                          <span className="font-semibold text-zinc-900 dark:text-white">Telefon:</span> {form.phone}
-                        </p>
-                      )}
                     </div>
                   </div>
 

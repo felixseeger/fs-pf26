@@ -297,22 +297,36 @@ export default function PixelatedVideoSlide({
       textContainer.appendChild(textCanvas);
     }
 
+    let rafId = 0;
+    let isPaused = false;
+
     const render = () => {
       if (isDestroyed) return;
 
-      time += 0.05;
-      updateAllDataTextures();
-      if (material) material.uniforms.time.value = time;
-      if (videoTexture) videoTexture.needsUpdate = true;
+      if (!isPaused) {
+        time += 0.05;
+        updateAllDataTextures();
+        if (material) material.uniforms.time.value = time;
+        if (videoTexture) videoTexture.needsUpdate = true;
 
-      if (renderer) renderer.render(scene!, camera);
-      if (textRenderer && textMaterial && textScene && textCamera) {
-        textMaterial.uniforms.time.value = time;
-        textRenderer.render(textScene, textCamera);
+        if (renderer) renderer.render(scene!, camera);
+        if (textRenderer && textMaterial && textScene && textCamera) {
+          textMaterial.uniforms.time.value = time;
+          textRenderer.render(textScene, textCamera);
+        }
       }
 
-      requestAnimationFrame(render);
+      rafId = requestAnimationFrame(render);
     };
+
+    const handleVisibilityChange = () => { isPaused = document.hidden; };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => { isPaused = !entries[0].isIntersecting; },
+      { threshold: 0 }
+    );
+    intersectionObserver.observe(container);
 
     const onVideoLoaded = () => {
       initVideoEffect();
@@ -378,6 +392,9 @@ export default function PixelatedVideoSlide({
     effectRef.current = {
       destroy: () => {
         isDestroyed = true;
+        cancelAnimationFrame(rafId);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        intersectionObserver.disconnect();
         container.removeEventListener('mousemove', handlePointerMove);
         window.removeEventListener('resize', handleResize);
         if (video) video.style.opacity = '1';
@@ -414,6 +431,7 @@ export default function PixelatedVideoSlide({
         muted
         loop
         playsInline
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-cover z-0"
         aria-hidden
       >

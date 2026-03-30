@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from '@/i18n/navigation';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useLocale } from 'next-intl';
 import gsap from 'gsap';
 
 import type { WPPortfolioItem, WPCategory } from '@/types/wordpress';
@@ -34,20 +36,15 @@ export default function PortfolioGridFightForSpace({
   items,
   title,
 }: PortfolioGridFightForSpaceProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null,
-  );
+  const locale = useLocale();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const rowsRef = useRef<HTMLDivElement[]>([]);
   const rowStartWidth = useRef(125);
   const rowEndWidth = useRef(500);
 
-  const categories = useMemo(
-    () => getCategoriesFromPortfolioItems(items),
-    [items],
-  );
-
+  const categories = useMemo(() => getCategoriesFromPortfolioItems(items), [items]);
   const filteredItems = useMemo(
     () => filterPortfolioItemsByCategory(items, selectedCategoryId),
     [items, selectedCategoryId],
@@ -55,35 +52,27 @@ export default function PortfolioGridFightForSpace({
 
   const projects: FightForSpaceProject[] = useMemo(() => {
     if (!filteredItems || filteredItems.length === 0) return [];
-
     return filteredItems.map((item) => {
       const featuredImage = item._embedded?.['wp:featuredmedia']?.[0];
-      const contentImages = extractImagesFromContent(
-        item.content?.rendered || '',
-      );
+      const contentImages = extractImagesFromContent(item.content?.rendered || '');
       const fallbackImage = contentImages[0];
-      const displayImageUrl =
-        featuredImage?.source_url ?? fallbackImage?.url ?? '';
+      const displayImageUrl = featuredImage?.source_url ?? fallbackImage?.url ?? '';
       const displayImageAlt =
-        featuredImage?.alt_text ||
-        fallbackImage?.altText ||
-        item.title?.rendered ||
-        'Project Image';
-      const year = new Date(item.date).getFullYear().toString();
-      const cats = (item._embedded?.['wp:term']?.[0] ||
-        []) as WPCategory[];
-
+        featuredImage?.alt_text || fallbackImage?.altText || item.title?.rendered || 'Project Image';
+      const parsedYear = item.date ? new Date(item.date).getFullYear() : NaN;
+      const year = Number.isFinite(parsedYear) ? parsedYear.toString() : '';
+      const cats = (item._embedded?.['wp:term']?.[0] || []) as WPCategory[];
       return {
         id: item.id,
-        name: item.acf?.portfolio_title || item.title?.rendered || 'Untitled',
+        name: (item.acf?.portfolio_title || item.title?.rendered || 'Untitled').replace(/<[^>]*>/g, '').trim(),
         year,
-        href: `/portfolio/${item.slug}`,
+        href: `/${locale}/portfolio/${item.slug}`,
         img: displayImageUrl,
         alt: displayImageAlt,
         categories: cats,
       };
     });
-  }, [filteredItems]);
+  }, [filteredItems, locale]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -96,29 +85,30 @@ export default function PortfolioGridFightForSpace({
     rowStartWidth.current = isMobile ? 250 : 125;
     rowEndWidth.current = isMobile ? 750 : 500;
 
+    // Measure section height at full expansion, then reset rows.
     const firstRow = rows[0];
     firstRow.style.width = `${rowEndWidth.current}%`;
     const expandedRowHeight = firstRow.offsetHeight;
     firstRow.style.width = '';
 
-    const computed = getComputedStyle(section);
-    const sectionGap = parseFloat(computed.gap || '0') || 0;
-    const sectionPadding =
-      parseFloat(computed.paddingTop || '0') || 0;
-
-    const expandedSectionHeight =
+    const sectionGap = parseFloat(getComputedStyle(section).gap) || 0;
+    const sectionPadding = parseFloat(getComputedStyle(section).paddingTop) || 0;
+    section.style.height = `${
       expandedRowHeight * rows.length +
       sectionGap * (rows.length - 1) +
-      sectionPadding * 2;
-
-    section.style.height = `${expandedSectionHeight}px`;
+      sectionPadding * 2
+    }px`;
 
     function onScrollUpdate() {
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
 
-      rows.forEach((row) => {
-        const rect = row.getBoundingClientRect();
+      // Batch reads first.
+      const rects = rows.map((row) => row.getBoundingClientRect());
+
+      // Batch writes after.
+      rows.forEach((row, i) => {
+        const rect = rects[i];
         const rowTop = rect.top + scrollY;
         const rowBottom = rowTop + rect.height;
 
@@ -128,62 +118,50 @@ export default function PortfolioGridFightForSpace({
         let progress = (scrollY - scrollStart) / (scrollEnd - scrollStart);
         progress = Math.max(0, Math.min(1, progress));
 
-        const width =
+        row.style.width = `${
           rowStartWidth.current +
-          (rowEndWidth.current - rowStartWidth.current) * progress;
-        row.style.width = `${width}%`;
+          (rowEndWidth.current - rowStartWidth.current) * progress
+        }%`;
       });
     }
 
     gsap.ticker.add(onScrollUpdate);
 
+    let resizeTimeout: ReturnType<typeof setTimeout>;
     const handleResize = () => {
-      const isNowMobile = window.innerWidth < 1000;
-      rowStartWidth.current = isNowMobile ? 250 : 125;
-      rowEndWidth.current = isNowMobile ? 750 : 500;
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const isNowMobile = window.innerWidth < 1000;
+        rowStartWidth.current = isNowMobile ? 250 : 125;
+        rowEndWidth.current = isNowMobile ? 750 : 500;
 
-      if (!rows[0]) return;
+        firstRow.style.width = `${rowEndWidth.current}%`;
+        const newRowHeight = firstRow.offsetHeight;
+        firstRow.style.width = '';
 
-      rows[0].style.width = `${rowEndWidth.current}%`;
-      const newRowHeight = rows[0].offsetHeight;
-      rows[0].style.width = '';
-
-      const computedResize = getComputedStyle(section);
-      const resizeGap = parseFloat(computedResize.gap || '0') || 0;
-      const resizePadding =
-        parseFloat(computedResize.paddingTop || '0') || 0;
-
-      const newSectionHeight =
-        newRowHeight * rows.length +
-        resizeGap * (rows.length - 1) +
-        resizePadding * 2;
-
-      section.style.height = `${newSectionHeight}px`;
+        section.style.height = `${
+          newRowHeight * rows.length +
+          sectionGap * (rows.length - 1) +
+          sectionPadding * 2
+        }px`;
+      }, 100);
     };
 
     window.addEventListener('resize', handleResize);
-
     return () => {
       gsap.ticker.remove(onScrollUpdate);
       window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
     };
   }, [projects.length]);
 
   if (!projects || projects.length === 0) {
     return (
       <section className="w-full">
-        {title && (
-          <h2 className="text-3xl font-bold mb-8 text-black dark:text-white">
-            {title}
-          </h2>
-        )}
+        {title && <h2 className="text-3xl font-bold mb-8 text-black dark:text-white">{title}</h2>}
         {categories.length > 0 && (
           <div className="mb-8 flex justify-center">
-            <PortfolioCategoryFilter
-              categories={categories}
-              selectedId={selectedCategoryId}
-              onSelect={setSelectedCategoryId}
-            />
+            <PortfolioCategoryFilter categories={categories} selectedId={selectedCategoryId} onSelect={setSelectedCategoryId} />
           </div>
         )}
         <div className="text-center py-12">
@@ -195,37 +173,28 @@ export default function PortfolioGridFightForSpace({
 
   const rowsData: FightForSpaceProject[][] = [];
   let currentProjectIndex = 0;
-
   for (let r = 0; r < TOTAL_ROWS; r++) {
-    const rowProjects: FightForSpaceProject[] = [];
+    const row: FightForSpaceProject[] = [];
     for (let c = 0; c < PROJECTS_PER_ROW; c++) {
-      const project = projects[currentProjectIndex % projects.length];
-      rowProjects.push(project);
+      row.push(projects[currentProjectIndex % projects.length]);
       currentProjectIndex++;
     }
-    rowsData.push(rowProjects);
+    rowsData.push(row);
   }
 
   rowsRef.current = [];
 
   return (
     <section className="relative left-1/2 right-1/2 -ml-[50vw] w-screen">
-      {title && (
-        <h2 className="text-3xl font-bold mb-8 text-black dark:text-white">
-          {title}
-        </h2>
-      )}
+      {title && <h2 className="text-3xl font-bold mb-8 text-black dark:text-white">{title}</h2>}
 
       {categories.length > 0 && (
         <div className="mb-8 flex justify-center">
-          <PortfolioCategoryFilter
-            categories={categories}
-            selectedId={selectedCategoryId}
-            onSelect={setSelectedCategoryId}
-          />
+          <PortfolioCategoryFilter categories={categories} selectedId={selectedCategoryId} onSelect={setSelectedCategoryId} />
         </div>
       )}
 
+      {/* Mirror reference: section with overflow:hidden, rows start at 125% */}
       <section
         ref={sectionRef}
         className="relative w-full py-2 flex flex-col items-center gap-2 overflow-hidden"
@@ -233,48 +202,39 @@ export default function PortfolioGridFightForSpace({
         {rowsData.map((rowProjects, rowIndex) => (
           <div
             key={rowIndex}
+            style={{ width: `${rowStartWidth.current}%` }}
             className="flex gap-4"
-            ref={(el) => {
-              if (el) rowsRef.current[rowIndex] = el;
-            }}
+            ref={(el) => { if (el) rowsRef.current[rowIndex] = el; }}
           >
             {rowProjects.map((project, colIndex) => (
-              <div
+              <Link
                 key={`${project.id}-${colIndex}`}
+                href={project.href}
                 className="group flex-1 aspect-7/5 flex flex-col overflow-hidden"
               >
-                <Link
-                  href={project.href}
-                  className="relative flex-1 min-h-0 overflow-hidden block bg-zinc-100 dark:bg-zinc-900 rounded-lg"
-                >
+                {/* Image — flex:1 min-h-0 mirrors reference .project-img */}
+                <div className="relative flex-1 min-h-0 overflow-hidden bg-zinc-100 dark:bg-zinc-800 rounded-sm">
                   {project.img && (
-                    <img
+                    <Image
                       src={project.img}
                       alt={project.alt}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 rounded-lg"
-                      loading="lazy"
+                      fill
+                      sizes="(max-width: 1000px) 84vw, 56vw"
+                      quality={85}
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   )}
-                  <div className="pointer-events-none absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span
-                      className="text-xs font-semibold uppercase tracking-tight text-white line-clamp-2"
-                      dangerouslySetInnerHTML={{ __html: project.name }}
-                    />
-                    {project.categories.length > 0 && (
-                      <div className="mt-1 flex flex-wrap gap-1">
-                        {project.categories.map((cat) => (
-                          <span
-                            key={cat.id}
-                            className="text-[0.65rem] uppercase tracking-wide px-2 py-0.5 rounded-full bg-white/10 text-zinc-100"
-                          >
-                            {cat.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              </div>
+                </div>
+                {/* Info row — mirrors reference .project-info */}
+                <div className="flex items-center justify-between pt-1 shrink-0">
+                  <p className="text-[0.6rem] uppercase tracking-tight font-medium text-zinc-900 dark:text-white truncate">
+                    {project.name}
+                  </p>
+                  <p className="text-[0.6rem] uppercase tracking-tight font-medium text-zinc-500 shrink-0 ml-1">
+                    {project.year}
+                  </p>
+                </div>
+              </Link>
             ))}
           </div>
         ))}
@@ -282,4 +242,3 @@ export default function PortfolioGridFightForSpace({
     </section>
   );
 }
-

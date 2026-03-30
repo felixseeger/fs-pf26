@@ -11,8 +11,13 @@ export const metadata: Metadata = {
     alternates: { canonical: getCanonicalUrl('/portfolio') },
 };
 
-export default async function PortfolioPage() {
-    const items = await getPortfolioItems(100);
+export default async function PortfolioPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    const items = await getPortfolioItems(100, 1, locale).catch(() => []);
 
     return (
         <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>

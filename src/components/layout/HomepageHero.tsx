@@ -27,7 +27,6 @@ interface HomepageHeroProps {
   scrollHintText?: string;
 }
 
-const HERO_REF_APNG = '/fs-pf-26.apng';
 const HERO_REF_MP4 = '/fs-pf-26.mp4';
 
 export default function HomepageHero({
@@ -42,8 +41,6 @@ export default function HomepageHero({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [showContent, setShowContent] = useState(false);
-  const [apngReady, setApngReady] = useState(false);
-  const [apngFailed, setApngFailed] = useState(false);
   const [showScrollHint, setShowScrollHint] = useState(true);
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -73,11 +70,19 @@ export default function HomepageHero({
   useEffect(() => {
     setMounted(true);
 
-    // Hero intro only on initial page load. When coming from subpage or returning
-    // visitor, show content immediately so scroll works.
+    // Returning visitors (or subpage navigation): show content immediately.
+    // First-time visitors: wait for the preloader-complete event so hero text
+    // appears exactly when the preloader finishes — no hardcoded guessing.
     const skipIntro = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('homePreloaderShown');
-    const delay = skipIntro ? 0 : 2200;
-    const timer = setTimeout(() => setShowContent(true), delay);
+    let contentTimer = 0;
+    const onPreloaderDone = () => setShowContent(true);
+    if (skipIntro) {
+      setShowContent(true);
+    } else {
+      window.addEventListener('preloader-complete', onPreloaderDone, { once: true });
+      // Safety fallback: if event never fires (tab backgrounded, reduced motion, etc.)
+      contentTimer = window.setTimeout(onPreloaderDone, 6000);
+    }
 
     // Hide scroll hint when user scrolls past hero
     const handleScroll = () => {
@@ -91,13 +96,18 @@ export default function HomepageHero({
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    if (!emblaApi) return;
+    if (!emblaApi) return () => {
+      clearTimeout(contentTimer);
+      window.removeEventListener('preloader-complete', onPreloaderDone);
+      window.removeEventListener('scroll', handleScroll);
+    };
     onSelect();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
 
     return () => {
-      clearTimeout(timer);
+      clearTimeout(contentTimer);
+      window.removeEventListener('preloader-complete', onPreloaderDone);
       window.removeEventListener('scroll', handleScroll);
     };
   }, [emblaApi, onSelect]);
@@ -119,7 +129,7 @@ export default function HomepageHero({
   return (
     <section
       id="hero"
-      className="relative w-full h-[150vh] overflow-visible bg-background"
+      className="relative w-full h-[115vh] overflow-visible bg-background"
     >
       {/* Stick the slideshow to the viewport */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
@@ -137,31 +147,6 @@ export default function HomepageHero({
           )}
         </div>
 
-        {/* Reference hero background (hidden when carousel/pixelated slide is shown) */}
-        <div className="absolute inset-0 z-0 opacity-0 pointer-events-none" aria-hidden>
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className={`absolute inset-0 w-full h-full object-cover ${apngReady ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-            aria-hidden
-          >
-            <source src={HERO_REF_MP4} type="video/mp4" />
-          </video>
-          {!apngFailed && (
-            <img
-              src={HERO_REF_APNG}
-              alt=""
-              role="presentation"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${apngReady ? 'opacity-100' : 'opacity-0'}`}
-              onLoad={() => setApngReady(true)}
-              onError={() => setApngFailed(true)}
-            />
-          )}
-          <div className="absolute inset-0 bg-background/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
-        </div>
 
         {/* Embla Viewport: Pixelated slide first, then portfolio images */}
         {(
@@ -230,7 +215,7 @@ export default function HomepageHero({
                       animate={{ opacity: 1, y: -39 }}
                       transition={{ delay: 0.5, duration: 0.6 }}
                     >
-                      <span className="inline-block px-4 py-1.5 md:px-5 md:py-2 mb-6 md:mb-8 text-[9px] md:text-[10px] font-black tracking-[0.3em] uppercase bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full">
+                      <span className="inline-block max-w-xs truncate px-4 py-1.5 md:px-5 md:py-2 mb-6 md:mb-8 text-[9px] md:text-[10px] font-black tracking-[0.3em] uppercase bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full">
                         {badge}
                       </span>
                       <h2

@@ -28,10 +28,28 @@
   },
   "contact": {
     "title": "Contact",
+    "badge": "Contact",
     "nameLabel": "Name",
     "emailLabel": "Email",
     "subjectLabel": "Subject",
     "messageLabel": "Message",
+    "availableForProjects": "Available for projects",
+    "fullNamePlaceholder": "Full Name *",
+    "emailAddressPlaceholder": "Email Address *",
+    "subjectPlaceholder": "Subject *",
+    "serviceTypePlaceholder": "Service type *",
+    "projectPlaceholder": "Tell me about your project *",
+    "heardFromLabel": "How did you find me?",
+    "privacyConsentPrefix": "By submitting this form, I agree to the ",
+    "privacyPolicyLabel": "Privacy Policy",
+    "privacyConsentSuffix": ".",
+    "genericError": "Something went wrong. Please try again.",
+    "sending": "Sending…",
+    "messageReceivedTitle": "Message received.",
+    "messageReceivedBody": "I'll read it myself and get back to you within a day or two.",
+    "sendAnotherMessage": "Send another message",
+    "getDirections": "Get directions",
+    "sendMessageCta": "Send message",
     "sendButton": "Send message",
     "successMessage": "Thank you! Your message was sent successfully.",
     "errorMessage": "There was an error sending your message. Please try again."
@@ -56,6 +74,12 @@
     "imprint": "Imprint",
     "privacy": "Privacy",
     "contact": "Contact"
+  },
+  "services": {
+    "label": "Services",
+    "disciplines": "disciplines",
+    "ctaTagline": "Every project starts with a conversation — not a proposal.",
+    "ctaButton": "Start a project"
   },
   "meta": {
     "language": "en",

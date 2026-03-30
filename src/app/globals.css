@@ -378,9 +378,31 @@ body.maintenance-page footer:not(main footer) {
   animation: featured-image-write-in 0.9s ease-out forwards;
 }
 
-/* Page transition overlay: blur preset uses translucent background */
-.page-transition-overlay[data-transition="blur"] {
-  background: hsl(var(--background) / 0.85);
+/* SVG stroke page transition */
+:root {
+  --transition-stroke-1: #a3e635;  /* lime — brand primary */
+  --transition-stroke-2: #011627;  /* navy — brand background */
+}
+
+.page-transition-svg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.5);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.page-transition-svg svg {
+  width: 100%;
+  height: 100%;
+}
+
+.page-transition-svg path {
+  stroke-dashoffset: 99999;
+  stroke-dasharray: 99999;
 }
 
 /* Skeleton loading: texture backgrounds */

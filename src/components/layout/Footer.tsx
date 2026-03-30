@@ -55,19 +55,49 @@ export default async function Footer({ locale }: { locale?: string }) {
   let footerCopyright = `© ${currentYear} Felix Seeger.`;
   let socialLinks: SocialLink[] = [];
   let footerImage: ACFImage | null = null;
+  const disallowedPlatforms: SocialLink['platform'][] = ['twitter'];
+
+  const isHiddenFooterNavLink = (href: string): boolean => {
+    const normalized = href.trim().toLowerCase();
+    return [
+      '/about',
+      '/ueber-mich',
+      '/services',
+      '/portfolio',
+      '/contact',
+      '/kontakt',
+      '/#about',
+      '/#services',
+      '#about',
+      '#services',
+    ].includes(normalized);
+  };
 
   try {
     const homePage = await getHomePage({ lang });
     const acf = homePage?.meta_box ?? homePage?.acf;
     const quickLinksMenuSlug = acf?.footer_quick_links_menu?.trim() || 'quick-links';
-    const legalMenuSlug = acf?.footer_legal_menu?.trim() || 'footer-legal';
+    const legalMenuSlugFromAcf = acf?.footer_legal_menu?.trim();
 
-    const [quickLinksMenu, secondaryMenu, legalMenu, legalPages] = await Promise.all([
+    const [quickLinksMenu, secondaryMenu, legalPages] = await Promise.all([
       getMenuItems(quickLinksMenuSlug, lang),
       getMenuItems('secondary-navigation', lang),
-      getMenuItems(legalMenuSlug, lang),
       getLegalPages(undefined, lang),
     ]);
+
+    const legalSlugCandidates = Array.from(new Set([
+      legalMenuSlugFromAcf,
+      `footer_legal-${lang}`,
+      `footer-legal-${lang}`,
+      'footer_legal',
+      'footer-legal',
+    ].filter(Boolean) as string[]));
+
+    let legalMenu: WPMenuItem[] = [];
+    for (const candidate of legalSlugCandidates) {
+      legalMenu = await getMenuItems(candidate, lang);
+      if (legalMenu.length > 0) break;
+    }
 
     quickLinksItems = Array.isArray(quickLinksMenu) && quickLinksMenu.length > 0
       ? quickLinksMenu
@@ -96,10 +126,12 @@ export default async function Footer({ locale }: { locale?: string }) {
   if (quickLinksItems.length > 0) {
     quickLinksItems.forEach((item: WPMenuItem) => {
       const { href, external } = toFrontendHref(item.url);
-      navLinks.push({ title: item.title, href, external });
+      if (!isHiddenFooterNavLink(href)) {
+        navLinks.push({ title: item.title, href, external });
+      }
     });
   } else {
-    navLinks.push({ title: 'Home', href: '/' }, { title: 'About', href: '/about' }, { title: 'Contact', href: '/contact' });
+    navLinks.push({ title: 'Home', href: '/' });
   }
   legalLinks.forEach((item) => navLinks.push(item));
   if (legalLinks.length === 0) {
@@ -116,9 +148,9 @@ export default async function Footer({ locale }: { locale?: string }) {
   return (
     <footer className="bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-6" suppressHydrationWarning>
-        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4" suppressHydrationWarning>
-          {/* Logo + Social icons */}
-          <div className="flex items-center gap-3 shrink-0" suppressHydrationWarning>
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-x-6 gap-y-4" suppressHydrationWarning>
+          {/* Logo + Copyright */}
+          <div className="flex items-center gap-3 shrink-0 md:justify-self-start" suppressHydrationWarning>
             {footerImage && (
               <Link href="/" suppressHydrationWarning>
                 <Image
@@ -131,62 +163,65 @@ export default async function Footer({ locale }: { locale?: string }) {
                 />
               </Link>
             )}
+            <div className="font-footer-mono flex items-center shrink-0" suppressHydrationWarning>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-nowrap" suppressHydrationWarning>
+                {copyrightDisplay}
+              </p>
+            </div>
+          </div>
+
+          {/* Navigation links + Social icons */}
+          <div className="flex flex-wrap items-center justify-center gap-4 md:justify-self-center" suppressHydrationWarning>
+            <nav className="font-footer-mono flex flex-wrap items-center gap-x-4 gap-y-1" aria-label="Footer navigation" suppressHydrationWarning>
+              {navLinks.map((item, index) => (
+                <span key={item.href + index} className="inline-flex items-center gap-x-4">
+                  {index > 0 && <span className="text-zinc-400 dark:text-zinc-500 select-none" aria-hidden>|</span>}
+                  {item.external ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm uppercase text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                      {item.title}
+                    </a>
+                  ) : (
+                    <Link href={item.href} className="text-sm uppercase text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
+                      {item.title}
+                    </Link>
+                  )}
+                </span>
+              ))}
+            </nav>
+
             <div className="flex items-center gap-4 shrink-0" suppressHydrationWarning>
               {socialLinks.length > 0 ? (
-                socialLinks.map((link, index) => (
+                socialLinks
+                .filter((link) => !disallowedPlatforms.includes(link.platform))
+                .map((link, index) => (
                   <a
                     key={index}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                    className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:scale-110 transition-all duration-200"
                     aria-label={link.platform}
                   >
                     <SocialIcon platform={link.platform} className="w-5 h-5" />
                   </a>
                 ))
               ) : (
-                (['linkedin', 'twitter', 'github'] as const).map((platform) => {
+                (['linkedin', 'github'] as const).map((platform) => {
                   const url = DEFAULT_SOCIAL_URLS[platform];
                   if (!url) return null;
                   return (
-                    <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors" aria-label={platform}>
+                    <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:scale-110 transition-all duration-200" aria-label={platform}>
                       <SocialIcon platform={platform} className="w-5 h-5" />
                     </a>
                   );
                 })
               )}
             </div>
-          </div>
-
-          {/* Navigation links */}
-          <nav className="font-footer-mono flex flex-wrap items-center gap-x-4 gap-y-1" aria-label="Footer navigation" suppressHydrationWarning>
-            {navLinks.map((item, index) => (
-              <span key={item.href + index} className="inline-flex items-center gap-x-4">
-                {index > 0 && <span className="text-zinc-400 dark:text-zinc-500 select-none" aria-hidden>|</span>}
-                {item.external ? (
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm uppercase text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-                  >
-                    {item.title}
-                  </a>
-                ) : (
-                  <Link href={item.href} className="text-sm uppercase text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
-                    {item.title}
-                  </Link>
-                )}
-              </span>
-            ))}
-          </nav>
-
-          {/* Copyright */}
-          <div className="font-footer-mono flex items-center shrink-0" suppressHydrationWarning>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-nowrap" suppressHydrationWarning>
-              {copyrightDisplay}
-            </p>
           </div>
         </div>
       </div>

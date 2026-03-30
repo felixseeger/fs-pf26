@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Unbounded, Poppins } from "next/font/google";
 import "../globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -17,34 +16,14 @@ import JsonLd from "@/components/seo/JsonLd";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
+import PlausibleAnalytics from "@/components/analytics/PlausibleAnalytics";
 import { getHomePage } from "@/lib/wordpress";
 import { getMenuItems } from "@/lib/wordpress/menus";
 import { toFrontendHref } from "@/lib/site-config";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const unbounded = Unbounded({
-  variable: "--font-unbounded",
-  subsets: ["latin"],
-});
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
 
 const siteUrl = getSiteUrl();
 
@@ -83,8 +62,11 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  // Ensure server helpers and client provider use the route locale.
+  setRequestLocale(locale);
+
   // Fetch messages for NextIntlClientProvider
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
 
   // Fetch primary navigation from WordPress (Polylang: primary-navigation / primary-navigation-en).
   // Try "primary-navigation" first; if it returns fewer than 3 items (incomplete menu),
@@ -122,25 +104,24 @@ export default async function LocaleLayout({
   const ogLocale = locale === "de" ? "de_DE" : "en_US";
 
   return (
-    <html lang={locale} suppressHydrationWarning className="scroll-smooth">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${unbounded.variable} ${poppins.variable} font-poppins antialiased flex flex-col min-h-screen bg-background text-foreground`}
-        suppressHydrationWarning
-      >
-        {/* Suppress unhandled Event rejections before Next.js hydration */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.addEventListener('unhandledrejection',function(e){var r=e.reason;if(r&&(r instanceof Event||(r.constructor&&r.constructor.name==='Event')||(r instanceof Error&&r.message==='[object Event]')))e.preventDefault();},true);`,
-          }}
-        />
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <JsonLd />
-          <TamboProvider>
-            <ThemeProvider>
-              <ShopCartProvider>
-                <CookieConsentProvider>
-                  <PageTransitionProvider defaultTransition="slideRight">
-                    <SmoothScroll>
+    <>
+      {/* Suppress unhandled Event rejections before Next.js hydration */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.addEventListener('unhandledrejection',function(e){var r=e.reason;if(r&&(r instanceof Event||(r.constructor&&r.constructor.name==='Event')||(r instanceof Error&&r.message==='[object Event]')))e.preventDefault();},true);`,
+        }}
+      />
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <JsonLd />
+        <TamboProvider>
+          <ThemeProvider>
+            <ShopCartProvider>
+              <CookieConsentProvider>
+                <PageTransitionProvider defaultTransition="slideRight">
+                  <SmoothScroll>
+                    <div
+                      className="scroll-smooth font-poppins antialiased flex flex-col min-h-screen bg-background text-foreground"
+                    >
                       <a
                         href="#main-content"
                         className="skip-link bg-primary text-primary-foreground"
@@ -152,39 +133,40 @@ export default async function LocaleLayout({
                         {children}
                       </main>
                       <Footer locale={locale} />
-                      <ScrollToTop threshold={400} />
-                    </SmoothScroll>
-                  </PageTransitionProvider>
-                  <CookieConsentBanner />
-                  <CookieSettingsButton />
-                  {waPhone && (
-                    <WhatsAppButton
-                      phone={waPhone}
-                      message={acf?.whatsapp_message?.trim() || undefined}
-                      contactName={
-                        acf?.whatsapp_contact_name?.trim() || undefined
-                      }
-                      contactRole={
-                        acf?.whatsapp_contact_role?.trim() || undefined
-                      }
-                      headerText={
-                        acf?.whatsapp_header_text?.trim() || undefined
-                      }
-                    />
-                  )}
-                </CookieConsentProvider>
-              </ShopCartProvider>
-            </ThemeProvider>
-          </TamboProvider>
-        </NextIntlClientProvider>
-        <SpeedInsights />
-        {tamboProjectId && (
-          <Script
-            src={`https://cdn.tambo.co/${tamboProjectId}.js`}
-            strategy="afterInteractive"
-          />
-        )}
-      </body>
-    </html>
+                    </div>
+                    <ScrollToTop threshold={400} />
+                  </SmoothScroll>
+                </PageTransitionProvider>
+                <CookieConsentBanner />
+                <CookieSettingsButton />
+                {waPhone && (
+                  <WhatsAppButton
+                    phone={waPhone}
+                    message={acf?.whatsapp_message?.trim() || undefined}
+                    contactName={
+                      acf?.whatsapp_contact_name?.trim() || undefined
+                    }
+                    contactRole={
+                      acf?.whatsapp_contact_role?.trim() || undefined
+                    }
+                    headerText={
+                      acf?.whatsapp_header_text?.trim() || undefined
+                    }
+                  />
+                )}
+              </CookieConsentProvider>
+            </ShopCartProvider>
+          </ThemeProvider>
+        </TamboProvider>
+      </NextIntlClientProvider>
+      <SpeedInsights />
+      <PlausibleAnalytics />
+      {tamboProjectId && (
+        <Script
+          src={`https://cdn.tambo.co/${tamboProjectId}.js`}
+          strategy="afterInteractive"
+        />
+      )}
+    </>
   );
 }

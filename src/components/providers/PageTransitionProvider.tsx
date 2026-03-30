@@ -1,22 +1,14 @@
 'use client';
 
-import React, { useCallback, useRef, useState, createContext, useContext } from 'react';
+import React, { useCallback, useRef, useState, createContext, useContext, useEffect } from 'react';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import gsap from 'gsap';
-import {
-  type PageTransitionType,
-  PAGE_TRANSITION_PRESETS,
-  DEFAULT_PAGE_TRANSITION,
-} from '@/lib/page-transitions';
-
-type Status = 'idle' | 'entering' | 'entered' | 'exiting';
+import type { PageTransitionType } from '@/lib/page-transitions';
+import { DEFAULT_PAGE_TRANSITION } from '@/lib/page-transitions';
 
 interface PageTransitionContextValue {
-  /** Navigate to href with the given (or default) transition */
   navigate: (href: string, transition?: PageTransitionType) => void;
-  /** Current transition type for the overlay (e.g. for curtain markup) */
   transitionType: PageTransitionType;
-  /** Default transition used when not specified */
   defaultTransition: PageTransitionType;
   setDefaultTransition: (t: PageTransitionType) => void;
 }
@@ -24,11 +16,12 @@ interface PageTransitionContextValue {
 const PageTransitionContext = createContext<PageTransitionContextValue | null>(null);
 
 export function usePageTransition() {
-  const ctx = useContext(PageTransitionContext);
-  return ctx;
+  return useContext(PageTransitionContext);
 }
 
-const DURATION = 0.5;
+const DURATION = 0.85;
+
+type Status = 'idle' | 'entering' | 'entered' | 'exiting';
 
 export function PageTransitionProvider({
   children,
@@ -39,84 +32,158 @@ export function PageTransitionProvider({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const path1Ref = useRef<SVGPathElement>(null);
+  const path2Ref = useRef<SVGPathElement>(null);
   const prevPathRef = useRef(pathname);
   const pendingExitRef = useRef(false);
-  const [status, setStatus] = useState<Status>('idle');
-  const [defaultTransition, setDefaultTransitionState] = useState<PageTransitionType>(defaultTransitionProp);
-  const [transitionType, setTransitionType] = useState<PageTransitionType>(defaultTransitionProp);
   const pendingHrefRef = useRef<string | null>(null);
+  const [status, setStatus] = useState<Status>('idle');
+  const [defaultTransition, setDefaultTransitionState] =
+    useState<PageTransitionType>(defaultTransitionProp);
 
   const setDefaultTransition = useCallback((t: PageTransitionType) => {
     setDefaultTransitionState(t);
   }, []);
 
+  // After mount: compute real path lengths and set initial hidden state
+  useEffect(() => {
+    const p1 = path1Ref.current;
+    const p2 = path2Ref.current;
+    if (!p1 || !p2) return;
+    const len1 = p1.getTotalLength();
+    const len2 = p2.getTotalLength();
+    gsap.set(p1, {
+      strokeDasharray: len1,
+      strokeDashoffset: len1,
+      attr: { 'stroke-width': 200 },
+    });
+    gsap.set(p2, {
+      strokeDasharray: len2,
+      strokeDashoffset: len2,
+      attr: { 'stroke-width': 200 },
+    });
+  }, []);
+
+  // next-intl's router.push only accepts typed pathnames; keep a stable ref for dynamic navigation
+  const routerRef = useRef(router);
+  routerRef.current = router;
+  const doPush = useCallback((href: string) => {
+    (routerRef.current as unknown as { push: (href: string) => void }).push(href);
+  }, []);
+
   const navigate = useCallback(
-    (href: string, transition?: PageTransitionType) => {
-      if (status !== 'idle' || !overlayRef.current) {
-        router.push(href);
+    (href: string, _transition?: PageTransitionType) => {
+      if (status !== 'idle') {
+        doPush(href);
         return;
       }
-      const type = transition ?? defaultTransition;
-      setTransitionType(type);
+      const p1 = path1Ref.current;
+      const p2 = path2Ref.current;
+      if (!p1 || !p2) {
+        doPush(href);
+        return;
+      }
+
       pendingHrefRef.current = href;
       setStatus('entering');
-      const preset = PAGE_TRANSITION_PRESETS[type];
-      preset.setInitial?.(overlayRef.current);
-      const tween = preset.enter(overlayRef.current, DURATION);
-      tween.eventCallback('onComplete', () => {
-        setStatus('entered');
-        pendingExitRef.current = true;
-        const url = pendingHrefRef.current;
-        pendingHrefRef.current = null;
-        if (url) router.push(url);
+
+      // Leave: strokes draw in and expand to cover the screen
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setStatus('entered');
+          pendingExitRef.current = true;
+          const url = pendingHrefRef.current;
+          pendingHrefRef.current = null;
+          if (url) doPush(url);
+        },
       });
+      tl.to(
+        p1,
+        { strokeDashoffset: 0, attr: { 'stroke-width': 700 }, duration: DURATION, ease: 'power1.inOut' },
+        0,
+      );
+      tl.to(
+        p2,
+        { strokeDashoffset: 0, attr: { 'stroke-width': 700 }, duration: DURATION, ease: 'power1.inOut' },
+        0,
+      );
     },
-    [status, defaultTransition, router]
+    [status, doPush],
   );
 
-  // When pathname changes (or same-page hash nav) after we navigated, run exit animation
-  React.useEffect(() => {
-    if (status !== 'entered' || !overlayRef.current) return;
+  // After route changes: run exit (reveal) animation
+  useEffect(() => {
+    if (status !== 'entered') return;
+    const p1 = path1Ref.current;
+    const p2 = path2Ref.current;
+    if (!p1 || !p2) return;
     const pathChanged = pathname !== prevPathRef.current;
     if (!pathChanged && !pendingExitRef.current) return;
     if (pathChanged) prevPathRef.current = pathname;
     pendingExitRef.current = false;
     setStatus('exiting');
-    const preset = PAGE_TRANSITION_PRESETS[transitionType];
-    const tween = preset.exit(overlayRef.current, DURATION);
-    tween.eventCallback('onComplete', () => {
-      setStatus('idle');
-      const el = overlayRef.current;
-      if (el) preset.setInitial?.(el);
+
+    const len1 = p1.getTotalLength();
+    const len2 = p2.getTotalLength();
+
+    // Enter: strokes sweep out, revealing the new page
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.set(p1, { strokeDashoffset: len1, attr: { 'stroke-width': 200 } });
+        gsap.set(p2, { strokeDashoffset: len2, attr: { 'stroke-width': 200 } });
+        setStatus('idle');
+      },
     });
-  }, [pathname, status, transitionType]);
+    tl.to(
+      p1,
+      { strokeDashoffset: -len1, attr: { 'stroke-width': 200 }, duration: DURATION, ease: 'power1.inOut' },
+      0,
+    );
+    tl.to(
+      p2,
+      { strokeDashoffset: -len2, attr: { 'stroke-width': 200 }, duration: DURATION, ease: 'power1.inOut' },
+      0,
+    );
+  }, [pathname, status]);
 
   const value: PageTransitionContextValue = {
     navigate,
-    transitionType,
+    transitionType: defaultTransition,
     defaultTransition,
     setDefaultTransition,
   };
 
-  const isCurtain = transitionType === 'curtain';
-
   return (
     <PageTransitionContext.Provider value={value}>
       {children}
+      {/* SVG Stroke Transition Overlay */}
       <div
-        ref={overlayRef}
         aria-hidden
-        data-transition={transitionType}
-        className="fixed inset-0 z-[9998] bg-background pointer-events-none page-transition-overlay"
-        style={{ visibility: status === 'idle' ? 'hidden' : 'visible' }}
+        className="page-transition-svg"
       >
-        {isCurtain ? (
-          <>
-            <div data-curtain="left" className="absolute inset-y-0 left-0 w-1/2 bg-background" />
-            <div data-curtain="right" className="absolute inset-y-0 right-0 w-1/2 bg-background" />
-          </>
-        ) : null}
+        <svg
+          viewBox="0 0 2453 2535"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          <path
+            ref={path1Ref}
+            d="M227.549 1818.76C227.549 1818.76 406.016 2207.75 569.049 2130.26C843.431 1999.85 -264.104 1002.3 227.549 876.262C552.918 792.849 773.647 2456.11 1342.05 2130.26C1885.43 1818.76 14.9644 455.772 760.548 137.262C1342.05 -111.152 1663.5 2266.35 2209.55 1972.76C2755.6 1679.18 1536.63 384.467 1826.55 137.262C2013.5 -22.1463 2209.55 381.262 2209.55 381.262"
+            stroke="var(--transition-stroke-1)"
+            strokeWidth="200"
+            strokeLinecap="round"
+            style={{ strokeDasharray: 99999, strokeDashoffset: 99999 }}
+          />
+          <path
+            ref={path2Ref}
+            d="M1661.28 2255.51C1661.28 2255.51 2311.09 1960.37 2111.78 1817.01C1944.47 1696.67 718.456 2870.17 499.781 2255.51C308.969 1719.17 2457.51 1613.83 2111.78 963.512C1766.05 313.198 427.949 2195.17 132.281 1455.51C-155.219 736.292 2014.78 891.514 1708.78 252.012C1437.81 -314.29 369.471 909.169 132.281 566.512C18.1772 401.672 244.781 193.012 244.781 193.012"
+            stroke="var(--transition-stroke-2)"
+            strokeWidth="200"
+            strokeLinecap="round"
+            style={{ strokeDasharray: 99999, strokeDashoffset: 99999 }}
+          />
+        </svg>
       </div>
     </PageTransitionContext.Provider>
   );

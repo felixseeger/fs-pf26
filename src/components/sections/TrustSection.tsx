@@ -95,7 +95,7 @@ export default function TrustSection({ title = 'Trusted Us', clients, className 
 
   return (
     <section
-      className={`relative w-full min-h-[70vh] flex flex-col justify-end items-start gap-8 overflow-hidden py-16 px-6 lg:px-10 ${className}`}
+      className={`relative w-full min-h-[70vh] flex flex-col justify-end items-start gap-8 overflow-hidden py-16 ${className}`}
     >
       <div
         ref={previewRef}
@@ -117,30 +117,37 @@ export default function TrustSection({ title = 'Trusted Us', clients, className 
         )}
       </div>
 
-      <p className="relative text-xs uppercase tracking-widest font-semibold text-zinc-500 dark:text-zinc-400 z-10">
-        {title}
-      </p>
+      <div className="w-full max-w-6xl mx-auto px-6 lg:px-10 relative z-10 flex flex-col justify-end items-start gap-8">
+        <p className="relative text-xs uppercase tracking-widest font-semibold text-zinc-500 dark:text-zinc-400 z-10">
+          {title}
+        </p>
 
-      <div className="relative w-full max-w-[80%] flex flex-wrap justify-start items-center gap-3 z-10">
+        <div className="relative w-full flex flex-wrap justify-start items-center gap-3 z-10">
         {clients.map((client, index) => {
           return (
             <div
-              key={index}
+              key={`${client.name}-${index}`}
               className="relative inline-flex items-center cursor-pointer group/client"
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={(e) => handleMouseLeave(index, e.relatedTarget, e.currentTarget)}
+              onTouchStart={() => handleMouseEnter(index)}
+              onTouchEnd={() => {
+                isLeavingRef.current = true;
+                runHide(() => setDisplayedIndex(-1));
+              }}
             >
               <h2 className="text-2xl md:text-3xl font-medium text-zinc-900 dark:text-white leading-tight">
                 {client.name || ' '}
                 {index < clients.length - 1 ? ',' : '.'}
               </h2>
               <span
-                className="absolute left-0 bottom-0 w-full h-[0.15rem] bg-zinc-900 dark:bg-white origin-right scale-x-0 transition-transform duration-300 ease-out group-hover/client:scale-x-100 group-hover/client:origin-left pointer-events-none"
+                className="absolute left-0 bottom-0 w-full h-[0.15rem] bg-primary origin-right scale-x-0 transition-transform duration-300 ease-out group-hover/client:scale-x-100 group-hover/client:origin-left pointer-events-none"
                 aria-hidden
               />
             </div>
           );
         })}
+      </div>
       </div>
     </section>
   );

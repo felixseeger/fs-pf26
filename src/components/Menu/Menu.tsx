@@ -88,7 +88,6 @@ const defaultSubColumns: MenuSubColumn[] = [
 
 const defaultSocialLinks: MenuSocialLink[] = [
   { href: 'https://x.com/codegridweb', label: 'Twitter' },
-  { href: 'https://www.instagram.com/codegridweb/', label: 'Instagram' },
   { href: 'https://www.youtube.com/@codegrid', label: 'YouTube' },
 ];
 

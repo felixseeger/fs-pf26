@@ -15,8 +15,6 @@ import ServicesSection, { Service } from "@/components/sections/ServicesSection"
 import FAQSection from "@/components/sections/FAQSection";
 import NewsletterCollect from "@/components/ui/NewsletterCollect";
 import HomePreloaderWrapper from "@/components/HomePreloaderWrapper";
-import ScrollSVGTransition from "@/components/sections/ScrollSVGTransition";
-import '@/components/sections/ScrollSVGTransition.css';
 import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 import { getServiceIconUrl } from '@/lib/service-icons';
 
@@ -62,7 +60,23 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     ]);
     portfolioItems = portfolioData || [];
     homePage = homePageData;
-    serviceItems = servicesData || [];
+    // Filter services to the current locale. Polylang can return all-language
+    // results when the `lang` query param isn't honoured for custom post types.
+    //
+    // Priority order:
+    // 1. `lang` field — Polylang REST API extension sets this directly on each
+    //    post (most reliable).
+    // 2. `link` URL — Polylang embeds the language slug in the permalink.
+    //    For the DEFAULT language (de) Polylang often omits the prefix, so we
+    //    match it by checking the OTHER language is NOT present instead.
+    const otherLocale = locale === 'de' ? 'en' : 'de';
+    serviceItems = (servicesData || []).filter((s) => {
+      // If Polylang exposes the lang field, trust it exclusively.
+      if (s.lang) return s.lang === locale;
+      // Fall back to link URL inspection.
+      const link = (s.link || '').toLowerCase();
+      return link.includes(`/${locale}/`) || !link.includes(`/${otherLocale}/`);
+    });
   } catch (err) {
     console.error("Error fetching content:", err);
   }
@@ -83,14 +97,16 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         slideBadge={acf?.hero_slide_badge}
         slideSubtitle={acf?.hero_slide_subtitle}
         slideCtaLabel={acf?.hero_slide_cta_primary_label}
-        slideCtaUrl={acf?.hero_slide_cta_primary_url}
+        slideCtaUrl={
+          acf?.hero_slide_cta_primary_url &&
+          /^(https?:\/\/|\/)/.test(String(acf.hero_slide_cta_primary_url))
+            ? String(acf.hero_slide_cta_primary_url)
+            : undefined
+        }
         scrollHintText={acf?.hero_start_text}
       />
 
-      {/* SVG Scroll Transition - Triggered when scrolling off hero */}
-      <ScrollSVGTransition />
-
-      <div className="pt-0 pb-24 -mt-48 overflow-hidden" role="region" aria-label="Homepage content" suppressHydrationWarning>
+      <div className="relative pb-24 overflow-hidden" role="region" aria-label="Homepage content" suppressHydrationWarning>
         {/* About Section - from WordPress ACF */}
         {acf?.about_content && (
           <section id="about" className="mb-24 py-16 relative overflow-hidden" style={{ isolation: 'isolate' }} suppressHydrationWarning>
@@ -147,8 +163,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <FAQSection
             faqTitle={acf.faq_title || 'Frequently Asked Questions'}
             faqItems={acf.faq_items}
-            contactPhone={acf.contact_phone}
-            contactEmail={acf.contact_email}
+            contactEmail={
+              acf.contact_email &&
+              /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(acf.contact_email))
+                ? String(acf.contact_email)
+                : undefined
+            }
             faqPhoneCardTitle={acf.faq_phone_card_title}
             faqPhoneCardDescription={acf.faq_phone_card_description}
             faqEmailCardTitle={acf.faq_email_card_title}

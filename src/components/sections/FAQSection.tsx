@@ -1,8 +1,9 @@
 'use client';
 
 import { useRef, useState, useCallback } from 'react';
-import { Phone, Mail, ArrowRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import TiltCard from '@/components/ui/TiltCard';
+import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -17,10 +18,7 @@ export interface FAQItem {
 interface FAQSectionProps {
   faqTitle: string;
   faqItems: FAQItem[];
-  contactPhone?: string;
   contactEmail?: string;
-  faqPhoneCardTitle?: string;
-  faqPhoneCardDescription?: string;
   faqEmailCardTitle?: string;
   faqEmailCardDescription?: string;
 }
@@ -42,10 +40,7 @@ function useSound(src: string) {
 export default function FAQSection({
   faqTitle,
   faqItems,
-  contactPhone,
   contactEmail,
-  faqPhoneCardTitle = 'Contact Me',
-  faqPhoneCardDescription = "Ready to discuss your project? I'm here to answer any questions and provide personalized solutions for your business needs.",
   faqEmailCardTitle = 'Send a Message',
   faqEmailCardDescription = 'Good website tells a story that will make users fully immerse themselves operating',
 }: FAQSectionProps) {
@@ -132,7 +127,7 @@ export default function FAQSection({
     <section ref={sectionRef} id="faq" className="mb-24 max-w-6xl mx-auto px-4 pt-[50px]">
       <header className="mb-8">
         <div className="flex items-center gap-4 mb-4">
-          <span className="w-12 h-px bg-zinc-300 dark:bg-zinc-800" />
+          <span className="w-12 h-px bg-primary/60" />
           <span className="text-xs uppercase tracking-widest font-bold text-zinc-500">FAQ</span>
         </div>
         <div
@@ -140,7 +135,7 @@ export default function FAQSection({
           className="overflow-hidden will-change-[clip-path]"
           style={{ clipPath: 'inset(0 100% 0 0)' }}
         >
-          <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white">
+          <h2 className="text-4xl md:text-5xl font-black text-black dark:text-white break-words">
             {faqTitle}
           </h2>
         </div>
@@ -150,20 +145,20 @@ export default function FAQSection({
         {faqItems.map((faq, index) => {
           const isOpen = openIndex === index;
           return (
-            <div key={index} data-faq-card>
+            <div key={`${faq.question.slice(0, 40)}-${index}`} data-faq-card>
             <TiltCard
               className={[
                 'rounded-xl border transition-all duration-300 dark:backdrop-blur-md',
                 isOpen
-                  ? 'bg-white dark:bg-white/10 border-blue-400/50 dark:border-blue-500/40 shadow-[0_8px_32px_0_rgba(96,165,250,0.18)]'
-                  : 'bg-white dark:bg-white/5 border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/8 hover:border-blue-200 dark:hover:border-white/20',
+                  ? 'bg-white dark:bg-white/10 border-primary/50 dark:border-primary/40 shadow-[0_8px_32px_0_rgba(163,230,53,0.12)]'
+                  : 'bg-white dark:bg-white/5 border-zinc-200 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/8 hover:border-primary/30 dark:hover:border-primary/20',
               ].join(' ')}
             >
               <button
                 type="button"
                 aria-expanded={isOpen}
                 onClick={() => toggleFAQ(index)}
-                className="w-full flex justify-between items-center gap-4 px-6 py-5 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-xl"
+                className="w-full flex justify-between items-center gap-4 px-6 py-5 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
               >
                 <span className="text-lg font-bold text-black dark:text-white leading-snug">
                   {faq.question}
@@ -173,8 +168,8 @@ export default function FAQSection({
                   className={[
                     'shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300',
                     isOpen
-                      ? 'bg-blue-500/30 text-blue-500 dark:text-blue-300 rotate-45'
-                      : 'bg-blue-100 text-blue-500 dark:bg-[#e9ff13]/15 dark:text-[#e9ff13] rotate-0',
+                      ? 'bg-primary/20 text-primary rotate-45'
+                      : 'bg-primary/10 text-primary rotate-0',
                   ].join(' ')}
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -186,7 +181,7 @@ export default function FAQSection({
               <div
                 className={[
                   'overflow-hidden transition-all duration-300 ease-in-out',
-                  isOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0',
+                  isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0',
                 ].join(' ')}
               >
                 <div
@@ -201,57 +196,41 @@ export default function FAQSection({
         })}
       </div>
 
-      {(contactPhone || contactEmail) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-          {contactPhone && (
-            <div data-contact-card>
-            <TiltCard className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-transparent rounded-2xl p-8 flex flex-col justify-between">
-              <div>
-                <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6">
-                  <Phone size={24} className="text-primary-foreground" />
-                </div>
-                <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-3">
-                  {faqPhoneCardTitle}
-                </h3>
-                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                  {faqPhoneCardDescription}
-                </p>
-              </div>
-              <a
-                href={`tel:${contactPhone.replace(/\s/g, '')}`}
-                className="inline-flex items-center gap-2 text-zinc-900 dark:text-white font-bold mt-8 group/link hover:text-primary transition-colors"
-              >
-                {contactPhone}
-                <ArrowRight size={18} className="group-hover/link:translate-x-1 transition-transform shrink-0" />
-              </a>
-            </TiltCard>
-            </div>
-          )}
+      {contactEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail) && (
+        <div
+          className="mt-16 relative overflow-hidden"
+          style={{ backgroundColor: '#011627', isolation: 'isolate' }}
+        >
+          <DotMatrixStatic color="#a3e635" dotSize={2} spacing={20} opacity={0.08} className="-z-10" />
 
-          {contactEmail && (
-            <div data-contact-card>
-            <TiltCard className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-transparent rounded-2xl p-8 flex flex-col justify-between">
-              <div>
-                <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center mb-6">
-                  <Mail size={24} className="text-primary-foreground" />
-                </div>
-                <h3 className="text-2xl font-black text-zinc-900 dark:text-white mb-3">
-                  {faqEmailCardTitle}
-                </h3>
-                <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                  {faqEmailCardDescription}
-                </p>
-              </div>
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-white/10">
+            <span className="text-[10px] font-unbounded font-black uppercase tracking-[0.4em] text-zinc-500">
+              Contact
+            </span>
+            <span className="text-[10px] font-unbounded tracking-widest text-zinc-600 tabular-nums">01 channels</span>
+          </div>
+
+          <div data-contact-card>
               <a
                 href={`mailto:${contactEmail}`}
-                className="inline-flex items-center gap-2 text-zinc-900 dark:text-white font-bold mt-8 group/link hover:text-primary transition-colors"
+                className="group flex items-start gap-5 md:gap-8 px-6 md:px-10 py-8 md:py-10 border-b border-white/10 hover:bg-white/5 transition-colors duration-300"
               >
-                {contactEmail}
-                <ArrowRight size={18} className="group-hover/link:translate-x-1 transition-transform shrink-0" />
+                <span className="shrink-0 pt-1 text-[10px] font-unbounded font-black text-zinc-600 tabular-nums">01</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-unbounded uppercase tracking-[0.3em] text-zinc-500 mb-3">
+                    {faqEmailCardTitle}
+                  </p>
+                  <p className="text-2xl md:text-4xl lg:text-5xl font-unbounded font-black text-white group-hover:text-primary transition-colors duration-300 break-all">
+                    {contactEmail}
+                  </p>
+                </div>
+                <ArrowUpRight
+                  size={20}
+                  className="shrink-0 mt-2 text-zinc-600 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300"
+                />
               </a>
-            </TiltCard>
-            </div>
-          )}
+          </div>
         </div>
       )}
     </section>

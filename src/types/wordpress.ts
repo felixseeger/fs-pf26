@@ -44,6 +44,8 @@ export interface WPPost {
   status: string;
   type: string;
   link: string;
+  /** Polylang REST API — language code of this post (e.g. "de" | "en") */
+  lang?: string;
   title: RenderedContent;
   content: RenderedContent;
   excerpt: RenderedContent;

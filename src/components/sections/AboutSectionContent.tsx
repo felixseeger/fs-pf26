@@ -1,6 +1,8 @@
 'use client';
 
 import { useRef } from 'react';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -37,6 +39,7 @@ interface AboutSectionContentProps {
 }
 
 export default function AboutSectionContent({ title, contentHtml }: AboutSectionContentProps) {
+  const t = useTranslations('nav');
   const stickyRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const proseRef = useRef<HTMLDivElement>(null);
@@ -52,65 +55,40 @@ export default function AboutSectionContent({ title, contentHtml }: AboutSection
     const section = sticky.closest('section');
     if (!section) return;
 
-    // 1. Mask-in headline (clip-path left to right)
     gsap.set(headline, { clipPath: 'inset(0 100% 0 0)' });
     gsap.to(headline, {
       clipPath: 'inset(0 0% 0 0)',
       duration: 1,
       ease: 'power2.out',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 75%',
-        end: 'top 45%',
-        scrub: 1.2,
-      },
+      scrollTrigger: { trigger: section, start: 'top 75%', end: 'top 45%', scrub: 1.2 },
     });
 
-    // 2. Reveal prose block (clip-path top to bottom)
     gsap.set(prose, { clipPath: 'inset(100% 0 0 0)' });
     gsap.to(prose, {
       clipPath: 'inset(0% 0 0 0)',
       duration: 1,
       ease: 'power2.out',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 70%',
-        end: 'top 5%',
-        scrub: 1.5,
-      },
+      scrollTrigger: { trigger: section, start: 'top 70%', end: 'top 5%', scrub: 1.5 },
     });
 
-    // 3. Type-in by character (split text, stagger opacity) – starts when prose is ~30% revealed
     const proseInner = prose.querySelector('[data-prose-inner]');
     if (proseInner) {
       splitTextIntoChars(proseInner as HTMLElement);
-      const chars = prose.querySelectorAll(`[${CHAR_DATA_ATTR}]`);
+      const chars = prose.querySelectorAll('[data-char]');
       gsap.set(chars, { opacity: 0 });
       gsap.to(chars, {
         opacity: 1,
         duration: 0.03,
         stagger: 0.02,
         ease: 'power1.out',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 55%',
-          end: 'top 15%',
-          scrub: 0.8,
-        },
+        scrollTrigger: { trigger: section, start: 'top 55%', end: 'top 15%', scrub: 0.8 },
       });
     }
 
-    // 4. Pulsing arrow (repeat, yoyo to the right)
     if (arrow) {
-      gsap.to(arrow, {
-        x: 6,
-        duration: 0.7,
-        repeat: -1,
-        yoyo: true,
-        ease: 'power1.inOut',
-      });
+      gsap.to(arrow, { x: 6, duration: 0.7, repeat: -1, yoyo: true, ease: 'power1.inOut' });
     }
-  });
+  }, []);
 
   return (
     <div
@@ -127,22 +105,24 @@ export default function AboutSectionContent({ title, contentHtml }: AboutSection
             {title}
           </h2>
         </div>
-        <div
-          ref={proseRef}
-          className="overflow-hidden will-change-[clip-path] mb-8"
-          style={{ clipPath: 'inset(100% 0 0 0)' }}
-        >
+        {contentHtml?.trim() && (
           <div
-            data-prose-inner
-            className="prose prose-lg max-w-none text-primary-foreground/80 [&>p]:mb-4 [&>p]:leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: contentHtml }}
-          />
-        </div>
-        <a
+            ref={proseRef}
+            className="overflow-hidden will-change-[clip-path] mb-8"
+            style={{ clipPath: 'inset(100% 0 0 0)' }}
+          >
+            <div
+              data-prose-inner
+              className="prose prose-lg max-w-none text-primary-foreground/80 [&>p]:mb-4 [&>p]:leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
+            />
+          </div>
+        )}
+        <Link
           href="/about"
           className="inline-flex items-center gap-2 text-primary-foreground font-bold uppercase tracking-widest text-sm hover:gap-4 transition-all group"
         >
-          More About Me
+          {t('about')}
           <svg
             ref={arrowRef}
             className="w-4 h-4 shrink-0"
@@ -152,7 +132,7 @@ export default function AboutSectionContent({ title, contentHtml }: AboutSection
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
-        </a>
+        </Link>
       </div>
     </div>
   );

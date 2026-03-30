@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
   const amountValue = priceAmount.toFixed(2);
 
   const origin = request.nextUrl.origin;
-  const returnUrl = `${origin}/api/checkout/capture?courseSlug=${encodeURIComponent(courseSlug)}&email=${encodeURIComponent(email)}&courseName=${encodeURIComponent(courseName)}`;
+  const returnUrl = `${origin}/api/checkout/capture?courseSlug=${encodeURIComponent(courseSlug)}&email=${encodeURIComponent(email)}&courseName=${encodeURIComponent(courseName)}&amount=${amountValue}&currency=${encodeURIComponent(currency)}`;
   const cancelUrl = `${origin}/courses/signup?course=${encodeURIComponent(courseSlug)}&canceled=true`;
 
   try {

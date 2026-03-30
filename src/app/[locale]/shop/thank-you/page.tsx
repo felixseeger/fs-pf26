@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import DotMatrixStatic from '@/components/DotMatrix/DotMatrixStatic';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import { getCanonicalUrl } from '@/lib/site-config';
+import ShopConversionTracker from '@/components/analytics/ShopConversionTracker';
 
 export const metadata: Metadata = {
   title: 'Thank You | Shop',
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 export default function ShopThankYouPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-background" suppressHydrationWarning>
+      <ShopConversionTracker />
       <section className="relative overflow-hidden">
         <DotMatrixStatic color="#4ade80" dotSize={2} spacing={20} opacity={0.18} className="-z-10" />
 

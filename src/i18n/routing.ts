@@ -4,9 +4,12 @@ export const routing = defineRouting({
   locales: ['de', 'en'],
   defaultLocale: 'de',
   localePrefix: 'always',
-  // German: /de/ueber-mich → /about; English: /en/about
+  // German localized slugs map to internal route segments.
   pathnames: {
     '/about': { de: '/ueber-mich' },
+    '/contact': { de: '/kontakt' },
+    '/services': { de: '/dienstleistungen' },
+    '/services/[slug]': { de: '/dienstleistungen/[slug]' },
   },
 });
 

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
+import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import { getAllServiceItems, getServiceItemBySlug, getServiceNeighbors } from '@/lib/wordpress';
 import { getCanonicalUrl } from '@/lib/site-config';
@@ -25,23 +26,23 @@ function toRepeaterArray<T>(value: T[] | Record<string, T> | null | undefined): 
 }
 
 export async function generateStaticParams() {
-    const services = await getAllServiceItems().catch(() => []);
-    // Return at least one param for static export, even if empty
-    if (services.length === 0) return [{ slug: '__no-services__' }];
-    return services.map((service) => ({
-        slug: service.slug,
-    }));
+    const services = await getAllServiceItems(routing.defaultLocale).catch(() => []);
+    if (services.length === 0) return [{ locale: routing.defaultLocale, slug: '__no-services__' }];
+    return routing.locales.flatMap((locale) =>
+        services.map((service) => ({ locale, slug: service.slug }))
+    );
 }
 
 interface ServicePageProps {
     params: Promise<{
         slug: string;
+        locale: string;
     }>;
 }
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
-    const { slug } = await params;
-    const service = await getServiceItemBySlug(slug);
+    const { slug, locale } = await params;
+    const service = await getServiceItemBySlug(slug, locale);
 
     if (!service) {
         return {
@@ -75,7 +76,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {
-    const { slug } = await params;
+    const { slug, locale } = await params;
     
     // Handle fallback slug when no services exist
     if (slug === '__no-services__') {
@@ -92,8 +93,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
     }
     
     const [service, neighbors] = await Promise.all([
-        getServiceItemBySlug(slug),
-        getServiceNeighbors(slug),
+        getServiceItemBySlug(slug, locale),
+        getServiceNeighbors(slug, locale),
     ]);
 
     if (!service) {
@@ -347,7 +348,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
                 {/* CTA (sales layout uses acf; legacy uses fixed Get a Quote) */}
                 <div className="mb-12">
-                    <a
+                    <Link
                         href={useSalesLayout ? ctaHref : '/contact'}
                         className="inline-flex items-center gap-2 px-8 py-4 bg-lime-500 hover:bg-lime-600 dark:bg-lime-500 dark:hover:bg-lime-600 text-zinc-900 font-bold rounded-xl transition-colors hover:gap-3"
                     >
@@ -355,7 +356,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
-                    </a>
+                    </Link>
                 </div>
 
                 {/* Legacy Features List */}

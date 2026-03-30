@@ -14,6 +14,8 @@ export async function GET(request: NextRequest) {
   const courseSlug = searchParams.get('courseSlug') ?? '';
   const email = searchParams.get('email') ?? '';
   const courseName = decodeURIComponent(searchParams.get('courseName') ?? 'Dein Kurs');
+  const amount = searchParams.get('amount') ?? '';
+  const currency = searchParams.get('currency') ?? 'EUR';
   const origin = request.nextUrl.origin;
 
   if (!token) {
@@ -39,8 +41,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const successParams = new URLSearchParams({
+      ref: captured.id,
+      product: courseName,
+    });
+    if (amount) successParams.set('amount', amount);
+    if (currency) successParams.set('currency', currency);
+
     return NextResponse.redirect(
-      `${origin}/courses/signup/success?ref=${encodeURIComponent(captured.id)}`
+      `${origin}/courses/signup/success?${successParams.toString()}`
     );
   } catch (err) {
     console.error('[capture] PayPal capture error:', err);

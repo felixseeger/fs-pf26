@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import { CheckCircle } from 'lucide-react';
 import { getBreadcrumbItems } from '@/lib/breadcrumbs';
 import Breadcrumb from '@/components/ui/Breadcrumb';
+import PurchaseTracker from '@/components/analytics/PurchaseTracker';
 
 export const metadata: Metadata = {
   title: 'Payment Successful',
@@ -10,16 +11,26 @@ export const metadata: Metadata = {
 };
 
 interface SuccessPageProps {
-  searchParams: Promise<{ ref?: string; session_id?: string }>;
+  searchParams: Promise<{ ref?: string; session_id?: string; amount?: string; currency?: string; product?: string }>;
 }
 
 export default async function CheckoutSuccessPage({ searchParams }: SuccessPageProps) {
   const params = await searchParams;
   const rawRef = params.ref ?? params.session_id ?? null;
   const refId = rawRef ? rawRef.slice(-8) : null;
+  const amount = params.amount ? parseFloat(params.amount) : undefined;
+  const currency = params.currency ?? 'EUR';
+  const product = params.product ? decodeURIComponent(params.product) : undefined;
 
   return (
     <div className="min-h-screen bg-white dark:bg-background pt-36 pb-24 px-4">
+      <PurchaseTracker
+        amount={amount}
+        currency={currency}
+        productName={product}
+        orderId={rawRef ?? undefined}
+        channel="course"
+      />
       <div className="max-w-md mx-auto">
         <div className="mb-8">
           <Breadcrumb items={getBreadcrumbItems('/courses/signup/success', 'Success')} />

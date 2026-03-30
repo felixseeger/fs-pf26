@@ -28,10 +28,28 @@
   },
   "contact": {
     "title": "Kontakt",
+    "badge": "Kontakt",
     "nameLabel": "Name",
     "emailLabel": "E-Mail",
     "subjectLabel": "Betreff",
     "messageLabel": "Nachricht",
+    "availableForProjects": "Verfuegbar fuer Projekte",
+    "fullNamePlaceholder": "Vollstaendiger Name *",
+    "emailAddressPlaceholder": "E-Mail-Adresse *",
+    "subjectPlaceholder": "Betreff *",
+    "serviceTypePlaceholder": "Leistungsart *",
+    "projectPlaceholder": "Erzaehl mir von deinem Projekt *",
+    "heardFromLabel": "Wie hast du mich gefunden?",
+    "privacyConsentPrefix": "Mit dem Absenden dieses Formulars stimme ich der ",
+    "privacyPolicyLabel": "Datenschutzerklaerung",
+    "privacyConsentSuffix": " zu.",
+    "genericError": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "sending": "Wird gesendet…",
+    "messageReceivedTitle": "Nachricht erhalten.",
+    "messageReceivedBody": "Ich lese sie persoenlich und melde mich in der Regel innerhalb von 1-2 Tagen.",
+    "sendAnotherMessage": "Weitere Nachricht senden",
+    "getDirections": "Route anzeigen",
+    "sendMessageCta": "Nachricht senden",
     "sendButton": "Nachricht senden",
     "successMessage": "Danke! Deine Nachricht wurde erfolgreich gesendet.",
     "errorMessage": "Beim Senden ist ein Fehler aufgetreten. Bitte versuche es erneut."
@@ -56,6 +74,12 @@
     "imprint": "Impressum",
     "privacy": "Datenschutz",
     "contact": "Kontakt"
+  },
+  "services": {
+    "label": "Leistungen",
+    "disciplines": "Disziplinen",
+    "ctaTagline": "Jedes Projekt beginnt mit einem Gespräch — nicht mit einem Angebot.",
+    "ctaButton": "Projekt starten"
   },
   "meta": {
     "language": "de",

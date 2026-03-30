@@ -203,7 +203,7 @@ export default function SelectedWorksSection({ items, maxItems = 6 }: SelectedWo
       <div className="max-w-6xl mx-auto px-4" suppressHydrationWarning>
         <header className="mb-12 md:mb-16" suppressHydrationWarning>
           <div className="flex items-center gap-4 mb-4" suppressHydrationWarning>
-            <span className="w-12 h-px bg-zinc-300 dark:bg-zinc-600" />
+            <span className="w-12 h-px bg-primary/60" />
             <span className="text-xs uppercase tracking-widest font-bold text-zinc-500 dark:text-zinc-400">
               Portfolio
             </span>
@@ -215,7 +215,7 @@ export default function SelectedWorksSection({ items, maxItems = 6 }: SelectedWo
           >
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-unbounded font-black text-black dark:text-white">
               <span>{SECTION_TITLE.split(' ')[0]}</span>{' '}
-              <span className="[-webkit-text-stroke:2px_#1d4ed8] text-transparent">{SECTION_TITLE.split(' ')[1]}</span>
+              <span className="text-transparent" style={{ WebkitTextStroke: '2px hsl(var(--primary))' }}>{SECTION_TITLE.split(' ')[1]}</span>
             </h2>
           </div>
           <div

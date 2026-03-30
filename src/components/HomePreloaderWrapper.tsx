@@ -1,27 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
+import PreloaderAnimation from '@/components/ui/PreloaderAnimation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Lazy-loaded chunk — GSAP + SVG code is never fetched for returning visitors
-const PreloaderAnimation = dynamic(
-  () => import('@/components/ui/PreloaderAnimation'),
-  {
-    ssr: false,
-    // Plain background cover while the dynamic chunk loads (< 100 ms on CDN)
-    loading: () => (
-      <div
-        className="fixed inset-0 z-9999"
-        style={{ background: '#d1d9b8' }}
-        aria-hidden
-      />
-    ),
-  }
-);
 
 // Avoid the "useLayoutEffect does nothing on the server" warning
 const useIsomorphicLayoutEffect =

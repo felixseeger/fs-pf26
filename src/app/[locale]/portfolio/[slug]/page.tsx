@@ -12,24 +12,31 @@ import PortfolioPostNavigation from '@/components/portfolio/PortfolioPostNavigat
 import ServicesUsed from '@/components/portfolio/ServicesUsed';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import Breadcrumb from '@/components/ui/Breadcrumb';
+import { routing } from '@/i18n/routing';
 
 export async function generateStaticParams() {
-  const items = await getPortfolioItems(100, 1).catch(() => []);
-  const slugs = items.map((p) => ({ slug: p.slug }));
+    const allParams = await Promise.all(
+        routing.locales.map(async (locale) => {
+            const items = await getPortfolioItems(100, 1, locale).catch(() => []);
+            return items.map((p) => ({ locale, slug: p.slug }));
+        })
+    );
+    const slugs = allParams.flat();
   // Next.js static export requires at least one param when API fails
-  if (slugs.length === 0) return [{ slug: '__no-items__' }];
+    if (slugs.length === 0) return [{ locale: routing.defaultLocale, slug: '__no-items__' }];
   return slugs;
 }
 
 interface PortfolioItemPageProps {
     params: Promise<{
+                locale: string;
         slug: string;
     }>;
 }
 
 export async function generateMetadata({ params }: PortfolioItemPageProps): Promise<Metadata> {
-    const { slug } = await params;
-    const item = await getPortfolioItemBySlug(slug);
+        const { slug, locale } = await params;
+        const item = await getPortfolioItemBySlug(slug, locale);
 
     if (!item) {
         return {
@@ -58,11 +65,11 @@ export async function generateMetadata({ params }: PortfolioItemPageProps): Prom
 }
 
 export default async function PortfolioItemPage({ params }: PortfolioItemPageProps) {
-    const { slug } = await params;
+    const { slug, locale } = await params;
     const [item, neighbors, allServices] = await Promise.all([
-        getPortfolioItemBySlug(slug),
-        getPortfolioNeighbors(slug),
-        getServiceItems(100, 1),
+        getPortfolioItemBySlug(slug, locale),
+        getPortfolioNeighbors(slug, locale),
+        getServiceItems(100, 1, locale),
     ]);
 
     if (!item) {
@@ -93,7 +100,7 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
     // ACF project_gallery for 3D monitor display
     const projectGallery = item.acf?.project_gallery;
     const galleryUrls = Array.isArray(projectGallery) && projectGallery.length > 0
-      ? projectGallery.map(img => img.url)
+      ? projectGallery.map(img => img?.url).filter((u): u is string => typeof u === 'string' && u.length > 0)
       : null;
 
     const matchingServices = getServicesMatchingPortfolioCategories(allServices, terms);
@@ -142,7 +149,7 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
                     )}
 
                     <h1
-                        className="text-4xl md:text-6xl font-black mb-6 text-zinc-900 dark:text-white leading-tight"
+                        className="text-4xl md:text-6xl font-black mb-6 text-zinc-900 dark:text-white leading-tight break-words"
                         dangerouslySetInnerHTML={{ __html: displayTitle }}
                     />
                 </header>
@@ -155,7 +162,7 @@ export default async function PortfolioItemPage({ params }: PortfolioItemPagePro
                 )}
 
                 {/* Content video (ACF portfolio_video) */}
-                {contentVideoUrl && (
+                {contentVideoUrl && /^https?:\/\//i.test(contentVideoUrl) && (
                     <div className="mb-16 rounded-2xl overflow-hidden shadow-2xl bg-zinc-900 aspect-video">
                         <video
                             src={contentVideoUrl}

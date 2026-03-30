@@ -16,11 +16,25 @@ export const metadata: Metadata = {
 const FALLBACK_HEADLINE = 'My Services.';
 const FALLBACK_SUBHEADLINE = 'Comprehensive digital solutions tailored to your needs. From concept to execution, I deliver high-quality work that drives results.';
 
-export default async function ServicesPage() {
-    const [servicesPage, services] = await Promise.all([
-        getPageBySlug('services'),
-        getAllServiceItems(),
+export default async function ServicesPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    const [servicesPage, allServices] = await Promise.all([
+        getPageBySlug('services', locale),
+        getAllServiceItems(locale),
     ]);
+
+    // Filter to the current locale — Polylang may return all languages when the
+    // lang query param isn't honoured for custom post types.
+    const otherLocale = locale === 'de' ? 'en' : 'de';
+    const services = allServices.filter((s) => {
+        if (s.lang) return s.lang === locale;
+        const link = (s.link || '').toLowerCase();
+        return link.includes(`/${locale}/`) || !link.includes(`/${otherLocale}/`);
+    });
 
     const acf = servicesPage?.acf;
     const heroHeadline = acf?.hero_headline?.trim() || FALLBACK_HEADLINE;
