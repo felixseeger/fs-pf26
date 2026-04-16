@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Link } from '@/i18n/navigation';
 import { getAllServiceItems, getPageBySlug } from '@/lib/wordpress';
+import { filterServiceItemsByLocale } from '@/lib/wordpress/services';
 import { getCanonicalUrl } from '@/lib/site-config';
 import { getBreadcrumbItems } from '@/lib/breadcrumbs';
 import Breadcrumb from '@/components/ui/Breadcrumb';
@@ -13,8 +14,20 @@ export const metadata: Metadata = {
     alternates: { canonical: getCanonicalUrl('/services') },
 };
 
-const FALLBACK_HEADLINE = 'My Services.';
-const FALLBACK_SUBHEADLINE = 'Comprehensive digital solutions tailored to your needs. From concept to execution, I deliver high-quality work that drives results.';
+const FALLBACK_COPY: Record<string, { headline: string; subheadline: string; lead: string; accent: string }> = {
+    de: {
+        headline: 'Meine Leistungen.',
+        subheadline: 'Umfassende digitale Loesungen, zugeschnitten auf deine Ziele. Von der Konzeption bis zur Umsetzung liefere ich hochwertige Arbeit mit messbaren Ergebnissen.',
+        lead: 'Meine ',
+        accent: 'Leistungen.',
+    },
+    en: {
+        headline: 'My Services.',
+        subheadline: 'Comprehensive digital solutions tailored to your needs. From concept to execution, I deliver high-quality work that drives results.',
+        lead: 'My ',
+        accent: 'Services.',
+    },
+};
 
 export default async function ServicesPage({
     params,
@@ -22,23 +35,16 @@ export default async function ServicesPage({
     params: Promise<{ locale: string }>;
 }) {
     const { locale } = await params;
+    const fallback = FALLBACK_COPY[locale] ?? FALLBACK_COPY.en;
     const [servicesPage, allServices] = await Promise.all([
         getPageBySlug('services', locale),
         getAllServiceItems(locale),
     ]);
-
-    // Filter to the current locale — Polylang may return all languages when the
-    // lang query param isn't honoured for custom post types.
-    const otherLocale = locale === 'de' ? 'en' : 'de';
-    const services = allServices.filter((s) => {
-        if (s.lang) return s.lang === locale;
-        const link = (s.link || '').toLowerCase();
-        return link.includes(`/${locale}/`) || !link.includes(`/${otherLocale}/`);
-    });
+    const services = filterServiceItemsByLocale(allServices, locale);
 
     const acf = servicesPage?.acf;
-    const heroHeadline = acf?.hero_headline?.trim() || FALLBACK_HEADLINE;
-    const heroSubheadline = acf?.hero_subheadline?.trim() || FALLBACK_SUBHEADLINE;
+    const heroHeadline = acf?.hero_headline?.trim() || fallback.headline;
+    const heroSubheadline = acf?.hero_subheadline?.trim() || fallback.subheadline;
     const hasTrust = acf?.trust_headline?.trim() || acf?.trust_body || (acf?.trust_items && acf.trust_items.length > 0);
     const hasCta = acf?.cta_headline?.trim() || acf?.cta_button_text?.trim();
     const ctaLink = acf?.cta_button_link?.trim() || '/contact';
@@ -52,9 +58,9 @@ export default async function ServicesPage({
                 </div>
                 <header className="max-w-3xl mb-16">
                     <h1 className="text-5xl md:text-7xl font-black text-zinc-900 dark:text-white mb-6 leading-tight">
-                        {heroHeadline === FALLBACK_HEADLINE ? (
+                        {heroHeadline === fallback.headline ? (
                             <>
-                                My <span className="text-blue-600 dark:text-blue-500">Services.</span>
+                                {fallback.lead}<span className="text-blue-600 dark:text-blue-500">{fallback.accent}</span>
                             </>
                         ) : (
                             heroHeadline

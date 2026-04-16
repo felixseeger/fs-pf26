@@ -33,3 +33,28 @@ npx tambo <command> --help
 ```
 
 **Exit codes**: 0=success, 1=error, 2=requires flags (check stderr for exact command)
+
+<!-- hippo:start -->
+## Project Memory (Hippo)
+
+At the start of every task, run:
+```bash
+hippo context --auto --budget 1500
+```
+Read the output before writing any code.
+
+On errors or unexpected behaviour:
+```bash
+hippo remember "<description of what went wrong>" --error
+```
+
+On task completion:
+```bash
+hippo outcome --good
+```
+
+When ending a session, capture a brief summary:
+```bash
+hippo capture --stdin <<< '<decisions, errors, lessons — 2-5 bullets>'
+```
+<!-- hippo:end -->

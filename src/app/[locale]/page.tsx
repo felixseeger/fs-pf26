@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPortfolioItems, getHomePage, getServiceItems } from "@/lib/wordpress";
+import { filterServiceItemsByLocale } from '@/lib/wordpress/services';
 import { WPPortfolioItem, WPPage, ACFImage, WPServiceItem } from "@/types/wordpress";
 import { getCanonicalUrl } from "@/lib/site-config";
 import HomepageHero from "@/components/layout/HomepageHero";
@@ -8,7 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 export const metadata: Metadata = {
   alternates: { canonical: getCanonicalUrl('/') },
 };
-import SelectedWorksSection from "@/components/sections/SelectedWorksSection";
+import Portfolio3D from "@/components/portfolio/Portfolio3D";
 import AboutSectionImage from "@/components/sections/AboutSectionImage";
 import AboutSectionContent from "@/components/sections/AboutSectionContent";
 import ServicesSection, { Service } from "@/components/sections/ServicesSection";
@@ -60,23 +61,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     ]);
     portfolioItems = portfolioData || [];
     homePage = homePageData;
-    // Filter services to the current locale. Polylang can return all-language
-    // results when the `lang` query param isn't honoured for custom post types.
-    //
-    // Priority order:
-    // 1. `lang` field — Polylang REST API extension sets this directly on each
-    //    post (most reliable).
-    // 2. `link` URL — Polylang embeds the language slug in the permalink.
-    //    For the DEFAULT language (de) Polylang often omits the prefix, so we
-    //    match it by checking the OTHER language is NOT present instead.
-    const otherLocale = locale === 'de' ? 'en' : 'de';
-    serviceItems = (servicesData || []).filter((s) => {
-      // If Polylang exposes the lang field, trust it exclusively.
-      if (s.lang) return s.lang === locale;
-      // Fall back to link URL inspection.
-      const link = (s.link || '').toLowerCase();
-      return link.includes(`/${locale}/`) || !link.includes(`/${otherLocale}/`);
-    });
+    serviceItems = filterServiceItemsByLocale(servicesData || [], locale);
   } catch (err) {
     console.error("Error fetching content:", err);
   }
@@ -146,8 +131,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </section>
         )}
 
-        {/* Selected Works - Masonry Portfolio Grid */}
-        <SelectedWorksSection items={portfolioItems} maxItems={6} />
+        {/* Selected Works - 3D Zoom Portfolio Tunnel */}
+        <Portfolio3D items={portfolioItems} maxItems={12} />
 
         {/* Services Section - from WordPress services post type (services_gallery icons) */}
         <ServicesSection
